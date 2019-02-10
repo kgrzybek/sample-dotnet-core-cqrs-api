@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers.Orders
@@ -9,16 +11,16 @@ namespace SampleProject.Domain.Customers.Orders
 
         public string Name { get; private set; }
 
-        public MoneyValue Price { get; private set; }
+        private List<ProductPrice> _prices;
 
         private Product()
         {
 
         }
 
-        public Product(string name)
+        internal MoneyValue GetPrice(string currency)
         {
-            this.Name = name;
+            return this._prices.Single(x => x.Value.Currency == currency).Value;
         }
     }
 }

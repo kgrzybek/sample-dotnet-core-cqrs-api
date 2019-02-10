@@ -15,16 +15,10 @@ namespace SampleProject.Infrastructure.Orders
             this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<List<Product>> GetAllAsync()
-        {
-            return await this._context.Products.ToListAsync();
-        }
-
         public async Task<List<Product>> GetByIdsAsync(List<Guid> ids)
         {
             return await this._context
                 .Products
-                .Include(x => x.Price)
                 .Where(x => ids.Contains(x.Id)).ToListAsync();
         }
     }
