@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
+using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Infrastructure.Orders
