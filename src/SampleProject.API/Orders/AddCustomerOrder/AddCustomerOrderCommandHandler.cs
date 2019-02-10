@@ -26,7 +26,8 @@ namespace SampleProject.API.Orders.AddCustomerOrder
             var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => x.Id).ToList());
 
             var orderProducts = selectedProducts.Select(x =>
-                new OrderProduct(x, request.Products.Single(y => y.Id == x.Id).Quantity)).ToList();
+                new OrderProduct(x, request.Products.Single(y => y.Id == x.Id).Quantity,
+                    request.Products.Single(y => y.Id == x.Id).Currency)).ToList();
             var order = new Order(orderProducts);
             
             customer.AddOrder(order);

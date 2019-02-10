@@ -29,10 +29,17 @@ namespace SampleProject.Infrastructure.Orders
                 {
                     y.ToTable("OrderProducts", SchemaNames.Orders);
                     y.Property<Guid>("OrderId");
+                    y.Property<Guid>("ProductId");
                     y.HasForeignKey("OrderId");
                     y.HasKey("OrderId", "ProductId");
 
                     y.HasOne(p => p.Product);
+
+                    y.OwnsOne<MoneyValue>("Value", mv =>
+                    {
+                        mv.Property(p => p.Currency).HasColumnName("Currency");
+                        mv.Property(p => p.Value).HasColumnName("Value");
+                    });
                 });
 
                 x.OwnsOne<MoneyValue>("_value", y =>

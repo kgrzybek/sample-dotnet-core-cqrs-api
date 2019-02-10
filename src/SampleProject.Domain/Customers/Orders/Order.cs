@@ -61,8 +61,8 @@ namespace SampleProject.Domain.Customers.Orders
 
         private void CalculateOrderValue()
         {
-            var value = this._orderProducts.Sum(x => x.Quantity * x.Product.Price.Value);
-            this._value = new MoneyValue(value, this._orderProducts.First().Product.Price.Currency);
+            var value = this._orderProducts.Sum(x => x.Value.Value);
+            this._value = new MoneyValue(value, this._orderProducts.First().Value.Currency);
         }
     }
 }

@@ -31,7 +31,9 @@ namespace SampleProject.API.Orders.GetCustomerOrderDetails
                 const string sqlProducts = "SELECT " +
                                    "[Order].[ProductId] AS [Id], " +
                                    "[Order].[Quantity], " +
-                                   "[Order].[Name] " +
+                                   "[Order].[Name], " +
+                                   "[Order].[Value], " +
+                                   "[Order].[Currency] " +
                                    "FROM orders.v_OrderProducts AS [Order] " +
                                    "WHERE [Order].OrderId = @OrderId";
                 var products = await connection.QueryAsync<ProductDto>(sqlProducts, new { request.OrderId });

@@ -26,23 +26,39 @@ GO
 CREATE TABLE orders.Products
 (
 	[Id] UNIQUEIDENTIFIER NOT NULL,
-	[Name] VARCHAR(200),
-	[PriceValue] DECIMAL (18, 2) NOT NULL,
-	[PriceCurrency] VARCHAR(3) NOT NULL
+	[Name] VARCHAR(200)
 	CONSTRAINT [PK_orders_Products_Id] PRIMARY KEY ([Id] ASC)
 )
 GO
 
-INSERT INTO orders.Products VALUES ('8fad1e5a-d4a2-4688-aa49-e70776940c19', 'Jacket', 200, 'USD')
-INSERT INTO orders.Products VALUES ('9db6e474-ae74-4cf5-a0dc-ba23a42e2566', 'T-shirt', 40, 'USD')
+INSERT INTO orders.Products VALUES ('8fad1e5a-d4a2-4688-aa49-e70776940c19', 'Jacket');
+INSERT INTO orders.Products VALUES ('9db6e474-ae74-4cf5-a0dc-ba23a42e2566', 'T-shirt');
+GO
 
 CREATE TABLE orders.OrderProducts
 (
 	[OrderId] UNIQUEIDENTIFIER NOT NULL,
 	[ProductId] UNIQUEIDENTIFIER NOT NULL,
 	[Quantity] INT,
+	[Value] DECIMAL(18, 2),
+	[Currency] VARCHAR(3),
 	CONSTRAINT [PK_orders_OrderProducts_OrderId_ProductId] PRIMARY KEY ([OrderId] ASC, [ProductId] ASC)
 )
+GO
+
+CREATE TABLE orders.ProductPrices
+(
+	[ProductId] UNIQUEIDENTIFIER NOT NULL,
+	[Value] DECIMAL(18, 2) NOT NULL,
+	[Currency] VARCHAR(3) NOT NULL,
+	CONSTRAINT [PK_orders_ProductPrices_ProductId, Currency] PRIMARY KEY ([ProductId] ASC, [Currency] ASC)
+)
+GO
+
+INSERT INTO orders.ProductPrices VALUES ('8fad1e5a-d4a2-4688-aa49-e70776940c19', 200, 'USD');
+INSERT INTO orders.ProductPrices VALUES ('8fad1e5a-d4a2-4688-aa49-e70776940c19', 180, 'EUR');
+INSERT INTO orders.ProductPrices VALUES ('9db6e474-ae74-4cf5-a0dc-ba23a42e2566', 40, 'USD');
+INSERT INTO orders.ProductPrices VALUES ('9db6e474-ae74-4cf5-a0dc-ba23a42e2566', 35, 'EUR');
 GO
 
 CREATE VIEW orders.v_Orders
@@ -65,6 +81,8 @@ AS
 		[OrderProduct].[OrderId],
 		[OrderProduct].[ProductId],
 		[OrderProduct].[Quantity],
+		[OrderProduct].[Value],
+		[OrderProduct].[Currency],
 		[Product].[Name]
 	FROM orders.OrderProducts AS [OrderProduct]
 		INNER JOIN orders.Products AS [Product]

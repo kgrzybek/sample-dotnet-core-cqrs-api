@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SampleProject.Domain.Customers.Orders;
 
@@ -12,10 +13,17 @@ namespace SampleProject.Infrastructure.Orders
             
             builder.HasKey(b => b.Id);
 
-            builder.OwnsOne<MoneyValue>("Price", y =>
+            builder.OwnsMany<ProductPrice>("_prices", y =>
             {
-                y.Property(p => p.Currency).HasColumnName("PriceCurrency");
-                y.Property(p => p.Value).HasColumnName("PriceValue");
+                y.ToTable("ProductPrices", SchemaNames.Orders);
+                y.Property<Guid>("ProductId");
+                y.Property<string>("Currency").HasColumnType("varchar(3)").IsRequired();
+                y.HasKey("ProductId", "Currency");
+                y.OwnsOne(p => p.Value, mv =>
+                {
+                    mv.Property(p => p.Currency).HasColumnName("Currency").HasColumnType("varchar(3)").IsRequired();
+                    mv.Property(p => p.Value).HasColumnName("Value");
+                });
             });
         }
     }
