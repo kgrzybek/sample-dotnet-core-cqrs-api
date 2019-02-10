@@ -24,7 +24,8 @@ namespace SampleProject.API.Orders.GetCustomerOrders
                 const string sql = "SELECT " +
                                    "[Order].[Id], " +
                                    "[Order].[IsRemoved], " +
-                                   "[Order].[Value] " +
+                                   "[Order].[Value], " +
+                                   "[Order].[Currency] " +
                                    "FROM orders.v_Orders AS [Order] " +
                                    "WHERE [Order].CustomerId = @CustomerId";
                 var orders = await connection.QueryAsync<OrderDto>(sql, new {request.CustomerId});

@@ -9,7 +9,7 @@ namespace SampleProject.Domain.Customers.Orders
 
         public string Name { get; private set; }
 
-        public decimal Price { get; private set; }
+        public MoneyValue Price { get; private set; }
 
         private Product()
         {

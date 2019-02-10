@@ -8,6 +8,8 @@ namespace SampleProject.API.Orders.GetCustomerOrders
 
         public decimal Value { get; set; }
 
+        public string Currency { get; set; }
+
         public bool IsRemoved { get; set; }
     }
 }

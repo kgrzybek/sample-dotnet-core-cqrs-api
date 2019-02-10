@@ -25,10 +25,10 @@ namespace SampleProject.Domain.Customers
             this.AddDomainEvent(new OrderAddedEvent(order));
         }
 
-        public void ChangeOrder(Guid orderId, List<OrderProduct> products, IReadOnlyCollection<Product> allProducts)
+        public void ChangeOrder(Guid orderId, List<OrderProduct> products)
         {
             var order = this._orders.Single(x => x.Id == orderId);
-            order.Change(products, allProducts);
+            order.Change(products);
 
             this.AddDomainEvent(new OrderChangedEvent(order));
         }
