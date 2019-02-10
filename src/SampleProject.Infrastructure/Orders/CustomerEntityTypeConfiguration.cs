@@ -22,8 +22,8 @@ namespace SampleProject.Infrastructure.Orders
                 x.ToTable("Orders", SchemaNames.Orders);
                 x.HasForeignKey("CustomerId");
                 x.Property<bool>("_isRemoved").HasColumnName("IsRemoved");
-                x.Property<Guid>(nameof(Order.Id));
-                x.HasKey(nameof(Order.Id));
+                x.Property<Guid>("Id");
+                x.HasKey("Id");
 
                 x.OwnsMany<OrderProduct>(OrderProducts, y =>
                 {
