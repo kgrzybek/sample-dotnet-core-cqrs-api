@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Products;
 
-namespace SampleProject.Infrastructure.Orders
+namespace SampleProject.Infrastructure.Products
 {
     public class ProductRepository : IProductRepository
     {

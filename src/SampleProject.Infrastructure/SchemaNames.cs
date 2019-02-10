@@ -1,4 +1,4 @@
-﻿namespace SampleProject.Infrastructure.Orders
+﻿namespace SampleProject.Infrastructure
 {
     internal class SchemaNames
     {

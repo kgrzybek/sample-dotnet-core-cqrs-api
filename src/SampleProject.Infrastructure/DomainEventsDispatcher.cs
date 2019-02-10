@@ -6,7 +6,6 @@ using Autofac;
 using Autofac.Core;
 using MediatR;
 using SampleProject.Domain.SeedWork;
-using SampleProject.Infrastructure.Orders;
 
 namespace SampleProject.Infrastructure
 {

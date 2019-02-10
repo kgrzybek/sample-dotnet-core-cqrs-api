@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace SampleProject.Infrastructure.SeedWork

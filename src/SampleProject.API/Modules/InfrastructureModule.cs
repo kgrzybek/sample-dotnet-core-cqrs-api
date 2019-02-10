@@ -2,7 +2,8 @@
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Products;
 using SampleProject.Infrastructure;
-using SampleProject.Infrastructure.Orders;
+using SampleProject.Infrastructure.Customers;
+using SampleProject.Infrastructure.Products;
 
 namespace SampleProject.API.Modules
 {
