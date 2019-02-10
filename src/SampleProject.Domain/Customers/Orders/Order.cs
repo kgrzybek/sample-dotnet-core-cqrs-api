@@ -7,7 +7,7 @@ namespace SampleProject.Domain.Customers.Orders
 {
     public class Order : Entity
     {
-        public Guid Id { get; private set; }
+        internal Guid Id;
         private bool _isRemoved;
         private MoneyValue _value;
         private List<OrderProduct> _orderProducts;

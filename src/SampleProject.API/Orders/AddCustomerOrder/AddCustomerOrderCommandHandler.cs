@@ -22,8 +22,7 @@ namespace SampleProject.API.Orders.AddCustomerOrder
         public async Task<Unit> Handle(AddCustomerOrderCommand request, CancellationToken cancellationToken)
         {
             var customer = await this._customerRepository.GetByIdAsync(request.CustomerId);
-
-            
+ 
             var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => x.Id).ToList());
 
             var orderProducts = selectedProducts.Select(x =>
