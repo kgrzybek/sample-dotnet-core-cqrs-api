@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using SampleProject.Domain.Customers.Orders;
+using SampleProject.Domain.Products;
 using SampleProject.Infrastructure;
 using SampleProject.Infrastructure.Orders;
 

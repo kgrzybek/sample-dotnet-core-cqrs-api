@@ -1,4 +1,6 @@
-﻿namespace SampleProject.Domain.Customers.Orders
+﻿using SampleProject.Domain.Customers.Orders;
+
+namespace SampleProject.Domain.Products
 {
     public class ProductPrice
     {

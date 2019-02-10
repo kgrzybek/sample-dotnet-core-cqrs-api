@@ -1,4 +1,5 @@
-﻿using SampleProject.Domain.SeedWork;
+﻿using SampleProject.Domain.Products;
+using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers.Orders
 {

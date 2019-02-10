@@ -7,7 +7,7 @@ using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers
 {
-    public class Customer : Entity
+    public class Customer : Entity, IAggregateRoot
     {
         public Guid Id { get; private set; }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SampleProject.Domain.Customers.Orders
+namespace SampleProject.Domain.Products
 {
     public interface IProductRepository
     {

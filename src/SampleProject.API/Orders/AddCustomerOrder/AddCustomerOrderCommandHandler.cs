@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SampleProject.Domain.Customers.Orders;
+using SampleProject.Domain.Products;
 
 namespace SampleProject.API.Orders.AddCustomerOrder
 {
