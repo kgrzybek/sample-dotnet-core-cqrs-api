@@ -1,4 +1,4 @@
-﻿using SampleProject.Domain.Customers.Orders;
+﻿using SampleProject.Domain.SharedKernel;
 
 namespace SampleProject.Domain.Products
 {

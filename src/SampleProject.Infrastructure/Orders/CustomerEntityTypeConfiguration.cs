@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
+using SampleProject.Domain.SharedKernel;
 
 namespace SampleProject.Infrastructure.Orders
 {

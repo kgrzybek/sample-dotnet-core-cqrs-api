@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SampleProject.Domain.SeedWork;
+using SampleProject.Domain.SharedKernel;
 
 namespace SampleProject.Domain.Customers.Orders
 {
