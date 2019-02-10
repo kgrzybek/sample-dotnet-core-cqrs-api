@@ -1,4 +1,4 @@
-﻿namespace SampleProject.Domain.Customers.Orders
+﻿namespace SampleProject.Domain.SharedKernel
 {
     public class MoneyValue
     {
