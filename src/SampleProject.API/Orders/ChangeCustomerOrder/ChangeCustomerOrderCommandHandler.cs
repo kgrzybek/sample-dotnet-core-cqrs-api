@@ -6,7 +6,7 @@ using SampleProject.Domain.Customers.Orders;
 
 namespace SampleProject.API.Orders.ChangeCustomerOrder
 {
-    public class ChangeCustomerOrderCommandHandler : IRequestHandler<ChangeCustomerOrderCommand>
+    internal class ChangeCustomerOrderCommandHandler : IRequestHandler<ChangeCustomerOrderCommand>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
@@ -23,10 +23,10 @@ namespace SampleProject.API.Orders.ChangeCustomerOrder
         {
             var customer = await this._customerRepository.GetByIdAsync(request.CustomerId);
 
-            var selectedProducts = request.Products.Select(x => new OrderProduct(x.Id, x.Quantity)).ToList();
-            var allProducts = await this._productRepository.GetAllAsync();
-
-            customer.ChangeOrder(request.OrderId, selectedProducts, allProducts);
+            var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => x.Id).ToList());
+            var orderProducts = selectedProducts.Select(x =>
+                new OrderProduct(x, request.Products.Single(y => y.Id == x.Id).Quantity)).ToList();
+            customer.ChangeOrder(request.OrderId, orderProducts);
 
             await this._customerRepository.UnitOfWork.CommitAsync(cancellationToken);
 

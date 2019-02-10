@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SeedWork;
+using SampleProject.Infrastructure.SeedWork;
 
 namespace SampleProject.Infrastructure.Orders
 {
@@ -20,6 +21,10 @@ namespace SampleProject.Infrastructure.Orders
         public async Task<Customer> GetByIdAsync(Guid id)
         {
             return await this._context.Customers
+                .IncludePaths(
+                    CustomerEntityTypeConfiguration.OrdersList, 
+                    CustomerEntityTypeConfiguration.OrderProducts, 
+                    nameof(Product))
                 .SingleAsync(x => x.Id == id);
         }
     }

@@ -16,9 +16,9 @@ namespace SampleProject.Domain.Customers.Orders
 
         }
 
-        public OrderProduct(Guid productId, int quantity)
+        public OrderProduct(Product product, int quantity)
         {
-            this.ProductId = productId;
+            this.Product = product;
             this.Quantity = quantity;
         }
 

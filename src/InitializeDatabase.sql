@@ -17,7 +17,8 @@ CREATE TABLE orders.Orders
 	[Id] UNIQUEIDENTIFIER NOT NULL,
 	[CustomerId] UNIQUEIDENTIFIER NOT NULL,
 	[IsRemoved] BIT NOT NULL,
-	[Value] DECIMAL (18, 2) NOT NULL
+	[Value] DECIMAL (18, 2) NOT NULL,
+	[Currency] VARCHAR(3) NOT NULL,
 	CONSTRAINT [PK_orders_Orders_Id] PRIMARY KEY ([Id] ASC)
 )
 GO
@@ -26,13 +27,14 @@ CREATE TABLE orders.Products
 (
 	[Id] UNIQUEIDENTIFIER NOT NULL,
 	[Name] VARCHAR(200),
-	[Price] DECIMAL (18, 2) NOT NULL
+	[PriceValue] DECIMAL (18, 2) NOT NULL,
+	[PriceCurrency] VARCHAR(3) NOT NULL
 	CONSTRAINT [PK_orders_Products_Id] PRIMARY KEY ([Id] ASC)
 )
 GO
 
-INSERT INTO orders.Products VALUES ('8fad1e5a-d4a2-4688-aa49-e70776940c19', 'Jacket', 200)
-INSERT INTO orders.Products VALUES ('9db6e474-ae74-4cf5-a0dc-ba23a42e2566', 'T-shirt', 40)
+INSERT INTO orders.Products VALUES ('8fad1e5a-d4a2-4688-aa49-e70776940c19', 'Jacket', 200, 'USD')
+INSERT INTO orders.Products VALUES ('9db6e474-ae74-4cf5-a0dc-ba23a42e2566', 'T-shirt', 40, 'USD')
 
 CREATE TABLE orders.OrderProducts
 (
@@ -50,7 +52,8 @@ AS
 		[Order].[Id],
 		[Order].[CustomerId],
 		[Order].[Value],
-		[Order].[IsRemoved]
+		[Order].[IsRemoved],
+		[Order].[Currency]
 	FROM orders.Orders AS [Order]
 )
 GO

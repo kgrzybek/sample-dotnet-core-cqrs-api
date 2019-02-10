@@ -9,7 +9,7 @@ namespace SampleProject.Domain.Customers.Orders
     {
         public Guid Id { get; private set; }
         private bool _isRemoved;
-        private decimal _value;
+        private MoneyValue _value;
         private List<OrderProduct> _orderProducts;
 
         private Order()
@@ -18,40 +18,40 @@ namespace SampleProject.Domain.Customers.Orders
             this._isRemoved = false;
         }
 
-        public Order(List<OrderProduct> orderProducts, IReadOnlyCollection<Product> allProducts)
+        public Order(List<OrderProduct> orderProducts)
         {
             this.Id = Guid.NewGuid();
             this._orderProducts = orderProducts;
 
-            this.CalculateOrderValue(allProducts);
+            this.CalculateOrderValue();
         }
 
-        internal void Change(List<OrderProduct> products, IReadOnlyCollection<Product> allProducts)
+        internal void Change(List<OrderProduct> orderProducts)
         {
-            foreach (var product in products)
+            foreach (var orderProduct in orderProducts)
             {
-                var orderProduct = this._orderProducts.SingleOrDefault(x => x.ProductId == product.ProductId);
-                if (orderProduct != null)
+                var existingOrderProduct = this._orderProducts.SingleOrDefault(x => x.Product == orderProduct.Product);
+                if (existingOrderProduct != null)
                 {
-                    orderProduct.ChangeQuantity(product.Quantity);
+                    existingOrderProduct.ChangeQuantity(orderProduct.Quantity);
                 }
                 else
                 {
-                    this._orderProducts.Add(product);
+                    this._orderProducts.Add(orderProduct);
                 }
             }
 
             var existingProducts = this._orderProducts.ToList();
             foreach (var existingProduct in existingProducts)
             {
-                var product = products.SingleOrDefault(x => x.ProductId == existingProduct.ProductId);
+                var product = orderProducts.SingleOrDefault(x => x.Product == existingProduct.Product);
                 if (product == null)
                 {
                     this._orderProducts.Remove(existingProduct);
                 }
             }
 
-            this.CalculateOrderValue(allProducts);
+            this.CalculateOrderValue();
         }
 
         internal void Remove()
@@ -59,9 +59,10 @@ namespace SampleProject.Domain.Customers.Orders
             this._isRemoved = true;
         }
 
-        private void CalculateOrderValue(IReadOnlyCollection<Product> allProducts)
+        private void CalculateOrderValue()
         {
-            this._value = this._orderProducts.Sum(x => x.Quantity * allProducts.Single(y => y.Id == x.ProductId).Price);
+            var value = this._orderProducts.Sum(x => x.Quantity * x.Product.Price.Value);
+            this._value = new MoneyValue(value, this._orderProducts.First().Product.Price.Currency);
         }
     }
 }

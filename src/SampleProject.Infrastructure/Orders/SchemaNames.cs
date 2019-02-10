@@ -2,6 +2,6 @@
 {
     internal class SchemaNames
     {
-        public const string Orders = "orders";
+        internal const string Orders = "orders";
     }
 }

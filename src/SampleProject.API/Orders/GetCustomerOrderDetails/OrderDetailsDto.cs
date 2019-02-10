@@ -9,6 +9,8 @@ namespace SampleProject.API.Orders.GetCustomerOrderDetails
 
         public decimal Value { get; set; }
 
+        public string Currency { get; set; }
+
         public bool IsRemoved { get; set; }
 
         public List<ProductDto> Products { get; set; }
