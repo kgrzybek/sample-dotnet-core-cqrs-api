@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SampleProject.Domain.SeedWork;
-using SampleProject.Infrastructure.Orders;
 
 namespace SampleProject.Infrastructure
 {

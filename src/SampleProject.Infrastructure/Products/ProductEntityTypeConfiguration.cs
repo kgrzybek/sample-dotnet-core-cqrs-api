@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Products;
 
-namespace SampleProject.Infrastructure.Orders
+namespace SampleProject.Infrastructure.Products
 {
     internal class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
     {

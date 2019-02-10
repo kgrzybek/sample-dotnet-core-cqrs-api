@@ -5,7 +5,7 @@ using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SharedKernel;
 
-namespace SampleProject.Infrastructure.Orders
+namespace SampleProject.Infrastructure.Customers
 {
     internal class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer>
     {

@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SampleProject.Domain.Customers;
-using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
+using SampleProject.Infrastructure.Customers;
+using SampleProject.Infrastructure.Products;
 
-namespace SampleProject.Infrastructure.Orders
+namespace SampleProject.Infrastructure
 {
     public class OrdersContext : DbContext, IUnitOfWork
     {

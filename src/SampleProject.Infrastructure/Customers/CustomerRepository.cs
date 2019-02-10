@@ -7,11 +7,12 @@ using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure.SeedWork;
 
-namespace SampleProject.Infrastructure.Orders
+namespace SampleProject.Infrastructure.Customers
 {
     public class CustomerRepository : ICustomerRepository
     {
         private readonly OrdersContext _context;
+
         public CustomerRepository(OrdersContext context)
         {
             this._context = context ?? throw new ArgumentNullException(nameof(context));
