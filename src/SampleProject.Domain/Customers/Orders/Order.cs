@@ -12,6 +12,7 @@ namespace SampleProject.Domain.Customers.Orders
         private bool _isRemoved;
         private MoneyValue _value;
         private List<OrderProduct> _orderProducts;
+        private OrderStatus _status;
 
         private Order()
         {
@@ -25,6 +26,7 @@ namespace SampleProject.Domain.Customers.Orders
             this._orderProducts = orderProducts;
 
             this.CalculateOrderValue();
+            this._status = OrderStatus.Placed;
         }
 
         internal void Change(List<OrderProduct> orderProducts)
