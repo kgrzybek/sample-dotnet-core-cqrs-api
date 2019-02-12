@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SharedKernel;
@@ -25,6 +26,8 @@ namespace SampleProject.Infrastructure.Customers
                 x.Property<bool>("_isRemoved").HasColumnName("IsRemoved");
                 x.Property<Guid>("Id");
                 x.HasKey("Id");
+
+                x.Property("_status").HasColumnName("StatusId").HasConversion(new EnumToNumberConverter<OrderStatus, byte>());
 
                 x.OwnsMany<OrderProduct>(OrderProducts, y =>
                 {

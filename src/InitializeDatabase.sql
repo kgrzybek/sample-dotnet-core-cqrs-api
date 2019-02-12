@@ -19,6 +19,7 @@ CREATE TABLE orders.Orders
 	[IsRemoved] BIT NOT NULL,
 	[Value] DECIMAL (18, 2) NOT NULL,
 	[Currency] VARCHAR(3) NOT NULL,
+	[StatusId] TINYINT NOT NULL
 	CONSTRAINT [PK_orders_Orders_Id] PRIMARY KEY ([Id] ASC)
 )
 GO
