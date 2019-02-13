@@ -24,9 +24,11 @@ Commands/Queries/Domain Events handling using [MediatR](https://github.com/jboga
 
 ![projects_dependencies](docs/domain_model_diagram.png)
 
-## Blog arcticles:
+## Related blog arcticles:
 
 [Simple CQRS implementation with raw SQL and DDD](http://www.kamilgrzybek.com/design/simple-cqrs-implementation-with-raw-sql-and-ddd/)
+
+[Domain Model Encapsulation and PI with Entity Framework 2.2](http://www.kamilgrzybek.com/design/domain-model-encapsulation-and-pi-with-entity-framework-2-2/)
 
 [How to publish and handle Domain Events](http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/)
 
