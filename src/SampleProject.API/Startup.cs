@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
 using SampleProject.API.Modules;
+using SampleProject.API.SeedWork;
 using SampleProject.Infrastructure;
 
 [assembly: UserSecretsId("54e8eb06-aaa1-4fff-9f05-3ced1cb623c2")]
@@ -40,6 +42,11 @@ namespace SampleProject.API
                     options.UseSqlServer(this._configuration[OrdersConnectionString]);
                 });
 
+            services.AddProblemDetails(x =>
+            {
+                x.Map<InvalidCommandException>(ex => new InvalidCommandProblemDetails(ex));
+            });
+
             return CreateAutofacServiceProvider(services);
         }
 
@@ -48,6 +55,10 @@ namespace SampleProject.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseProblemDetails();
             }
 
             app.UseMvc();
