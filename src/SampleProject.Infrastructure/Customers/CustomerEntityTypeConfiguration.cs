@@ -44,12 +44,24 @@ namespace SampleProject.Infrastructure.Customers
                         mv.Property(p => p.Currency).HasColumnName("Currency");
                         mv.Property(p => p.Value).HasColumnName("Value");
                     });
+
+                    y.OwnsOne<MoneyValue>("ValueInEUR", mv =>
+                    {
+                        mv.Property(p => p.Currency).HasColumnName("CurrencyEUR");
+                        mv.Property(p => p.Value).HasColumnName("ValueInEUR");
+                    });
                 });
 
                 x.OwnsOne<MoneyValue>("_value", y =>
                 {
                     y.Property(p => p.Currency).HasColumnName("Currency");
                     y.Property(p => p.Value).HasColumnName("Value");
+                });
+
+                x.OwnsOne<MoneyValue>("_valueInEUR", y =>
+                {
+                    y.Property(p => p.Currency).HasColumnName("CurrencyEUR");
+                    y.Property(p => p.Value).HasColumnName("ValueInEUR");
                 });
             });
         }
