@@ -24,11 +24,18 @@ Commands/Queries/Domain Events handling using [MediatR](https://github.com/jboga
 
 ![projects_dependencies](docs/domain_model_diagram.png)
 
-## Related blog arcticles:
+## Validation
+Data validation using [FluentValidation](https://github.com/JeremySkinner/FluentValidation)
+
+Problem Details for HTTP APIs standard implementation using [ProblemDetails](https://github.com/khellang/Middleware/tree/master/src/ProblemDetails)
+
+## Related blog articles:
 
 [Simple CQRS implementation with raw SQL and DDD](http://www.kamilgrzybek.com/design/simple-cqrs-implementation-with-raw-sql-and-ddd/)
 
 [Domain Model Encapsulation and PI with Entity Framework 2.2](http://www.kamilgrzybek.com/design/domain-model-encapsulation-and-pi-with-entity-framework-2-2/)
+
+[REST API Data Validation](http://www.kamilgrzybek.com/design/rest-api-data-validation/)
 
 [How to publish and handle Domain Events](http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/)
 
