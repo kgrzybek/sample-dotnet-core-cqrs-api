@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
+using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers
@@ -25,10 +26,13 @@ namespace SampleProject.Domain.Customers
             this.AddDomainEvent(new OrderAddedEvent(order));
         }
 
-        public void ChangeOrder(Guid orderId, List<OrderProduct> products)
+        public void ChangeOrder(
+            Guid orderId, 
+            List<OrderProduct> products,
+            List<ConversionRate> conversionRates)
         {
             var order = this._orders.Single(x => x.Id == orderId);
-            order.Change(products);
+            order.Change(products, conversionRates);
 
             this.AddDomainEvent(new OrderChangedEvent(order));
         }

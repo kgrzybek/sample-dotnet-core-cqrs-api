@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Domain.SharedKernel;
 
@@ -11,6 +12,7 @@ namespace SampleProject.Domain.Customers.Orders
         internal Guid Id;
         private bool _isRemoved;
         private MoneyValue _value;
+        private MoneyValue _valueInEUR;
         private List<OrderProduct> _orderProducts;
         private OrderStatus _status;
 
@@ -20,7 +22,8 @@ namespace SampleProject.Domain.Customers.Orders
             this._isRemoved = false;
         }
 
-        public Order(List<OrderProduct> orderProducts)
+        public Order(
+            List<OrderProduct> orderProducts)
         {
             this.Id = Guid.NewGuid();
             this._orderProducts = orderProducts;
@@ -29,14 +32,16 @@ namespace SampleProject.Domain.Customers.Orders
             this._status = OrderStatus.Placed;
         }
 
-        internal void Change(List<OrderProduct> orderProducts)
+        internal void Change(
+            List<OrderProduct> orderProducts, 
+            List<ConversionRate> conversionRates)
         {
             foreach (var orderProduct in orderProducts)
             {
                 var existingOrderProduct = this._orderProducts.SingleOrDefault(x => x.Product == orderProduct.Product);
                 if (existingOrderProduct != null)
                 {
-                    existingOrderProduct.ChangeQuantity(orderProduct.Quantity);
+                    existingOrderProduct.ChangeQuantity(orderProduct.Quantity, conversionRates);
                 }
                 else
                 {
@@ -66,6 +71,9 @@ namespace SampleProject.Domain.Customers.Orders
         {
             var value = this._orderProducts.Sum(x => x.Value.Value);
             this._value = new MoneyValue(value, this._orderProducts.First().Value.Currency);
+
+            var valueInEUR = this._orderProducts.Sum(x => x.ValueInEUR.Value);            
+            this._valueInEUR = new MoneyValue(valueInEUR, "EUR");
         }
     }
 }

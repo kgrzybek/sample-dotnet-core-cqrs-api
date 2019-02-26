@@ -19,6 +19,8 @@ CREATE TABLE orders.Orders
 	[IsRemoved] BIT NOT NULL,
 	[Value] DECIMAL (18, 2) NOT NULL,
 	[Currency] VARCHAR(3) NOT NULL,
+	[ValueInEUR] DECIMAL (18, 2) NOT NULL,
+	[CurrencyEUR] VARCHAR(3) NOT NULL,
 	[StatusId] TINYINT NOT NULL
 	CONSTRAINT [PK_orders_Orders_Id] PRIMARY KEY ([Id] ASC)
 )
@@ -43,6 +45,8 @@ CREATE TABLE orders.OrderProducts
 	[Quantity] INT,
 	[Value] DECIMAL(18, 2),
 	[Currency] VARCHAR(3),
+	[ValueInEUR] DECIMAL(18, 2),
+	[CurrencyEUR] VARCHAR(3),
 	CONSTRAINT [PK_orders_OrderProducts_OrderId_ProductId] PRIMARY KEY ([OrderId] ASC, [ProductId] ASC)
 )
 GO

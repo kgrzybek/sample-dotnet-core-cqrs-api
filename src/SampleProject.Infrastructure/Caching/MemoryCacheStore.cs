@@ -33,6 +33,21 @@ namespace SampleProject.Infrastructure.Caching
             this._memoryCache.Set(key.CacheKey, item, timespan);
         }
 
+        public void Add<TItem>(TItem item, ICacheKey<TItem> key, DateTime? absoluteExpiration = null)
+        {
+            DateTimeOffset offset;
+            if (absoluteExpiration.HasValue)
+            {
+                offset = absoluteExpiration.Value;
+            }
+            else
+            {
+                offset = DateTimeOffset.MaxValue;
+            }
+
+            this._memoryCache.Set(key.CacheKey, item, offset);
+        }
+
         public TItem Get<TItem>(ICacheKey<TItem> key) where TItem : class
         {
             if (this._memoryCache.TryGetValue(key.CacheKey, out TItem value))
