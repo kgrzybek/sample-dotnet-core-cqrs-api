@@ -21,6 +21,11 @@ namespace SampleProject.Domain.Customers
 
         public void AddOrder(Order order)
         {
+            if (this._orders.Count(x => x.IsOrderedToday()) >= 2)
+            {
+                throw new BusinessRuleValidationException("You cannot order more than 2 orders on the same day");
+            }
+
             this._orders.Add(order);
 
             this.AddDomainEvent(new OrderAddedEvent(order));

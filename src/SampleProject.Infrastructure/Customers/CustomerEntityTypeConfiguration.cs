@@ -24,6 +24,8 @@ namespace SampleProject.Infrastructure.Customers
                 x.ToTable("Orders", SchemaNames.Orders);
                 x.HasForeignKey("CustomerId");
                 x.Property<bool>("_isRemoved").HasColumnName("IsRemoved");
+                x.Property<DateTime>("_orderDate").HasColumnName("OrderDate");
+                x.Property<DateTime?>("_orderChangeDate").HasColumnName("OrderChangeDate");
                 x.Property<Guid>("Id");
                 x.HasKey("Id");
 

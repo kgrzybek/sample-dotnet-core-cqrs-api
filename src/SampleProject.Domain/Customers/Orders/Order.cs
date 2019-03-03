@@ -15,6 +15,8 @@ namespace SampleProject.Domain.Customers.Orders
         private MoneyValue _valueInEUR;
         private List<OrderProduct> _orderProducts;
         private OrderStatus _status;
+        private DateTime _orderDate;
+        private DateTime? _orderChangeDate;
 
         private Order()
         {
@@ -25,6 +27,7 @@ namespace SampleProject.Domain.Customers.Orders
         public Order(
             List<OrderProduct> orderProducts)
         {
+            this._orderDate = DateTime.UtcNow;
             this.Id = Guid.NewGuid();
             this._orderProducts = orderProducts;
 
@@ -60,6 +63,8 @@ namespace SampleProject.Domain.Customers.Orders
             }
 
             this.CalculateOrderValue();
+
+            this._orderChangeDate = DateTime.UtcNow;
         }
 
         internal void Remove()
@@ -74,6 +79,11 @@ namespace SampleProject.Domain.Customers.Orders
 
             var valueInEUR = this._orderProducts.Sum(x => x.ValueInEUR.Value);            
             this._valueInEUR = new MoneyValue(valueInEUR, "EUR");
+        }
+
+        internal bool IsOrderedToday()
+        {
+           return this._orderDate.Date == DateTime.UtcNow.Date;
         }
     }
 }
