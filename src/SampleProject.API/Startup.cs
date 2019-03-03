@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
 using SampleProject.API.Modules;
 using SampleProject.API.SeedWork;
+using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
 
 [assembly: UserSecretsId("54e8eb06-aaa1-4fff-9f05-3ced1cb623c2")]
@@ -47,6 +48,7 @@ namespace SampleProject.API
             services.AddProblemDetails(x =>
             {
                 x.Map<InvalidCommandException>(ex => new InvalidCommandProblemDetails(ex));
+                x.Map<BusinessRuleValidationException>(ex => new BusinessRuleValidationExceptionProblemDetails(ex));
             });
 
             return CreateAutofacServiceProvider(services);

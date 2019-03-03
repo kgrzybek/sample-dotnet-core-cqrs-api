@@ -21,7 +21,9 @@ CREATE TABLE orders.Orders
 	[Currency] VARCHAR(3) NOT NULL,
 	[ValueInEUR] DECIMAL (18, 2) NOT NULL,
 	[CurrencyEUR] VARCHAR(3) NOT NULL,
-	[StatusId] TINYINT NOT NULL
+	[StatusId] TINYINT NOT NULL,
+	[OrderDate] DATETIME2 NOT NULL,
+	[OrderChangeDate] DATETIME2 NULL,
 	CONSTRAINT [PK_orders_Orders_Id] PRIMARY KEY ([Id] ASC)
 )
 GO
