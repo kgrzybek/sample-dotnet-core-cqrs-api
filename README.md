@@ -40,6 +40,8 @@ Using Cache-Aside pattern and in-memory cache.
 
 [REST API Data Validation](http://www.kamilgrzybek.com/design/rest-api-data-validation/)
 
+[Domain Model Validation](http://www.kamilgrzybek.com/design/domain-model-validation/)
+
 [How to publish and handle Domain Events](http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/)
 
 [Cache-Aside Pattern in .NET Core](http://www.kamilgrzybek.com/design/cache-aside-pattern-in-net-core/)
