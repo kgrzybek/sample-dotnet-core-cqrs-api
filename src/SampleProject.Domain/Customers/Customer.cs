@@ -12,11 +12,23 @@ namespace SampleProject.Domain.Customers
     {
         public Guid Id { get; private set; }
 
+        public string Email { get; private set; }
+
+        public string Name { get; private set; }
+
         private readonly List<Order> _orders;
 
         private Customer()
         {
             this._orders = new List<Order>();
+        }
+
+        public Customer(string email, string name)
+        {
+            this.Email = email;
+            this.Name = name;
+
+            this.AddDomainEvent(new CustomerRegisteredEvent(this));
         }
 
         public void AddOrder(Order order)

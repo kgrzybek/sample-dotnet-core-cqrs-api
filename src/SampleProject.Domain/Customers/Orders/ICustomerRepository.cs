@@ -9,5 +9,6 @@ namespace SampleProject.Domain.Customers.Orders
         Task<Customer> GetByIdAsync(Guid id);
 
         IUnitOfWork UnitOfWork { get; }
+        Task AddAsync(Customer customer);
     }
 }
