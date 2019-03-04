@@ -23,10 +23,16 @@ namespace SampleProject.Domain.Customers
             this._orders = new List<Order>();
         }
 
-        public Customer(string email, string name)
+        public Customer(string email, string name, ICustomerUniquenessChecker customerUniquenessChecker)
         {
             this.Email = email;
             this.Name = name;
+
+            var isUnique = customerUniquenessChecker.IsUnique(this);
+            if (!isUnique)
+            {
+                throw new BusinessRuleValidationException("Customer with this email already exists.");
+            }
 
             this.AddDomainEvent(new CustomerRegisteredEvent(this));
         }
