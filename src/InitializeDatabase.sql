@@ -4,13 +4,14 @@ GO
 CREATE TABLE orders.Customers
 (
 	[Id] UNIQUEIDENTIFIER NOT NULL,
-	[Name] VARCHAR(200),
+	[Email] VARCHAR(255) NOT NULL,
+	[Name] VARCHAR(200) NULL,
 	CONSTRAINT [PK_orders_Customers_Id] PRIMARY KEY ([Id] ASC)
 )
 GO
 
-INSERT INTO orders.Customers VALUES ('8A812F08-0647-443B-8FA3-A98C3B9493A7', 'John Doe');
-INSERT INTO orders.Customers VALUES ('42441057-b6c1-4852-9ea7-1f382f99e4eb', 'Jane Doe');
+INSERT INTO orders.Customers VALUES ('8A812F08-0647-443B-8FA3-A98C3B9493A7', 'johndoe@mail.com', 'John Doe');
+INSERT INTO orders.Customers VALUES ('42441057-b6c1-4852-9ea7-1f382f99e4eb', 'janedoe@mail.com', 'Jane Doe');
 
 CREATE TABLE orders.Orders
 (

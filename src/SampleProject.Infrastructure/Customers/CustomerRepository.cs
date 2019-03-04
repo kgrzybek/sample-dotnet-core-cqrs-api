@@ -19,6 +19,10 @@ namespace SampleProject.Infrastructure.Customers
         }
 
         public IUnitOfWork UnitOfWork => _context;
+        public async Task AddAsync(Customer customer)
+        {
+            await this._context.Customers.AddAsync(customer);
+        }
 
         public async Task<Customer> GetByIdAsync(Guid id)
         {
