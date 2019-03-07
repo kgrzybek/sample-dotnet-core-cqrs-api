@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Core;
 using MediatR;
 using SampleProject.Domain.SeedWork;
+using SampleProject.Infrastructure.SeedWork;
 
 namespace SampleProject.Infrastructure
 {
@@ -42,7 +43,7 @@ namespace SampleProject.Infrastructure
 
                 if (domainNotification != null)
                 {
-                    domainEventNotifications.Add(domainNotification as IDomainEventNotification<IDomainEvent>);
+                    domainEventNotifications.Add(domainNotification as SeedWork.IDomainEventNotification<IDomainEvent>);
                 }
             }
 

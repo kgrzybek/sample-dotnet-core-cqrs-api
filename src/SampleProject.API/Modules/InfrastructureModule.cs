@@ -1,13 +1,16 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Products;
+using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
 using SampleProject.Infrastructure.Customers;
 using SampleProject.Infrastructure.Products;
+using SampleProject.Infrastructure.SeedWork;
 
 namespace SampleProject.API.Modules
 {
-    public class InfrastructureModule : Module
+    public class InfrastructureModule : Autofac.Module
     {
         private readonly string _databaseConnectionString;
 
@@ -34,6 +37,9 @@ namespace SampleProject.API.Modules
             builder.RegisterType<ProductRepository>()
                 .As<IProductRepository>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(typeof(IDomainEventNotification<>).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
         }
     }
 }
