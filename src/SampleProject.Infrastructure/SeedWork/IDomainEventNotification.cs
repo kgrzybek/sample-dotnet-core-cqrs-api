@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SampleProject.Domain.SeedWork
+namespace SampleProject.Infrastructure.SeedWork
 {
     public interface IDomainEventNotification<out TEventType> : INotification
     {

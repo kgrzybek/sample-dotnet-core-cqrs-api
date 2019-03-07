@@ -3,10 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure.Customers;
+using SampleProject.Infrastructure.Outbox;
 using SampleProject.Infrastructure.Products;
 
 namespace SampleProject.Infrastructure
@@ -18,6 +20,7 @@ namespace SampleProject.Infrastructure
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         public OrdersContext(DbContextOptions options) : base(options)
         {
@@ -33,15 +36,19 @@ namespace SampleProject.Infrastructure
         public async Task<int> CommitAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             var notifications = await this._domainEventsDispatcher.DispatchEventsAsync(this);
+
+            foreach (var domainEventNotification in notifications)
+            {
+                string type = domainEventNotification.GetType().FullName;
+                var data = JsonConvert.SerializeObject(domainEventNotification);
+                OutboxMessage outboxMessage = new OutboxMessage(
+                    domainEventNotification.DomainEvent.OccurredOn,
+                    type,
+                    data);
+                this.OutboxMessages.Add(outboxMessage);
+            }
+
             var saveResult = await base.SaveChangesAsync(cancellationToken);
-
-            var tasks = notifications
-                .Select(async (notification) =>
-                {
-                    await _mediator.Publish(notification, cancellationToken);
-                });
-
-            await Task.WhenAll(tasks);
 
             return saveResult;
         }
@@ -50,6 +57,8 @@ namespace SampleProject.Infrastructure
         {
             modelBuilder.ApplyConfiguration(new CustomerEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ProductEntityTypeConfiguration());
+
+            modelBuilder.ApplyConfiguration(new OutboxMessageEntityTypeConfiguration());
         }
     }
 }

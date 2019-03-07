@@ -20,7 +20,7 @@ namespace SampleProject.API.Customers.DomainServices
                 const string sql = "SELECT TOP 1 1" +
                                    "FROM [orders].[Customers] AS [Customer] " +
                                    "WHERE [Customer].[Email] = @Email";
-                var customersNumber = connection.QuerySingle<int?>(sql,
+                var customersNumber = connection.QuerySingleOrDefault<int?>(sql,
                                 new
                                 {
                                     customer.Email
