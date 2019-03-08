@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Hellang.Middleware.ProblemDetails;
@@ -11,7 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
+using Quartz;
+using Quartz.Impl;
 using SampleProject.API.Modules;
+using SampleProject.API.Outbox;
 using SampleProject.API.SeedWork;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
@@ -23,6 +27,9 @@ namespace SampleProject.API
     {
         private readonly IConfiguration _configuration;
         private const string OrdersConnectionString = "OrdersConnectionString";
+
+        private ISchedulerFactory _schedulerFactory;
+        private IScheduler _scheduler;
 
         public Startup(IHostingEnvironment env)
         {
@@ -54,7 +61,8 @@ namespace SampleProject.API
             return CreateAutofacServiceProvider(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            IApplicationLifetime lifetime, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -66,6 +74,8 @@ namespace SampleProject.API
             }
 
             app.UseMvc();
+
+            this.StartQuartz(serviceProvider);
         }
 
         private IServiceProvider CreateAutofacServiceProvider(IServiceCollection services)
@@ -84,6 +94,29 @@ namespace SampleProject.API
             container.RegisterModule(new CachingModule(configuration));
 
             return new AutofacServiceProvider(container.Build());
+        }
+
+        public void StartQuartz(IServiceProvider serviceProvider)
+        {
+            this._schedulerFactory = new StdSchedulerFactory();
+            this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
+
+            var container = new ContainerBuilder();
+            container.RegisterModule(new OutboxModule());
+            container.RegisterModule(new MediatorModule());
+            container.RegisterModule(new InfrastructureModule(this._configuration[OrdersConnectionString]));
+            _scheduler.JobFactory = new JobFactory(container.Build());
+
+            _scheduler.Start().GetAwaiter().GetResult();
+
+            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
+            var trigger = 
+                TriggerBuilder
+                    .Create()
+                    .StartNow()
+                    .WithCronSchedule("0/15 * * ? * *")
+                    .Build();
+            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();           
         }
     }
 }
