@@ -4,20 +4,20 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Quartz;
 using SampleProject.Infrastructure;
 using SampleProject.Infrastructure.SeedWork;
 
 namespace SampleProject.API.Outbox
 {
+    [DisallowConcurrentExecution]
     public class ProcessOutboxJob : IJob
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly IMediator _mediator;
 
         public ProcessOutboxJob(
-            ISqlConnectionFactory sqlConnectionFactory, 
+            ISqlConnectionFactory sqlConnectionFactory,
             IMediator mediator)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
@@ -35,13 +35,13 @@ namespace SampleProject.API.Outbox
                              "FROM [app].[OutboxMessages] AS [OutboxMessage] " +
                              "WHERE [OutboxMessage].[ProcessedDate] IS NULL";
                 var messages = await connection.QueryAsync<OutboxMessageDto>(sql);
-                
+
                 foreach (var message in messages)
                 {
                     Type type = Assembly.GetAssembly(typeof(IDomainEventNotification<>)).GetType(message.Type);
                     var notification = JsonConvert.DeserializeObject(message.Data, type);
 
-                    await this._mediator.Publish((INotification) notification);
+                    await this._mediator.Publish((INotification)notification);
 
                     string sqlInsert = "UPDATE [app].[OutboxMessages] " +
                                        "SET [ProcessedDate] = @Date " +

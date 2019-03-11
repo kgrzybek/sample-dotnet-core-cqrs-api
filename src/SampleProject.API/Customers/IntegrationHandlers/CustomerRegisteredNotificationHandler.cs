@@ -9,6 +9,8 @@ namespace SampleProject.API.Customers.IntegrationHandlers
     {
         public Task Handle(CustomerRegisteredNotification notification, CancellationToken cancellationToken)
         {
+            // Send event to bus or e-mail message...
+
             return Task.CompletedTask;
         }
     }
