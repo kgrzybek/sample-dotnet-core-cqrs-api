@@ -32,6 +32,9 @@ Problem Details for HTTP APIs standard implementation using [ProblemDetails](htt
 ## Caching
 Using Cache-Aside pattern and in-memory cache.
 
+## Integration
+Outbox Pattern implementation using [Quartz.NET](https://github.com/quartznet/quartznet)
+
 ## Related blog articles
 
 [Simple CQRS implementation with raw SQL and DDD](http://www.kamilgrzybek.com/design/simple-cqrs-implementation-with-raw-sql-and-ddd/)
@@ -45,6 +48,8 @@ Using Cache-Aside pattern and in-memory cache.
 [How to publish and handle Domain Events](http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/)
 
 [Cache-Aside Pattern in .NET Core](http://www.kamilgrzybek.com/design/cache-aside-pattern-in-net-core/)
+
+[The Outbox Pattern](http://www.kamilgrzybek.com/design/the-outbox-pattern/)
 
 ## How to run
 1. Create empty database.
