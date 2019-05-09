@@ -1,14 +1,15 @@
-﻿using SampleProject.Domain.SeedWork;
+﻿using System;
+using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers.Orders.Events
 {
     public class OrderAddedEvent : DomainEventBase
     {
-        public Order Order { get; }
+        public Guid OrderId { get; }
 
-        public OrderAddedEvent(Order order)
+        public OrderAddedEvent(Guid orderId)
         {
-            this.Order = order;
+            this.OrderId = orderId;
         }
     }
 }

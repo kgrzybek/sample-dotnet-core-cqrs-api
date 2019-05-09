@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers.Orders
 {
@@ -8,7 +7,6 @@ namespace SampleProject.Domain.Customers.Orders
     {
         Task<Customer> GetByIdAsync(Guid id);
 
-        IUnitOfWork UnitOfWork { get; }
         Task AddAsync(Customer customer);
     }
 }

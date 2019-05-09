@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Autofac;
+using MediatR;
 using SampleProject.Domain.Customers.Orders;
+using SampleProject.Domain.Payments;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
@@ -26,6 +28,10 @@ namespace SampleProject.API.Modules
                 .WithParameter("connectionString", _databaseConnectionString)
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<UnitOfWork>()
+                .As<IUnitOfWork>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<DomainEventsDispatcher>()
                 .As<IDomainEventsDispatcher>()
                 .InstancePerLifetimeScope();
@@ -38,8 +44,20 @@ namespace SampleProject.API.Modules
                 .As<IProductRepository>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(typeof(IDomainEventNotification<>).GetTypeInfo().Assembly)
+            builder.RegisterType<PaymentRepository>()
+                .As<IPaymentRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(typeof(PaymentCreatedNotification).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
+
+            builder.RegisterGenericDecorator(
+                typeof(DomainEventsDispatcherNotificationHandlerDecorator<>), 
+                typeof(INotificationHandler<>));
+
+            builder.RegisterGenericDecorator(
+                typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
+                typeof(IRequestHandler<,>));
         }
     }
 }

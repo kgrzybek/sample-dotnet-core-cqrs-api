@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using SampleProject.Domain.Customers;
 using SampleProject.Infrastructure.SeedWork;
 
-namespace SampleProject.Infrastructure.Customers
+namespace SampleProject.API.Customers.IntegrationHandlers
 {
     public class CustomerRegisteredNotification : DomainNotificationBase<CustomerRegisteredEvent>
     {

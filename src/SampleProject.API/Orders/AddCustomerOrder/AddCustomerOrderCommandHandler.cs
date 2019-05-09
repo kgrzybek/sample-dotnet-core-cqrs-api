@@ -44,8 +44,6 @@ namespace SampleProject.API.Orders.AddCustomerOrder
             
             customer.AddOrder(order);
 
-            await this._customerRepository.UnitOfWork.CommitAsync(cancellationToken);
-
             return Unit.Value;
         }
     }

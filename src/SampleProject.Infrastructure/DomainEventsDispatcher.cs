@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using MediatR;
+using Newtonsoft.Json;
 using SampleProject.Domain.SeedWork;
+using SampleProject.Infrastructure.Outbox;
 using SampleProject.Infrastructure.SeedWork;
 
 namespace SampleProject.Infrastructure
@@ -14,16 +16,18 @@ namespace SampleProject.Infrastructure
     {
         private readonly IMediator _mediator;
         private readonly ILifetimeScope _scope;
+        private readonly OrdersContext _ordersContext;
 
-        public DomainEventsDispatcher(IMediator mediator, ILifetimeScope scope)
+        public DomainEventsDispatcher(IMediator mediator, ILifetimeScope scope, OrdersContext ordersContext)
         {
             this._mediator = mediator;
             this._scope = scope;
+            this._ordersContext = ordersContext;
         }
 
-        public async Task<List<IDomainEventNotification<IDomainEvent>>> DispatchEventsAsync(OrdersContext context)
+        public async Task DispatchEventsAsync()
         {
-            var domainEntities = context.ChangeTracker
+            var domainEntities = this._ordersContext.ChangeTracker
                 .Entries<Entity>()
                 .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any()).ToList();
 
@@ -58,7 +62,16 @@ namespace SampleProject.Infrastructure
 
             await Task.WhenAll(tasks);
 
-            return domainEventNotifications;
+            foreach (var domainEventNotification in domainEventNotifications)
+            {
+                string type = domainEventNotification.GetType().FullName;
+                var data = JsonConvert.SerializeObject(domainEventNotification);
+                OutboxMessage outboxMessage = new OutboxMessage(
+                    domainEventNotification.DomainEvent.OccurredOn,
+                    type,
+                    data);
+                this._ordersContext.OutboxMessages.Add(outboxMessage);
+            }
         }
     }
 }

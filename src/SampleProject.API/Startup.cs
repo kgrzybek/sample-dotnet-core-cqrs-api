@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
@@ -105,6 +106,15 @@ namespace SampleProject.API
             container.RegisterModule(new OutboxModule());
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new InfrastructureModule(this._configuration[OrdersConnectionString]));
+ 
+            container.Register(c =>
+            {
+                var dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
+                dbContextOptionsBuilder.UseSqlServer(this._configuration[OrdersConnectionString]);
+
+                return new OrdersContext(dbContextOptionsBuilder.Options);
+            }).AsSelf().InstancePerLifetimeScope();
+
             _scheduler.JobFactory = new JobFactory(container.Build());
 
             _scheduler.Start().GetAwaiter().GetResult();
