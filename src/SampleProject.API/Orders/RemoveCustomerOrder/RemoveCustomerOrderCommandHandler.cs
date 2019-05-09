@@ -20,8 +20,6 @@ namespace SampleProject.API.Orders.RemoveCustomerOrder
 
             customer.RemoveOrder(request.OrderId);
 
-            await this._customerRepository.UnitOfWork.CommitAsync(cancellationToken);
-
             return Unit.Value;
         }
     }

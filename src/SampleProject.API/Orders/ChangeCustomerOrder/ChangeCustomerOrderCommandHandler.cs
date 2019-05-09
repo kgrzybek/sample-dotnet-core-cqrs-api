@@ -43,8 +43,6 @@ namespace SampleProject.API.Orders.ChangeCustomerOrder
 
             customer.ChangeOrder(request.OrderId, orderProducts, conversionRates);
 
-            await this._customerRepository.UnitOfWork.CommitAsync(cancellationToken);
-
             return Unit.Value;
         }
     }

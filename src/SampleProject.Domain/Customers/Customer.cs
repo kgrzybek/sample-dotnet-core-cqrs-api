@@ -46,7 +46,7 @@ namespace SampleProject.Domain.Customers
 
             this._orders.Add(order);
 
-            this.AddDomainEvent(new OrderAddedEvent(order));
+            this.AddDomainEvent(new OrderAddedEvent(order.Id));
         }
 
         public void ChangeOrder(

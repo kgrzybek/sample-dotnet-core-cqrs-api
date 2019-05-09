@@ -110,3 +110,16 @@ CREATE TABLE app.OutboxMessages
 	[ProcessedDate] DATETIME2 NULL,
 	CONSTRAINT [PK_app_OutboxMessages_Id] PRIMARY KEY ([Id] ASC)
 )
+GO
+
+CREATE SCHEMA payments AUTHORIZATION dbo
+GO
+
+CREATE TABLE payments.Payments
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL,
+	[CreateDate] DATETIME2 NOT NULL,
+	[StatusId] TINYINT NOT NULL,
+	[OrderId] UNIQUEIDENTIFIER NOT NULL
+	CONSTRAINT [PK_payments_Payments_Id] PRIMARY KEY ([Id] ASC)
+)

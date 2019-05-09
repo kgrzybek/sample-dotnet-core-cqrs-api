@@ -6,6 +6,7 @@ using MediatR;
 using Newtonsoft.Json;
 using Quartz;
 using SampleProject.Infrastructure;
+using SampleProject.Infrastructure.Customers;
 using SampleProject.Infrastructure.SeedWork;
 
 namespace SampleProject.API.Outbox
@@ -38,10 +39,19 @@ namespace SampleProject.API.Outbox
 
                 foreach (var message in messages)
                 {
-                    Type type = Assembly.GetAssembly(typeof(IDomainEventNotification<>)).GetType(message.Type);
+                    Type type = Assembly.GetAssembly(typeof(PaymentCreatedNotification)).GetType(message.Type);
                     var notification = JsonConvert.DeserializeObject(message.Data, type);
 
-                    await this._mediator.Publish((INotification)notification);
+                    try
+                    {
+                        await this._mediator.Publish((INotification)notification);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                    
 
                     string sqlInsert = "UPDATE [app].[OutboxMessages] " +
                                        "SET [ProcessedDate] = @Date " +

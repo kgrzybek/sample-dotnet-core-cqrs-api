@@ -18,7 +18,6 @@ namespace SampleProject.Infrastructure.Customers
             this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public IUnitOfWork UnitOfWork => _context;
         public async Task AddAsync(Customer customer)
         {
             await this._context.Customers.AddAsync(customer);
