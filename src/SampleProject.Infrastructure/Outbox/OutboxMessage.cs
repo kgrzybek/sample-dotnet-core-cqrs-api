@@ -12,6 +12,13 @@ namespace SampleProject.Infrastructure.Outbox
 
         public string Data { get; set; }
 
+        public DateTime? ProcessedDate { get; set; }
+
+        private OutboxMessage()
+        {
+            
+        }
+
         public OutboxMessage(DateTime occurredOn, string type, string data)
         {
             this.Id = Guid.NewGuid();
