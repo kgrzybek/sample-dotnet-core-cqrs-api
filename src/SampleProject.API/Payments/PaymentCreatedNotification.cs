@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using SampleProject.Domain.Payments;
 using SampleProject.Infrastructure.SeedWork;
 
-namespace SampleProject.Infrastructure.Customers
+namespace SampleProject.API.Payments
 {
     public class PaymentCreatedNotification : DomainNotificationBase<PaymentCreatedEvent>
     {

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Autofac;
 using MediatR;
+using SampleProject.API.Payments;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Payments;
 using SampleProject.Domain.Products;

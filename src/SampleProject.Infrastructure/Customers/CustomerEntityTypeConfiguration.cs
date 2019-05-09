@@ -18,6 +18,8 @@ namespace SampleProject.Infrastructure.Customers
             builder.ToTable("Customers", SchemaNames.Orders);
             
             builder.HasKey(b => b.Id);
+
+            builder.Property<bool>("_welcomeEmailWasSent").HasColumnName("WelcomeEmailWasSent");
             
             builder.OwnsMany<Order>(OrdersList, x =>
             {

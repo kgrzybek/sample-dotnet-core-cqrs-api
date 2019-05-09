@@ -18,6 +18,8 @@ namespace SampleProject.Domain.Customers
 
         private readonly List<Order> _orders;
 
+        private bool _welcomeEmailWasSent;
+
         private Customer()
         {
             this._orders = new List<Order>();
@@ -27,6 +29,7 @@ namespace SampleProject.Domain.Customers
         {
             this.Email = email;
             this.Name = name;
+            this._welcomeEmailWasSent = false;
 
             var isUnique = customerUniquenessChecker.IsUnique(this);
             if (!isUnique)
@@ -66,6 +69,11 @@ namespace SampleProject.Domain.Customers
             order.Remove();
 
             this.AddDomainEvent(new OrderRemovedEvent(order));
+        }
+
+        public void MarkAsWelcomedByEmail()
+        {
+            this._welcomeEmailWasSent = true;
         }
     }
 }

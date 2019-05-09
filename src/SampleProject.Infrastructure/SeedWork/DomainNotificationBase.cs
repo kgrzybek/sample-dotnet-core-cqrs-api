@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using MediatR;
+using Newtonsoft.Json;
 
 namespace SampleProject.Infrastructure.SeedWork
 {
-    public class DomainNotificationBase<T> : IDomainEventNotification<T>
+    public class DomainNotificationBase<T> : IDomainEventNotification<T>, INotification
     {
         [JsonIgnore]
         public T DomainEvent { get; }

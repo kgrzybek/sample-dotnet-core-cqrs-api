@@ -1,68 +1,48 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Dapper;
 using MediatR;
 using Newtonsoft.Json;
 using Quartz;
+using SampleProject.API.Payments;
+using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
 using SampleProject.Infrastructure.Customers;
-using SampleProject.Infrastructure.SeedWork;
 
 namespace SampleProject.API.Outbox
 {
     [DisallowConcurrentExecution]
     public class ProcessOutboxJob : IJob
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly IMediator _mediator;
+        private readonly OrdersContext _ordersContext;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ProcessOutboxJob(
-            ISqlConnectionFactory sqlConnectionFactory,
-            IMediator mediator)
+            IMediator mediator,
+            OrdersContext ordersContext, 
+            IUnitOfWork unitOfWork)
         {
-            _sqlConnectionFactory = sqlConnectionFactory;
             _mediator = mediator;
+            _ordersContext = ordersContext;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            using (var connection = this._sqlConnectionFactory.GetOpenConnection())
+            var messages = _ordersContext.OutboxMessages.Where(x => x.ProcessedDate == null).ToList();
+
+            foreach (var message in messages)
             {
-                string sql = "SELECT " +
-                             "[OutboxMessage].[Id], " +
-                             "[OutboxMessage].[Type], " +
-                             "[OutboxMessage].[Data] " +
-                             "FROM [app].[OutboxMessages] AS [OutboxMessage] " +
-                             "WHERE [OutboxMessage].[ProcessedDate] IS NULL";
-                var messages = await connection.QueryAsync<OutboxMessageDto>(sql);
+                Type type = Assembly.GetAssembly(typeof(PaymentCreatedNotification)).GetType(message.Type);
+                var request = JsonConvert.DeserializeObject(message.Data, type);
 
-                foreach (var message in messages)
-                {
-                    Type type = Assembly.GetAssembly(typeof(PaymentCreatedNotification)).GetType(message.Type);
-                    var notification = JsonConvert.DeserializeObject(message.Data, type);
+                await this._mediator.Publish((INotification)request);
 
-                    try
-                    {
-                        await this._mediator.Publish((INotification)notification);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-                    
+                message.ProcessedDate = DateTime.UtcNow;
 
-                    string sqlInsert = "UPDATE [app].[OutboxMessages] " +
-                                       "SET [ProcessedDate] = @Date " +
-                                       "WHERE [Id] = @Id";
-
-                    await connection.ExecuteAsync(sqlInsert, new
-                    {
-                        Date = DateTime.UtcNow,
-                        message.Id
-                    });
-                }
+                await this._unitOfWork.CommitAsync();
             }
         }
     }
