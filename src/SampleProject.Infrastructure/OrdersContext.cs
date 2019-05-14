@@ -9,6 +9,7 @@ using SampleProject.Domain.Payments;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure.Customers;
+using SampleProject.Infrastructure.InternalCommands;
 using SampleProject.Infrastructure.Outbox;
 using SampleProject.Infrastructure.Products;
 
@@ -19,6 +20,8 @@ namespace SampleProject.Infrastructure
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
+
+        public DbSet<InternalCommand> InternalCommands { get; set; }
 
         public DbSet<Payment> Payments { get; set; }
 
@@ -33,6 +36,7 @@ namespace SampleProject.Infrastructure
             modelBuilder.ApplyConfiguration(new ProductEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PaymentEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new OutboxMessageEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new InternalCommandEntityTypeConfiguration());
         }
     }
 }

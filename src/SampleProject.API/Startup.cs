@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
+using SampleProject.API.InternalCommands;
 using SampleProject.API.Modules;
 using SampleProject.API.Outbox;
 using SampleProject.API.SeedWork;
@@ -106,7 +107,7 @@ namespace SampleProject.API
             container.RegisterModule(new OutboxModule());
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new InfrastructureModule(this._configuration[OrdersConnectionString]));
- 
+
             container.Register(c =>
             {
                 var dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
@@ -126,7 +127,17 @@ namespace SampleProject.API
                     .StartNow()
                     .WithCronSchedule("0/15 * * ? * *")
                     .Build();
-            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();           
+
+            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult(); 
+
+            var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
+            var triggerCommandsProcessing = 
+                TriggerBuilder
+                    .Create()
+                    .StartNow()
+                    .WithCronSchedule("0/15 * * ? * *")
+                    .Build();
+            _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();           
         }
     }
 }
