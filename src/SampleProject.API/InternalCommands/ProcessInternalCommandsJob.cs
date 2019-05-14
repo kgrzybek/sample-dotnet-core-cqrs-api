@@ -24,17 +24,15 @@ namespace SampleProject.API.InternalCommands
 
         public async Task Execute(IJobExecutionContext context)
         {
-            List<Guid> commandListIds;
-            using (var connection = this._sqlConnectionFactory.GetOpenConnection())
-            {
-                string sql = "SELECT " +
-                             "[Command].[Id] " +
-                             "FROM [app].[InternalCommands] AS [Command] " +
-                             "WHERE [Command].[ProcessedDate] IS NULL";
-                var commandIds = await connection.QueryAsync<Guid>(sql);
+            var connection = this._sqlConnectionFactory.GetOpenConnection();
 
-                commandListIds = commandIds.AsList();
-            }
+            const string sql = "SELECT " +
+                               "[Command].[Id] " +
+                               "FROM [app].[InternalCommands] AS [Command] " +
+                               "WHERE [Command].[ProcessedDate] IS NULL";
+            var commandIds = await connection.QueryAsync<Guid>(sql);
+
+            var commandListIds = commandIds.AsList();
 
             foreach (var commandId in commandListIds)
             {

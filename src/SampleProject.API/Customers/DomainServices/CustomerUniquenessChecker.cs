@@ -15,19 +15,18 @@ namespace SampleProject.API.Customers.DomainServices
 
         public bool IsUnique(Customer customer)
         {
-            using (var connection = this._sqlConnectionFactory.GetOpenConnection())
-            {
-                const string sql = "SELECT TOP 1 1" +
-                                   "FROM [orders].[Customers] AS [Customer] " +
-                                   "WHERE [Customer].[Email] = @Email";
-                var customersNumber = connection.QuerySingleOrDefault<int?>(sql,
-                                new
-                                {
-                                    customer.Email
-                                });
+            var connection = this._sqlConnectionFactory.GetOpenConnection();
 
-                return !customersNumber.HasValue;
-            }
+            const string sql = "SELECT TOP 1 1" +
+                               "FROM [orders].[Customers] AS [Customer] " +
+                               "WHERE [Customer].[Email] = @Email";
+            var customersNumber = connection.QuerySingleOrDefault<int?>(sql,
+                            new
+                            {
+                                customer.Email
+                            });
+
+            return !customersNumber.HasValue;
         }
     }
 }

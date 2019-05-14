@@ -90,6 +90,7 @@ namespace SampleProject.API
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new ForeignExchangeModule());
             container.RegisterModule(new DomainModule());
+            container.RegisterModule(new EmailModule());
 
             var children = this._configuration.GetSection("Caching").GetChildren();
             Dictionary<string, TimeSpan> configuration = children.ToDictionary(child => child.Key, child => TimeSpan.Parse(child.Value));
@@ -107,6 +108,7 @@ namespace SampleProject.API
             container.RegisterModule(new OutboxModule());
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new InfrastructureModule(this._configuration[OrdersConnectionString]));
+            container.RegisterModule(new EmailModule());
 
             container.Register(c =>
             {

@@ -17,6 +17,7 @@ namespace SampleProject.Infrastructure.Customers
             builder.Property<DateTime>("_createDate").HasColumnName("CreateDate");
             builder.Property<Guid>("_orderId").HasColumnName("OrderId");
             builder.Property("_status").HasColumnName("StatusId").HasConversion(new EnumToNumberConverter<PaymentStatus, byte>());
+            builder.Property<bool>("_emailNotificationIsSent").HasColumnName("EmailNotificationIsSent");
         }
     }
 }

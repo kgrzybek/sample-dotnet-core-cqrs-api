@@ -19,19 +19,18 @@ namespace SampleProject.API.InternalCommands
 
         public async Task EnqueueAsync(IRequest command)
         {
-            using (var connection = this._sqlConnectionFactory.GetOpenConnection())
-            {
-                const string sqlInsert = "INSERT INTO [app].[InternalCommands] ([Id], [EnqueueDate] , [Type], [Data]) VALUES " +
-                                         "(@Id, @EnqueueDate, @Type, @Data)";
+            var connection = this._sqlConnectionFactory.GetOpenConnection();
 
-                await connection.ExecuteAsync(sqlInsert, new
-                {
-                    Id = Guid.NewGuid(),
-                    EnqueueDate = DateTime.UtcNow,
-                    Type = command.GetType().FullName,
-                    Data = JsonConvert.SerializeObject(command)
-                });
-            }
+            const string sqlInsert = "INSERT INTO [app].[InternalCommands] ([Id], [EnqueueDate] , [Type], [Data]) VALUES " +
+                                     "(@Id, @EnqueueDate, @Type, @Data)";
+
+            await connection.ExecuteAsync(sqlInsert, new
+            {
+                Id = Guid.NewGuid(),
+                EnqueueDate = DateTime.UtcNow,
+                Type = command.GetType().FullName,
+                Data = JsonConvert.SerializeObject(command)
+            });
         }
     }
 }

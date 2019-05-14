@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Dapper;
 using MediatR;
 using Newtonsoft.Json;
 using Quartz;
 using SampleProject.API.Payments;
-using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
-using SampleProject.Infrastructure.Customers;
 
 namespace SampleProject.API.Outbox
 {
@@ -16,22 +14,31 @@ namespace SampleProject.API.Outbox
     public class ProcessOutboxJob : IJob
     {
         private readonly IMediator _mediator;
-        private readonly OrdersContext _ordersContext;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
         public ProcessOutboxJob(
             IMediator mediator,
-            OrdersContext ordersContext, 
-            IUnitOfWork unitOfWork)
+            ISqlConnectionFactory sqlConnectionFactory)
         {
             _mediator = mediator;
-            _ordersContext = ordersContext;
-            _unitOfWork = unitOfWork;
+            _sqlConnectionFactory = sqlConnectionFactory;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var messages = _ordersContext.OutboxMessages.Where(x => x.ProcessedDate == null).ToList();
+            var connection = this._sqlConnectionFactory.GetOpenConnection();
+            const string sql = "SELECT " +
+                               "[OutboxMessage].[Id], " +
+                               "[OutboxMessage].[Type], " +
+                               "[OutboxMessage].[Data] " +
+                               "FROM [app].[OutboxMessages] AS [OutboxMessage] " +
+                               "WHERE [OutboxMessage].[ProcessedDate] IS NULL";
+
+            var messages = await connection.QueryAsync<OutboxMessageDto>(sql);
+
+            const string sqlUpdateProcessedDate = "UPDATE [app].[OutboxMessages] " +
+                                                  "SET [ProcessedDate] = @Date " +
+                                                  "WHERE [Id] = @Id";
 
             foreach (var message in messages)
             {
@@ -40,9 +47,11 @@ namespace SampleProject.API.Outbox
 
                 await this._mediator.Publish((INotification)request);
 
-                message.ProcessedDate = DateTime.UtcNow;
-
-                await this._unitOfWork.CommitAsync();
+                await connection.ExecuteAsync(sqlUpdateProcessedDate, new
+                {
+                    Date = DateTime.UtcNow,
+                    message.Id
+                });
             }
         }
     }
