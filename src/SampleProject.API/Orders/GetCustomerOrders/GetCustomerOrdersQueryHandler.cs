@@ -19,8 +19,7 @@ namespace SampleProject.API.Orders.GetCustomerOrders
 
         public async Task<List<OrderDto>> Handle(GetCustomerOrdersQuery request, CancellationToken cancellationToken)
         {
-            using (var connection = this._sqlConnectionFactory.GetOpenConnection())
-            {
+            var connection = this._sqlConnectionFactory.GetOpenConnection();
                 const string sql = "SELECT " +
                                    "[Order].[Id], " +
                                    "[Order].[IsRemoved], " +
@@ -31,7 +30,6 @@ namespace SampleProject.API.Orders.GetCustomerOrders
                 var orders = await connection.QueryAsync<OrderDto>(sql, new {request.CustomerId});
 
                 return orders.AsList();
-            }
         }
     }
 }
