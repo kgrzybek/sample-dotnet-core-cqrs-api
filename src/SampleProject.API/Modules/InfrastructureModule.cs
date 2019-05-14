@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Autofac;
 using MediatR;
+using SampleProject.API.InternalCommands;
 using SampleProject.API.Payments;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Payments;
@@ -8,6 +9,7 @@ using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
 using SampleProject.Infrastructure.Customers;
+using SampleProject.Infrastructure.InternalCommands;
 using SampleProject.Infrastructure.Products;
 using SampleProject.Infrastructure.SeedWork;
 
@@ -59,6 +61,14 @@ namespace SampleProject.API.Modules
             builder.RegisterGenericDecorator(
                 typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
                 typeof(IRequestHandler<,>));
+
+            builder.RegisterType<CommandsDispatcher>()
+                .As<ICommandsDispatcher>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CommandsScheduler>()
+                .As<ICommandsScheduler>()
+                .InstancePerLifetimeScope();
         }
     }
 }
