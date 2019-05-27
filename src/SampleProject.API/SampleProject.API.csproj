@@ -6,6 +6,11 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>54e8eb06-aaa1-4fff-9f05-3ced1cb623c2</UserSecretsId>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.2\SampleProject.API.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SampleProject.Domain\**" />
     <Content Remove="SampleProject.Domain\**" />
@@ -22,6 +27,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
     <PackageReference Include="Quartz" Version="3.0.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>

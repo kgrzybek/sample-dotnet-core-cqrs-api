@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Builder;
@@ -45,7 +47,9 @@ namespace SampleProject.API
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            this.AddSwagger(services);
 
             services
                 .AddEntityFrameworkSqlServer()
@@ -78,6 +82,8 @@ namespace SampleProject.API
             app.UseMvc();
 
             this.StartQuartz(serviceProvider);
+
+            ConfigureSwagger(app);
         }
 
         private IServiceProvider CreateAutofacServiceProvider(IServiceCollection services)
@@ -140,6 +146,35 @@ namespace SampleProject.API
                     .WithCronSchedule("0/15 * * ? * *")
                     .Build();
             _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();           
+        }
+
+        private static void ConfigureSwagger(IApplicationBuilder app)
+        {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample CQRS API V1");
+            });
+        }
+
+        private void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "Sample CQRS API",
+                    Version = "v1",
+                    Description = "Sample .NET Core REST API CQRS implementation with raw SQL and DDD using Clean Architecture.",
+                });
+
+                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                var commentsFileName = Assembly.GetExecutingAssembly().GetName().Name + ".XML";
+                var commentsFile = Path.Combine(baseDirectory, commentsFileName);
+                options.IncludeXmlComments(commentsFile);
+            });
         }
     }
 }
