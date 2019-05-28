@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SampleProject.Domain.ForeignExchange;
+using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Domain.SharedKernel;
 
@@ -9,7 +10,7 @@ namespace SampleProject.Domain.Customers.Orders
 {
     public class Order : Entity
     {
-        internal Guid Id;
+        internal OrderId Id;
         private bool _isRemoved;
         private MoneyValue _value;
         private MoneyValue _valueInEUR;
@@ -28,7 +29,7 @@ namespace SampleProject.Domain.Customers.Orders
             List<OrderProduct> orderProducts)
         {
             this._orderDate = DateTime.UtcNow;
-            this.Id = Guid.NewGuid();
+            this.Id = new OrderId(Guid.NewGuid());
             this._orderProducts = orderProducts;
 
             this.CalculateOrderValue();
@@ -36,15 +37,17 @@ namespace SampleProject.Domain.Customers.Orders
         }
 
         internal void Change(
+            List<Product> existingProducts,
             List<OrderProduct> orderProducts, 
             List<ConversionRate> conversionRates)
         {
             foreach (var orderProduct in orderProducts)
             {
-                var existingOrderProduct = this._orderProducts.SingleOrDefault(x => x.Product == orderProduct.Product);
-                if (existingOrderProduct != null)
+                var existingProduct = existingProducts.SingleOrDefault(x => x.Id == orderProduct.ProductId);
+                if (existingProduct != null)
                 {
-                    existingOrderProduct.ChangeQuantity(orderProduct.Quantity, conversionRates);
+                    var existingOrderProduct = this._orderProducts.Single(x => x.ProductId == existingProduct.Id);
+                    existingOrderProduct.ChangeQuantity(existingProduct, orderProduct.Quantity, conversionRates);
                 }
                 else
                 {
@@ -52,13 +55,13 @@ namespace SampleProject.Domain.Customers.Orders
                 }
             }
 
-            var existingProducts = this._orderProducts.ToList();
             foreach (var existingProduct in existingProducts)
             {
-                var product = orderProducts.SingleOrDefault(x => x.Product == existingProduct.Product);
+                var product = orderProducts.SingleOrDefault(x => x.ProductId == existingProduct.Id);
                 if (product == null)
                 {
-                    this._orderProducts.Remove(existingProduct);
+                    var existingOrderProduct = this._orderProducts.Single(x => x.ProductId == existingProduct.Id);
+                    this._orderProducts.Remove(existingOrderProduct);
                 }
             }
 
@@ -84,6 +87,11 @@ namespace SampleProject.Domain.Customers.Orders
         internal bool IsOrderedToday()
         {
            return this._orderDate.Date == DateTime.UtcNow.Date;
+        }
+
+        public List<ProductId> GetProductsIds()
+        {
+            return this._orderProducts.Select(x => x.ProductId).ToList();
         }
     }
 }

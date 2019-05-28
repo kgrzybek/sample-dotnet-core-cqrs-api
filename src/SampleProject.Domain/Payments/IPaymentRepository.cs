@@ -5,7 +5,7 @@ namespace SampleProject.Domain.Payments
 {
     public interface IPaymentRepository
     {
-        Task<Payment> GetByIdAsync(Guid id);
+        Task<Payment> GetByIdAsync(PaymentId id);
 
         Task AddAsync(Payment payment);
     }

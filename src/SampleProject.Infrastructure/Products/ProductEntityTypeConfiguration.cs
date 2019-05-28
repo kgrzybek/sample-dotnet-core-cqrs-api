@@ -16,7 +16,7 @@ namespace SampleProject.Infrastructure.Products
             builder.OwnsMany<ProductPrice>("_prices", y =>
             {
                 y.ToTable("ProductPrices", SchemaNames.Orders);
-                y.Property<Guid>("ProductId");
+                y.Property<ProductId>("ProductId");
                 y.Property<string>("Currency").HasColumnType("varchar(3)").IsRequired();
                 y.HasKey("ProductId", "Currency");
                 y.OwnsOne(p => p.Value, mv =>

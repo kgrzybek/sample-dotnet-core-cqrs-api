@@ -4,13 +4,14 @@ using System.Linq;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
 using SampleProject.Domain.ForeignExchange;
+using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers
 {
     public class Customer : Entity, IAggregateRoot
     {
-        public Guid Id { get; private set; }
+        public CustomerId Id { get; private set; }
 
         public string Email { get; private set; }
 
@@ -27,6 +28,7 @@ namespace SampleProject.Domain.Customers
 
         public Customer(string email, string name, ICustomerUniquenessChecker customerUniquenessChecker)
         {
+            this.Id = new CustomerId(Guid.NewGuid());
             this.Email = email;
             this.Name = name;
             this._welcomeEmailWasSent = false;
@@ -53,17 +55,18 @@ namespace SampleProject.Domain.Customers
         }
 
         public void ChangeOrder(
-            Guid orderId, 
-            List<OrderProduct> products,
+            OrderId orderId, 
+            List<Product> existingProducts,
+            List<OrderProduct> newOrderProducts,
             List<ConversionRate> conversionRates)
         {
             var order = this._orders.Single(x => x.Id == orderId);
-            order.Change(products, conversionRates);
+            order.Change(existingProducts, newOrderProducts, conversionRates);
 
             this.AddDomainEvent(new OrderChangedEvent(order));
         }
 
-        public void RemoveOrder(Guid orderId)
+        public void RemoveOrder(OrderId orderId)
         {
             var order = this._orders.Single(x => x.Id == orderId);
             order.Remove();
@@ -74,6 +77,13 @@ namespace SampleProject.Domain.Customers
         public void MarkAsWelcomedByEmail()
         {
             this._welcomeEmailWasSent = true;
+        }
+
+        public List<ProductId> GetOrderProductsIds(OrderId orderId)
+        {
+            var order = this._orders.Single(x => x.Id == orderId);
+
+            return order.GetProductsIds();
         }
     }
 }

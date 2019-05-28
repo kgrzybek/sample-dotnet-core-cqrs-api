@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 
 namespace SampleProject.API.Customers.IntegrationHandlers

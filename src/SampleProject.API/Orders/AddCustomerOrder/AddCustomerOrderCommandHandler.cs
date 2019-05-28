@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
@@ -26,17 +27,17 @@ namespace SampleProject.API.Orders.AddCustomerOrder
 
         public async Task<Unit> Handle(AddCustomerOrderCommand request, CancellationToken cancellationToken)
         {
-            var customer = await this._customerRepository.GetByIdAsync(request.CustomerId);
+            var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
  
-            var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => x.Id).ToList());
+            var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => new ProductId(x.Id)).ToList());
 
             var conversionRates = this._foreignExchange.GetConversionRates();
 
             var orderProducts = selectedProducts.Select(x =>
                 new OrderProduct(
                     x, 
-                    request.Products.Single(y => y.Id == x.Id).Quantity,
-                    request.Products.Single(y => y.Id == x.Id).Currency,
+                    request.Products.Single(y => y.Id == x.Id.Value).Quantity,
+                    request.Products.Single(y => y.Id == x.Id.Value).Currency,
                     conversionRates)
                 ).ToList();
             

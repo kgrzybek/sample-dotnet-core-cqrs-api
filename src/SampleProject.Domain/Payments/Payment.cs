@@ -6,9 +6,9 @@ namespace SampleProject.Domain.Payments
 {
     public class Payment : Entity, IAggregateRoot
     {
-        public Guid Id { get; private set; }
+        public PaymentId Id { get; private set; }
 
-        private Guid _orderId;
+        private OrderId _orderId;
 
         private DateTime _createDate;
 
@@ -21,9 +21,9 @@ namespace SampleProject.Domain.Payments
             // Only for EF.
         }
 
-        public Payment(Guid orderId)
+        public Payment(OrderId orderId)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = new PaymentId(Guid.NewGuid());
             this._createDate = DateTime.UtcNow;
             this._orderId = orderId;
             this._status = PaymentStatus.ToPay;

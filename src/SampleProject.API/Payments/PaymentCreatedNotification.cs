@@ -7,7 +7,7 @@ namespace SampleProject.API.Payments
 {
     public class PaymentCreatedNotification : DomainNotificationBase<PaymentCreatedEvent>
     {
-        public Guid PaymentId { get; }
+        public PaymentId PaymentId { get; }
 
         public PaymentCreatedNotification(PaymentCreatedEvent domainEvent) : base(domainEvent)
         {
@@ -15,7 +15,7 @@ namespace SampleProject.API.Payments
         }
 
         [JsonConstructor]
-        public PaymentCreatedNotification(Guid paymentId) : base(null)
+        public PaymentCreatedNotification(PaymentId paymentId) : base(null)
         {
             this.PaymentId = paymentId;
         }

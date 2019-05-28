@@ -1,15 +1,16 @@
 ﻿using System;
 using MediatR;
+using SampleProject.Domain.Customers;
 
 namespace SampleProject.API.Customers
 {
     public class MarkCustomerAsWelcomedCommand : IRequest
     {
-        public MarkCustomerAsWelcomedCommand(Guid customerId)
+        public MarkCustomerAsWelcomedCommand(CustomerId customerId)
         {
             CustomerId = customerId;
         }
 
-        public Guid CustomerId { get; }
+        public CustomerId CustomerId { get; }
     }
 }
