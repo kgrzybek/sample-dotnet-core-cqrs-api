@@ -7,7 +7,7 @@ namespace SampleProject.API.Customers.IntegrationHandlers
 {
     public class CustomerRegisteredNotification : DomainNotificationBase<CustomerRegisteredEvent>
     {
-        public Guid CustomerId { get; }
+        public CustomerId CustomerId { get; }
 
         public CustomerRegisteredNotification(CustomerRegisteredEvent domainEvent) : base(domainEvent)
         {
@@ -15,7 +15,7 @@ namespace SampleProject.API.Customers.IntegrationHandlers
         }
 
         [JsonConstructor]
-        public CustomerRegisteredNotification(Guid customerId) : base(null)
+        public CustomerRegisteredNotification(CustomerId customerId) : base(null)
         {
             this.CustomerId = customerId;
         }

@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Quartz;
 using Quartz.Impl;
 using SampleProject.API.InternalCommands;
@@ -23,6 +27,8 @@ using SampleProject.API.Outbox;
 using SampleProject.API.SeedWork;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
+using SampleProject.Infrastructure.Customers;
+using SampleProject.Infrastructure.SeedWork;
 
 [assembly: UserSecretsId("54e8eb06-aaa1-4fff-9f05-3ced1cb623c2")]
 namespace SampleProject.API
@@ -50,12 +56,16 @@ namespace SampleProject.API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             this.AddSwagger(services);
-
+            
             services
                 .AddEntityFrameworkSqlServer()
+                
                 .AddDbContext<OrdersContext>(options =>
                 {
-                    options.UseSqlServer(this._configuration[OrdersConnectionString]);
+                    options
+                        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
+                        
+                        .UseSqlServer(this._configuration[OrdersConnectionString]);
                 });
 
             services.AddProblemDetails(x =>
@@ -102,7 +112,11 @@ namespace SampleProject.API
             Dictionary<string, TimeSpan> configuration = children.ToDictionary(child => child.Key, child => TimeSpan.Parse(child.Value));
             container.RegisterModule(new CachingModule(configuration));
 
-            return new AutofacServiceProvider(container.Build());
+            var buildContainer = container.Build();
+                         
+            ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
+
+            return new AutofacServiceProvider(buildContainer);
         }
 
         public void StartQuartz(IServiceProvider serviceProvider)
@@ -120,6 +134,9 @@ namespace SampleProject.API
             {
                 var dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
                 dbContextOptionsBuilder.UseSqlServer(this._configuration[OrdersConnectionString]);
+
+                dbContextOptionsBuilder
+                    .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
 
                 return new OrdersContext(dbContextOptionsBuilder.Options);
             }).AsSelf().InstancePerLifetimeScope();

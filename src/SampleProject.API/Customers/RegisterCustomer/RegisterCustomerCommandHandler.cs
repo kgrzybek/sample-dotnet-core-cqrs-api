@@ -31,7 +31,7 @@ namespace SampleProject.API.Customers.RegisterCustomer
 
             await this._unitOfWork.CommitAsync(cancellationToken);
 
-            return new CustomerDto { Id = customer.Id };
+            return new CustomerDto { Id = customer.Id.Value };
         }
     }
 }

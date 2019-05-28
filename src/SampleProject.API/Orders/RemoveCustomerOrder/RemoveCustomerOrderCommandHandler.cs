@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 
 namespace SampleProject.API.Orders.RemoveCustomerOrder
@@ -16,9 +17,9 @@ namespace SampleProject.API.Orders.RemoveCustomerOrder
 
         public async Task<Unit> Handle(RemoveCustomerOrderCommand request, CancellationToken cancellationToken)
         {
-            var customer = await this._customerRepository.GetByIdAsync(request.CustomerId);
+            var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
 
-            customer.RemoveOrder(request.OrderId);
+            customer.RemoveOrder(new OrderId(request.OrderId));
 
             return Unit.Value;
         }

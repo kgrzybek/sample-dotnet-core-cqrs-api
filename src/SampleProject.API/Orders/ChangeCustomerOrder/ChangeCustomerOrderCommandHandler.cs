@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
@@ -26,9 +28,15 @@ namespace SampleProject.API.Orders.ChangeCustomerOrder
 
         public async Task<Unit> Handle(ChangeCustomerOrderCommand request, CancellationToken cancellationToken)
         {
-            var customer = await this._customerRepository.GetByIdAsync(request.CustomerId);
+            var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
 
-            var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => x.Id).ToList());
+            var orderId = new OrderId(request.OrderId);
+            var existingProductsIds = customer.GetOrderProductsIds(orderId);
+
+            var existingProducts =
+                await this._productRepository.GetByIdsAsync(existingProductsIds);
+
+            var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => new ProductId(x.Id)).ToList());
 
             var conversionRates = this._foreignExchange.GetConversionRates();
 
@@ -36,12 +44,13 @@ namespace SampleProject.API.Orders.ChangeCustomerOrder
             var orderProducts = selectedProducts.Select(x => 
                 new OrderProduct(
                     x, 
-                    request.Products.Single(y => y.Id == x.Id).Quantity,
+                    request.Products.Single(y => y.Id == x.Id.Value).Quantity,
                     orderCurrency,
                     conversionRates))
                 .ToList();
 
-            customer.ChangeOrder(request.OrderId, orderProducts, conversionRates);
+            
+            customer.ChangeOrder(orderId, existingProducts, orderProducts, conversionRates);
 
             return Unit.Value;
         }

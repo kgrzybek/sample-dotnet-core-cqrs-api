@@ -1,18 +1,19 @@
 ﻿using System;
+using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Payments
 {
     public class PaymentCreatedEvent : DomainEventBase
     {
-        public PaymentCreatedEvent(Guid paymentId, Guid orderId)
+        public PaymentCreatedEvent(PaymentId paymentId, OrderId orderId)
         {
             this.PaymentId = paymentId;
             this.OrderId = orderId;
         }
 
-        public Guid PaymentId { get; }
+        public PaymentId PaymentId { get; }
 
-        public Guid OrderId { get; }
+        public OrderId OrderId { get; }
     }
 }

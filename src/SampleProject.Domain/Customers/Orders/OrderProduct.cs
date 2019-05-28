@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
@@ -11,7 +12,7 @@ namespace SampleProject.Domain.Customers.Orders
     {
         public int Quantity { get; private set; }
 
-        public Product Product { get; private set; }
+        public ProductId ProductId { get; private set; }
 
         internal MoneyValue Value { get; private set; }
 
@@ -28,22 +29,22 @@ namespace SampleProject.Domain.Customers.Orders
             string currency,
             List<ConversionRate> conversionRates)
         {
-            this.Product = product;
+            this.ProductId = product.Id;
             this.Quantity = quantity;
 
-            this.CalculateValue(currency, conversionRates);
+            this.CalculateValue(product, currency, conversionRates);
         }
 
-        internal void ChangeQuantity(int quantity, List<ConversionRate> conversionRates)
+        internal void ChangeQuantity(Product product, int quantity, List<ConversionRate> conversionRates)
         {
             this.Quantity = quantity;
 
-            this.CalculateValue(this.Value.Currency, conversionRates);
+            this.CalculateValue(product, this.Value.Currency, conversionRates);
         }
 
-        private void CalculateValue(string currency, List<ConversionRate> conversionRates)
+        private void CalculateValue(Product product, string currency, List<ConversionRate> conversionRates)
         {
-            var totalValueForOrderProduct = this.Quantity * this.Product.GetPrice(currency).Value;
+            var totalValueForOrderProduct = this.Quantity * product.GetPrice(currency).Value;
             this.Value = new MoneyValue(totalValueForOrderProduct, currency);
 
             var conversionRate = conversionRates.Single(x => x.SourceCurrency == currency && x.TargetCurrency == "EUR");

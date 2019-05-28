@@ -5,9 +5,9 @@ namespace SampleProject.Domain.Customers.Orders.Events
 {
     public class OrderAddedEvent : DomainEventBase
     {
-        public Guid OrderId { get; }
+        public OrderId OrderId { get; }
 
-        public OrderAddedEvent(Guid orderId)
+        public OrderAddedEvent(OrderId orderId)
         {
             this.OrderId = orderId;
         }

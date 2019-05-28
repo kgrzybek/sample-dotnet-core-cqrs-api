@@ -6,6 +6,6 @@ namespace SampleProject.Domain.Products
 {
     public interface IProductRepository
     {
-        Task<List<Product>> GetByIdsAsync(List<Guid> ids);
+        Task<List<Product>> GetByIdsAsync(List<ProductId> ids);
     }
 }

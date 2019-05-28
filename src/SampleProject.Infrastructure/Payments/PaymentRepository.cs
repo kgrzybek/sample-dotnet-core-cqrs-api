@@ -14,7 +14,7 @@ namespace SampleProject.Infrastructure.Customers
             this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Payment> GetByIdAsync(Guid id)
+        public async Task<Payment> GetByIdAsync(PaymentId id)
         {
             return await this._context.Payments
                 .SingleAsync(x => x.Id == id);

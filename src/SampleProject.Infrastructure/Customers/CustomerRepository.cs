@@ -23,13 +23,12 @@ namespace SampleProject.Infrastructure.Customers
             await this._context.Customers.AddAsync(customer);
         }
 
-        public async Task<Customer> GetByIdAsync(Guid id)
+        public async Task<Customer> GetByIdAsync(CustomerId id)
         {
             return await this._context.Customers
                 .IncludePaths(
                     CustomerEntityTypeConfiguration.OrdersList, 
-                    CustomerEntityTypeConfiguration.OrderProducts, 
-                    nameof(Product))
+                    CustomerEntityTypeConfiguration.OrderProducts)
                 .SingleAsync(x => x.Id == id);
         }
     }

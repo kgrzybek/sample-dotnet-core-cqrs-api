@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
+using SampleProject.Domain.Products;
 using SampleProject.Domain.SharedKernel;
 
 namespace SampleProject.Infrastructure.Customers
@@ -28,7 +29,7 @@ namespace SampleProject.Infrastructure.Customers
                 x.Property<bool>("_isRemoved").HasColumnName("IsRemoved");
                 x.Property<DateTime>("_orderDate").HasColumnName("OrderDate");
                 x.Property<DateTime?>("_orderChangeDate").HasColumnName("OrderChangeDate");
-                x.Property<Guid>("Id");
+                x.Property<OrderId>("Id");
                 x.HasKey("Id");
 
                 x.Property("_status").HasColumnName("StatusId").HasConversion(new EnumToNumberConverter<OrderStatus, byte>());
@@ -36,12 +37,10 @@ namespace SampleProject.Infrastructure.Customers
                 x.OwnsMany<OrderProduct>(OrderProducts, y =>
                 {
                     y.ToTable("OrderProducts", SchemaNames.Orders);
-                    y.Property<Guid>("OrderId");
-                    y.Property<Guid>("ProductId");
+                    y.Property<OrderId>("OrderId");
+                    y.Property<ProductId>("ProductId");
                     y.HasForeignKey("OrderId");
                     y.HasKey("OrderId", "ProductId");
-
-                    y.HasOne(p => p.Product);
 
                     y.OwnsOne<MoneyValue>("Value", mv =>
                     {

@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using Autofac;
 using MediatR;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleProject.API.InternalCommands;
 using SampleProject.API.Payments;
 using SampleProject.Domain.Customers.Orders;
@@ -68,6 +70,15 @@ namespace SampleProject.API.Modules
 
             builder.RegisterType<CommandsScheduler>()
                 .As<ICommandsScheduler>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<StronglyTypedIdValueConverterSelector>()
+                .As<IValueConverterSelector>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(typeof(CustomerIdConverter).GetTypeInfo().Assembly)
+                .As<ITypedIdValueConverter>()
+                .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
         }
     }
