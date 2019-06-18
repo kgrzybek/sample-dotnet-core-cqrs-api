@@ -47,6 +47,8 @@ Outbox Pattern implementation using [Quartz.NET](https://github.com/quartznet/qu
 
 [How to publish and handle Domain Events](http://www.kamilgrzybek.com/design/how-to-publish-and-handle-domain-events/)
 
+[Handling Domain Events: Missing Part](http://www.kamilgrzybek.com/design/handling-domain-events-missing-part/)
+
 [Cache-Aside Pattern in .NET Core](http://www.kamilgrzybek.com/design/cache-aside-pattern-in-net-core/)
 
 [The Outbox Pattern](http://www.kamilgrzybek.com/design/the-outbox-pattern/)
