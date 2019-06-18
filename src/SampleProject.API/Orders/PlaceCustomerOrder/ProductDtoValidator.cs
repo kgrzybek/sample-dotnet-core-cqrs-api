@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SampleProject.API.Orders.AddCustomerOrder
+namespace SampleProject.API.Orders.PlaceCustomerOrder
 {
     public class ProductDtoValidator : AbstractValidator<ProductDto>
     {

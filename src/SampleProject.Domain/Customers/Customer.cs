@@ -42,7 +42,7 @@ namespace SampleProject.Domain.Customers
             this.AddDomainEvent(new CustomerRegisteredEvent(this));
         }
 
-        public void AddOrder(Order order)
+        public void PlaceOrder(Order order)
         {
             if (this._orders.Count(x => x.IsOrderedToday()) >= 2)
             {
@@ -51,7 +51,7 @@ namespace SampleProject.Domain.Customers
 
             this._orders.Add(order);
 
-            this.AddDomainEvent(new OrderAddedEvent(order.Id));
+            this.AddDomainEvent(new OrderPlacedEvent(order.Id));
         }
 
         public void ChangeOrder(

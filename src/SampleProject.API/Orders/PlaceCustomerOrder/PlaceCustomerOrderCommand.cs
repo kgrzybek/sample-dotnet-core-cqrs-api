@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using MediatR;
 
-namespace SampleProject.API.Orders.AddCustomerOrder
+namespace SampleProject.API.Orders.PlaceCustomerOrder
 {
-    public class AddCustomerOrderCommand : IRequest
+    public class PlaceCustomerOrderCommand : IRequest
     {
         public Guid CustomerId { get; }
 
         public List<ProductDto> Products { get; }
 
-        public AddCustomerOrderCommand(
+        public PlaceCustomerOrderCommand(
             Guid customerId, 
             List<ProductDto> products)
         {

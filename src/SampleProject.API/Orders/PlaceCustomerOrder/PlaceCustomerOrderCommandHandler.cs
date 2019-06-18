@@ -7,15 +7,15 @@ using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
 
-namespace SampleProject.API.Orders.AddCustomerOrder
+namespace SampleProject.API.Orders.PlaceCustomerOrder
 {
-    public class AddCustomerOrderCommandHandler : IRequestHandler<AddCustomerOrderCommand>
+    public class PlaceCustomerOrderCommandHandler : IRequestHandler<PlaceCustomerOrderCommand>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IForeignExchange _foreignExchange;
 
-        public AddCustomerOrderCommandHandler(
+        public PlaceCustomerOrderCommandHandler(
             ICustomerRepository customerRepository, 
             IProductRepository productRepository, 
             IForeignExchange foreignExchange)
@@ -25,7 +25,7 @@ namespace SampleProject.API.Orders.AddCustomerOrder
             this._foreignExchange = foreignExchange;
         }
 
-        public async Task<Unit> Handle(AddCustomerOrderCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(PlaceCustomerOrderCommand request, CancellationToken cancellationToken)
         {
             var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
  
@@ -43,7 +43,7 @@ namespace SampleProject.API.Orders.AddCustomerOrder
             
             var order = new Order(orderProducts);
             
-            customer.AddOrder(order);
+            customer.PlaceOrder(order);
 
             return Unit.Value;
         }

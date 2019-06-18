@@ -3,11 +3,11 @@ using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers.Orders.Events
 {
-    public class OrderAddedEvent : DomainEventBase
+    public class OrderPlacedEvent : DomainEventBase
     {
         public OrderId OrderId { get; }
 
-        public OrderAddedEvent(OrderId orderId)
+        public OrderPlacedEvent(OrderId orderId)
         {
             this.OrderId = orderId;
         }
