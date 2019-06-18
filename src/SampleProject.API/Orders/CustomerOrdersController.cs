@@ -4,10 +4,10 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SampleProject.API.Orders.AddCustomerOrder;
 using SampleProject.API.Orders.ChangeCustomerOrder;
 using SampleProject.API.Orders.GetCustomerOrderDetails;
 using SampleProject.API.Orders.GetCustomerOrders;
+using SampleProject.API.Orders.PlaceCustomerOrder;
 using SampleProject.API.Orders.RemoveCustomerOrder;
 
 namespace SampleProject.API.Orders
@@ -66,7 +66,7 @@ namespace SampleProject.API.Orders
             [FromRoute]Guid customerId, 
             [FromBody]CustomerOrderRequest request)
         {
-           await _mediator.Send(new AddCustomerOrderCommand(customerId, request.Products));
+           await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products));
 
            return Created(string.Empty, null);
         }

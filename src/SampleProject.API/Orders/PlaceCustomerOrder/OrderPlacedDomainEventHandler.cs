@@ -4,18 +4,18 @@ using MediatR;
 using SampleProject.Domain.Customers.Orders.Events;
 using SampleProject.Domain.Payments;
 
-namespace SampleProject.API.Orders.AddCustomerOrder
+namespace SampleProject.API.Orders.PlaceCustomerOrder
 {
-    public class OrderAddedDomainEventHandler : INotificationHandler<OrderAddedEvent>
+    public class OrderPlacedDomainEventHandler : INotificationHandler<OrderPlacedEvent>
     {
         private readonly IPaymentRepository _paymentRepository;
 
-        public OrderAddedDomainEventHandler(IPaymentRepository paymentRepository)
+        public OrderPlacedDomainEventHandler(IPaymentRepository paymentRepository)
         {
             _paymentRepository = paymentRepository;
         }
 
-        public async Task Handle(OrderAddedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(OrderPlacedEvent notification, CancellationToken cancellationToken)
         {
             var newPayment = new Payment(notification.OrderId);
 

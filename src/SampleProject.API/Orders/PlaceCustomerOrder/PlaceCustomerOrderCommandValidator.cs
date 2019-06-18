@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace SampleProject.API.Orders.AddCustomerOrder
+namespace SampleProject.API.Orders.PlaceCustomerOrder
 {
-    public class AddCustomerOrderCommandValidator : AbstractValidator<AddCustomerOrderCommand>
+    public class PlaceCustomerOrderCommandValidator : AbstractValidator<PlaceCustomerOrderCommand>
     {
-        public AddCustomerOrderCommandValidator()
+        public PlaceCustomerOrderCommandValidator()
         {
             RuleFor(x => x.CustomerId).NotEmpty().WithMessage("CustomerId is empty");
             RuleFor(x => x.Products).NotEmpty().WithMessage("Products list is empty");
