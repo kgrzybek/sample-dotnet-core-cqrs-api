@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +13,7 @@ namespace SampleProject.API.Orders
 {
     [Route("api/customers")]
     [ApiController]
-    public class CustomerOrdersController : Controller
+    public class CustomerOrdersController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -27,11 +26,9 @@ namespace SampleProject.API.Orders
         /// Get customer orders.
         /// </summary>
         /// <param name="customerId">Customer ID.</param>
-        /// <returns>List of customer orders.</returns>
-        [Route("{customerId}/orders")]
-        [HttpGet]
-        [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetCustomerOrders(Guid customerId)
+        /// <returns>List of customer orders.</returns> 
+        [HttpGet("{customerId}/orders")]
+        public async Task<ActionResult<List<OrderDto>>> Get(Guid customerId)
         {
             var orders = await _mediator.Send(new GetCustomerOrdersQuery(customerId));
 
@@ -42,11 +39,8 @@ namespace SampleProject.API.Orders
         /// Get customer order details.
         /// </summary>
         /// <param name="orderId">Order ID.</param>
-        [Route("{customerId}/orders/{orderId}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(OrderDetailsDto), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetCustomerOrderDetails(
-            [FromRoute]Guid orderId)
+        [HttpGet("{customerId}/orders/{orderId}")]
+        public async Task<ActionResult<OrderDetailsDto>> GetDetails(Guid orderId)
         {
             var orderDetails = await _mediator.Send(new GetCustomerOrderDetailsQuery(orderId));
 
@@ -59,16 +53,12 @@ namespace SampleProject.API.Orders
         /// </summary>
         /// <param name="customerId">Customer ID.</param>
         /// <param name="request">Products list.</param>
-        [Route("{customerId}/orders")]
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> AddCustomerOrder(
-            [FromRoute]Guid customerId, 
-            [FromBody]CustomerOrderRequest request)
+        [HttpPost("{customerId}/orders")]
+        public async Task<IActionResult> Post(Guid customerId, CustomerOrderRequest request)
         {
-           await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products));
+            await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products));
 
-           return Created(string.Empty, null);
+            return Created(string.Empty, null);
         }
 
         /// <summary>
@@ -77,13 +67,8 @@ namespace SampleProject.API.Orders
         /// <param name="customerId">Customer ID.</param>
         /// <param name="orderId">Order ID.</param>
         /// <param name="request">List of products.</param>
-        [Route("{customerId}/orders/{orderId}")]
-        [HttpPut]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> ChangeCustomerOrder(
-            [FromRoute]Guid customerId, 
-            [FromRoute]Guid orderId,
-            [FromBody]CustomerOrderRequest request)
+        [HttpPut("{customerId}/orders/{orderId}")]
+        public async Task<IActionResult> Put(Guid customerId, Guid orderId, CustomerOrderRequest request)
         {
             await _mediator.Send(new ChangeCustomerOrderCommand(customerId, orderId, request.Products));
 
@@ -95,12 +80,8 @@ namespace SampleProject.API.Orders
         /// </summary>
         /// <param name="customerId">Customer ID.</param>
         /// <param name="orderId">Order ID.</param>
-        [Route("{customerId}/orders/{orderId}")]
-        [HttpDelete]
-        [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> RemoveCustomerOrder(
-            [FromRoute]Guid customerId,
-            [FromRoute]Guid orderId)
+        [HttpDelete("{customerId}/orders/{orderId}")]
+        public async Task<IActionResult> Delete(Guid customerId, Guid orderId)
         {
             await _mediator.Send(new RemoveCustomerOrderCommand(customerId, orderId));
 

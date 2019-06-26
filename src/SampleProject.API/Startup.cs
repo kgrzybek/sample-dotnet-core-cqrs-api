@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Autofac;
-using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Extras.CommonServiceLocator;
 using CommonServiceLocator;
@@ -18,7 +16,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Quartz;
 using Quartz.Impl;
 using SampleProject.API.InternalCommands;
@@ -27,12 +24,12 @@ using SampleProject.API.Outbox;
 using SampleProject.API.SeedWork;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
-using SampleProject.Infrastructure.Customers;
 using SampleProject.Infrastructure.SeedWork;
 
 [assembly: UserSecretsId("54e8eb06-aaa1-4fff-9f05-3ced1cb623c2")]
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace SampleProject.API
-{  
+{
     public class Startup
     {
         private readonly IConfiguration _configuration;
@@ -56,15 +53,15 @@ namespace SampleProject.API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             this.AddSwagger(services);
-            
+
             services
                 .AddEntityFrameworkSqlServer()
-                
+
                 .AddDbContext<OrdersContext>(options =>
                 {
                     options
                         .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
-                        
+
                         .UseSqlServer(this._configuration[OrdersConnectionString]);
                 });
 
@@ -113,7 +110,7 @@ namespace SampleProject.API
             container.RegisterModule(new CachingModule(configuration));
 
             var buildContainer = container.Build();
-                         
+
             ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
 
             return new AutofacServiceProvider(buildContainer);
@@ -146,23 +143,23 @@ namespace SampleProject.API
             _scheduler.Start().GetAwaiter().GetResult();
 
             var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            var trigger = 
+            var trigger =
                 TriggerBuilder
                     .Create()
                     .StartNow()
                     .WithCronSchedule("0/15 * * ? * *")
                     .Build();
 
-            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult(); 
+            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
 
             var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
-            var triggerCommandsProcessing = 
+            var triggerCommandsProcessing =
                 TriggerBuilder
                     .Create()
                     .StartNow()
                     .WithCronSchedule("0/15 * * ? * *")
                     .Build();
-            _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();           
+            _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();
         }
 
         private static void ConfigureSwagger(IApplicationBuilder app)
