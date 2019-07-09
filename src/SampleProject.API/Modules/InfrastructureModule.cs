@@ -75,11 +75,6 @@ namespace SampleProject.API.Modules
             builder.RegisterType<StronglyTypedIdValueConverterSelector>()
                 .As<IValueConverterSelector>()
                 .InstancePerLifetimeScope();
-
-            builder.RegisterAssemblyTypes(typeof(CustomerIdConverter).GetTypeInfo().Assembly)
-                .As<ITypedIdValueConverter>()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
         }
     }
 }
