@@ -20,7 +20,7 @@ namespace SampleProject.API.Customers
         /// Register customer.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Post(RegisterCustomerRequest request)
+        public async Task<IActionResult> RegisterCustomer(RegisterCustomerRequest request)
         {
             var customer = await _mediator.Send(new RegisterCustomerCommand(request.Email, request.Name));
 

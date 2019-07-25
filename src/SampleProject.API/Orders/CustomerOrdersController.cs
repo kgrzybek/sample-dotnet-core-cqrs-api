@@ -28,7 +28,7 @@ namespace SampleProject.API.Orders
         /// <param name="customerId">Customer ID.</param>
         /// <returns>List of customer orders.</returns> 
         [HttpGet("{customerId}/orders")]
-        public async Task<ActionResult<List<OrderDto>>> Get(Guid customerId)
+        public async Task<ActionResult<List<OrderDto>>> GetCustomerOrders(Guid customerId)
         {
             var orders = await _mediator.Send(new GetCustomerOrdersQuery(customerId));
 
@@ -40,13 +40,12 @@ namespace SampleProject.API.Orders
         /// </summary>
         /// <param name="orderId">Order ID.</param>
         [HttpGet("{customerId}/orders/{orderId}")]
-        public async Task<ActionResult<OrderDetailsDto>> GetDetails(Guid orderId)
+        public async Task<ActionResult<OrderDetailsDto>> GetCustomerOrderDetails(Guid orderId)
         {
             var orderDetails = await _mediator.Send(new GetCustomerOrderDetailsQuery(orderId));
 
             return Ok(orderDetails);
         }
-
 
         /// <summary>
         /// Add customer order.
@@ -54,7 +53,7 @@ namespace SampleProject.API.Orders
         /// <param name="customerId">Customer ID.</param>
         /// <param name="request">Products list.</param>
         [HttpPost("{customerId}/orders")]
-        public async Task<IActionResult> Post(Guid customerId, CustomerOrderRequest request)
+        public async Task<IActionResult> AddCustomerOrder(Guid customerId, CustomerOrderRequest request)
         {
             await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products));
 
@@ -68,7 +67,7 @@ namespace SampleProject.API.Orders
         /// <param name="orderId">Order ID.</param>
         /// <param name="request">List of products.</param>
         [HttpPut("{customerId}/orders/{orderId}")]
-        public async Task<IActionResult> Put(Guid customerId, Guid orderId, CustomerOrderRequest request)
+        public async Task<IActionResult> ChangeCustomerOrder(Guid customerId, Guid orderId, CustomerOrderRequest request)
         {
             await _mediator.Send(new ChangeCustomerOrderCommand(customerId, orderId, request.Products));
 
@@ -81,7 +80,7 @@ namespace SampleProject.API.Orders
         /// <param name="customerId">Customer ID.</param>
         /// <param name="orderId">Order ID.</param>
         [HttpDelete("{customerId}/orders/{orderId}")]
-        public async Task<IActionResult> Delete(Guid customerId, Guid orderId)
+        public async Task<IActionResult> RemoveCustomerOrder(Guid customerId, Guid orderId)
         {
             await _mediator.Send(new RemoveCustomerOrderCommand(customerId, orderId));
 
