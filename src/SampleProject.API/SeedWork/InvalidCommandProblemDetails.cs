@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SampleProject.Application.Configuration.Validation;
 
 namespace SampleProject.API.SeedWork
 {

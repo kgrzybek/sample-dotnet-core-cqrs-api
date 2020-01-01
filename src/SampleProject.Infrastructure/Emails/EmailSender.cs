@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using SampleProject.Application.Configuration.Emails;
 
 namespace SampleProject.Infrastructure.Emails
 {

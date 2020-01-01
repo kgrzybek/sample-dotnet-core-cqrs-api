@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SampleProject.API.Customers.RegisterCustomer;
+using SampleProject.Application.Customers;
+using SampleProject.Application.Customers.RegisterCustomer;
 
 namespace SampleProject.API.Customers
 {

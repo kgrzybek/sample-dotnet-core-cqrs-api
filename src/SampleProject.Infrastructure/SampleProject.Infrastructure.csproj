@@ -7,14 +7,17 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="5.0.0" />
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Quartz" Version="3.0.7" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SampleProject.Application\SampleProject.Application.csproj" />
     <ProjectReference Include="..\SampleProject.Domain\SampleProject.Domain.csproj" />
   </ItemGroup>
 

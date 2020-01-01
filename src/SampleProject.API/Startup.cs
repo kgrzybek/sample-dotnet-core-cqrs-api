@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using Autofac;
-using Autofac.Builder;
-using Autofac.Extensions.DependencyInjection;
-using Autofac.Extras.CommonServiceLocator;
-using CommonServiceLocator;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,16 +11,12 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Quartz;
-using Quartz.Impl;
-using SampleProject.API.InternalCommands;
-using SampleProject.API.Modules;
-using SampleProject.API.Outbox;
+using SampleProject.Application.Configuration.Validation;
 using SampleProject.API.SeedWork;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
-using SampleProject.Infrastructure.Customers;
+using SampleProject.Infrastructure.Database;
 using SampleProject.Infrastructure.SeedWork;
 
 [assembly: UserSecretsId("54e8eb06-aaa1-4fff-9f05-3ced1cb623c2")]
@@ -73,8 +62,14 @@ namespace SampleProject.API
                 x.Map<InvalidCommandException>(ex => new InvalidCommandProblemDetails(ex));
                 x.Map<BusinessRuleValidationException>(ex => new BusinessRuleValidationExceptionProblemDetails(ex));
             });
+            
+            var children = this._configuration.GetSection("Caching").GetChildren();
+            var cachingConfiguration = children.ToDictionary(child => child.Key, child => TimeSpan.Parse(child.Value));
 
-            return CreateAutofacServiceProvider(services);
+            return ApplicationStartup.Initialize(
+                services, 
+                this._configuration[OrdersConnectionString],
+                cachingConfiguration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
@@ -91,78 +86,7 @@ namespace SampleProject.API
 
             app.UseMvc();
 
-            this.StartQuartz(serviceProvider);
-
             ConfigureSwagger(app);
-        }
-
-        private IServiceProvider CreateAutofacServiceProvider(IServiceCollection services)
-        {
-            var container = new ContainerBuilder();
-
-            container.Populate(services);
-
-            container.RegisterModule(new InfrastructureModule(this._configuration[OrdersConnectionString]));
-            container.RegisterModule(new MediatorModule());
-            container.RegisterModule(new ForeignExchangeModule());
-            container.RegisterModule(new DomainModule());
-            container.RegisterModule(new EmailModule());
-
-            var children = this._configuration.GetSection("Caching").GetChildren();
-            Dictionary<string, TimeSpan> configuration = children.ToDictionary(child => child.Key, child => TimeSpan.Parse(child.Value));
-            container.RegisterModule(new CachingModule(configuration));
-
-            var buildContainer = container.Build();
-                         
-            ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
-
-            return new AutofacServiceProvider(buildContainer);
-        }
-
-        public void StartQuartz(IServiceProvider serviceProvider)
-        {
-            this._schedulerFactory = new StdSchedulerFactory();
-            this._scheduler = _schedulerFactory.GetScheduler().GetAwaiter().GetResult();
-
-            var container = new ContainerBuilder();
-            container.RegisterModule(new OutboxModule());
-            container.RegisterModule(new MediatorModule());
-            container.RegisterModule(new InfrastructureModule(this._configuration[OrdersConnectionString]));
-            container.RegisterModule(new EmailModule());
-
-            container.Register(c =>
-            {
-                var dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
-                dbContextOptionsBuilder.UseSqlServer(this._configuration[OrdersConnectionString]);
-
-                dbContextOptionsBuilder
-                    .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
-
-                return new OrdersContext(dbContextOptionsBuilder.Options);
-            }).AsSelf().InstancePerLifetimeScope();
-
-            _scheduler.JobFactory = new JobFactory(container.Build());
-
-            _scheduler.Start().GetAwaiter().GetResult();
-
-            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            var trigger = 
-                TriggerBuilder
-                    .Create()
-                    .StartNow()
-                    .WithCronSchedule("0/15 * * ? * *")
-                    .Build();
-
-            _scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult(); 
-
-            var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
-            var triggerCommandsProcessing = 
-                TriggerBuilder
-                    .Create()
-                    .StartNow()
-                    .WithCronSchedule("0/15 * * ? * *")
-                    .Build();
-            _scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();           
         }
 
         private static void ConfigureSwagger(IApplicationBuilder app)
