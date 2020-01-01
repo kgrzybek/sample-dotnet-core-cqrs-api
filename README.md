@@ -10,7 +10,7 @@ Sample .NET Core REST API application implemented with basic [CQRS](https://docs
 
 ## Architecture [Clean Architecture](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-![projects_dependencies](docs/projects_dependencies.png)
+![projects_dependencies](docs/clean_architecture.jpg)
 
 ## CQRS
 
