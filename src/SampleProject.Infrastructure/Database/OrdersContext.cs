@@ -28,11 +28,7 @@ namespace SampleProject.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CustomerEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new PaymentEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new OutboxMessageEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new InternalCommandEntityTypeConfiguration());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrdersContext).Assembly);
         }
     }
 }
