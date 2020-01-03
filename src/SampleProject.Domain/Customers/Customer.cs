@@ -13,9 +13,9 @@ namespace SampleProject.Domain.Customers
     {
         public CustomerId Id { get; private set; }
 
-        public string Email { get; private set; }
+        public string _email;
 
-        public string Name { get; private set; }
+        public string _name;
 
         private readonly List<Order> _orders;
 
@@ -25,29 +25,43 @@ namespace SampleProject.Domain.Customers
         {
             this._orders = new List<Order>();
         }
-
-        public Customer(string email, string name, ICustomerUniquenessChecker customerUniquenessChecker)
+         
+        private Customer(string email, string name)
         {
             this.Id = new CustomerId(Guid.NewGuid());
-            this.Email = email;
-            this.Name = name;
-            this._welcomeEmailWasSent = false;
+            _email = email;
+            _name = name;
+            _welcomeEmailWasSent = false;
 
-            var isUnique = customerUniquenessChecker.IsUnique(this);
+            this.AddDomainEvent(new CustomerRegisteredEvent(this.Id));
+        }
+
+        public static Customer CreateRegistered(
+            string email, 
+            string name,
+            ICustomerUniquenessChecker customerUniquenessChecker)
+        {
+            var isUnique = customerUniquenessChecker.IsUnique(email);
             if (!isUnique)
             {
                 throw new BusinessRuleValidationException("Customer with this email already exists.");
             }
 
-            this.AddDomainEvent(new CustomerRegisteredEvent(this));
+            return new Customer(email, name);
         }
 
-        public void PlaceOrder(Order order)
+        public void PlaceOrder(
+            List<OrderProductData> orderProductsData,
+            List<Product> allProducts,
+            string currency, 
+            List<ConversionRate> conversionRates)
         {
             if (this._orders.Count(x => x.IsOrderedToday()) >= 2)
             {
                 throw new BusinessRuleValidationException("You cannot order more than 2 orders on the same day");
             }
+
+            var order = Order.CreateNew(orderProductsData, allProducts, currency, conversionRates);
 
             this._orders.Add(order);
 
@@ -57,13 +71,14 @@ namespace SampleProject.Domain.Customers
         public void ChangeOrder(
             OrderId orderId, 
             List<Product> existingProducts,
-            List<OrderProduct> newOrderProducts,
-            List<ConversionRate> conversionRates)
+            List<OrderProductData> newOrderProductsData,
+            List<ConversionRate> conversionRates,
+            string currency)
         {
             var order = this._orders.Single(x => x.Id == orderId);
-            order.Change(existingProducts, newOrderProducts, conversionRates);
+            order.Change(existingProducts, newOrderProductsData, conversionRates, currency);
 
-            this.AddDomainEvent(new OrderChangedEvent(order));
+            this.AddDomainEvent(new OrderChangedEvent(orderId));
         }
 
         public void RemoveOrder(OrderId orderId)
@@ -71,19 +86,12 @@ namespace SampleProject.Domain.Customers
             var order = this._orders.Single(x => x.Id == orderId);
             order.Remove();
 
-            this.AddDomainEvent(new OrderRemovedEvent(order));
+            this.AddDomainEvent(new OrderRemovedEvent(orderId));
         }
 
         public void MarkAsWelcomedByEmail()
         {
             this._welcomeEmailWasSent = true;
-        }
-
-        public List<ProductId> GetOrderProductsIds(OrderId orderId)
-        {
-            var order = this._orders.Single(x => x.Id == orderId);
-
-            return order.GetProductsIds();
         }
     }
 }

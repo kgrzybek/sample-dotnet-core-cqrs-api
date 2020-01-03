@@ -30,26 +30,21 @@ namespace SampleProject.Application.Orders.ChangeCustomerOrder
             var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
 
             var orderId = new OrderId(request.OrderId);
-            var existingProductsIds = customer.GetOrderProductsIds(orderId);
 
-            var existingProducts =
-                await this._productRepository.GetByIdsAsync(existingProductsIds);
-
-            var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => new ProductId(x.Id)).ToList());
+            var allProducts = await this._productRepository.GetAllAsync();
 
             var conversionRates = this._foreignExchange.GetConversionRates();
+            var orderProducts = request
+                    .Products
+                    .Select(x => new OrderProductData(new ProductId(x.Id), x.Quantity))
+                    .ToList();  
 
-            var orderCurrency = request.Products.First().Currency;
-            var orderProducts = selectedProducts.Select(x => 
-                new OrderProduct(
-                    x, 
-                    request.Products.Single(y => y.Id == x.Id.Value).Quantity,
-                    orderCurrency,
-                    conversionRates))
-                .ToList();
-
-            
-            customer.ChangeOrder(orderId, existingProducts, orderProducts, conversionRates);
+            customer.ChangeOrder(
+                orderId, 
+                allProducts, 
+                orderProducts, 
+                conversionRates, 
+                request.Currency);
 
             return Unit.Value;
         }

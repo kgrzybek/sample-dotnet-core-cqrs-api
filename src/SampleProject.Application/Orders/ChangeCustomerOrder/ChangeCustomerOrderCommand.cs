@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MediatR;
+using SampleProject.Domain.Products;
 
 namespace SampleProject.Application.Orders.ChangeCustomerOrder
 {
@@ -10,15 +11,19 @@ namespace SampleProject.Application.Orders.ChangeCustomerOrder
 
         public Guid OrderId { get; }
 
+        public string Currency { get; }
+
         public List<ProductDto> Products { get; }
 
         public ChangeCustomerOrderCommand(
             Guid customerId, 
             Guid orderId,
-            List<ProductDto> products)
+            List<ProductDto> products, 
+            string currency)
         {
             this.CustomerId = customerId;
             this.OrderId = orderId;
+            this.Currency = currency;
             this.Products = products;
         }
     }

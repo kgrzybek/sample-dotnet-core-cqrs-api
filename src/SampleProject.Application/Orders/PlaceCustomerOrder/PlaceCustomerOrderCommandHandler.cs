@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -29,21 +30,20 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
         {
             var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
  
-            var selectedProducts = await this._productRepository.GetByIdsAsync(request.Products.Select(x => new ProductId(x.Id)).ToList());
+            var allProducts = await this._productRepository.GetAllAsync();
 
             var conversionRates = this._foreignExchange.GetConversionRates();
 
-            var orderProducts = selectedProducts.Select(x =>
-                new OrderProduct(
-                    x, 
-                    request.Products.Single(y => y.Id == x.Id.Value).Quantity,
-                    request.Products.Single(y => y.Id == x.Id.Value).Currency,
-                    conversionRates)
-                ).ToList();
+            var orderProductsData = request
+                .Products
+                .Select(x => new OrderProductData(new ProductId(x.Id), x.Quantity))
+                .ToList();          
             
-            var order = new Order(orderProducts);
-            
-            customer.PlaceOrder(order);
+            customer.PlaceOrder(
+                orderProductsData, 
+                allProducts, 
+                request.Currency,
+                conversionRates);
 
             return Unit.Value;
         }

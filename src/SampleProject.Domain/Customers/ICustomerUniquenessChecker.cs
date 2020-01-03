@@ -2,6 +2,6 @@
 {
     public interface ICustomerUniquenessChecker
     {
-        bool IsUnique(Customer customer);
+        bool IsUnique(string customerEmail);
     }
 }

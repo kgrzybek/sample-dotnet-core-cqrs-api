@@ -10,7 +10,7 @@ namespace SampleProject.Application.Customers.IntegrationHandlers
 
         public CustomerRegisteredNotification(CustomerRegisteredEvent domainEvent) : base(domainEvent)
         {
-            this.CustomerId = domainEvent.Customer.Id;
+            this.CustomerId = domainEvent.CustomerId;
         }
 
         [JsonConstructor]

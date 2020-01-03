@@ -4,11 +4,11 @@ namespace SampleProject.Domain.Customers.Orders.Events
 {
     public class OrderRemovedEvent : DomainEventBase
     {
-        public Order Order { get; }
+        public OrderId OrderId { get; }
 
-        public OrderRemovedEvent(Order order)
+        public OrderRemovedEvent(OrderId orderId)
         {
-            this.Order = order;
+            this.OrderId = orderId;
         }
     }
 }

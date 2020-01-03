@@ -25,7 +25,7 @@ namespace SampleProject.Application.Customers.RegisterCustomer
 
         public async Task<CustomerDto> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = new Customer(request.Email, request.Name, this._customerUniquenessChecker);
+            var customer = Customer.CreateRegistered(request.Email, request.Name, this._customerUniquenessChecker);
 
             await this._customerRepository.AddAsync(customer);
 

@@ -8,7 +8,7 @@ namespace SampleProject.Application.Orders
 
         public int Quantity { get; set; }
 
-        public string Currency { get; set; }
+        
 
         public string Name { get; set; }
     }

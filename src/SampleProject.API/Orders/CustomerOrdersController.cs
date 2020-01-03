@@ -66,7 +66,7 @@ namespace SampleProject.API.Orders
             [FromRoute]Guid customerId, 
             [FromBody]CustomerOrderRequest request)
         {
-           await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products));
+           await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products, request.Currency));
 
            return Created(string.Empty, null);
         }
@@ -85,7 +85,7 @@ namespace SampleProject.API.Orders
             [FromRoute]Guid orderId,
             [FromBody]CustomerOrderRequest request)
         {
-            await _mediator.Send(new ChangeCustomerOrderCommand(customerId, orderId, request.Products));
+            await _mediator.Send(new ChangeCustomerOrderCommand(customerId, orderId, request.Products, request.Currency));
 
             return Ok();
         }

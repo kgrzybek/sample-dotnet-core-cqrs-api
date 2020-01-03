@@ -21,7 +21,9 @@ namespace SampleProject.Infrastructure.Domain.Customers
             
             builder.HasKey(b => b.Id);
 
-            builder.Property<bool>("_welcomeEmailWasSent").HasColumnName("WelcomeEmailWasSent");
+            builder.Property("_welcomeEmailWasSent").HasColumnName("WelcomeEmailWasSent");
+            builder.Property("_email").HasColumnName("Email");
+            builder.Property("_name").HasColumnName("Name");
             
             builder.OwnsMany<Order>(OrdersList, x =>
             {

@@ -23,7 +23,7 @@ namespace SampleProject.Domain.Customers.Orders
 
         }
 
-        public OrderProduct(
+        private OrderProduct(
             Product product, 
             int quantity, 
             string currency,
@@ -33,6 +33,12 @@ namespace SampleProject.Domain.Customers.Orders
             this.Quantity = quantity;
 
             this.CalculateValue(product, currency, conversionRates);
+        }
+
+        internal static OrderProduct CreateForProduct(Product product, int quantity, string currency,
+            List<ConversionRate> conversionRates)
+        {
+            return new OrderProduct(product, quantity, currency, conversionRates);
         }
 
         internal void ChangeQuantity(Product product, int quantity, List<ConversionRate> conversionRates)

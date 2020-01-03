@@ -13,7 +13,7 @@ namespace SampleProject.Application.Customers.DomainServices
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public bool IsUnique(Customer customer)
+        public bool IsUnique(string customerEmail)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
 
@@ -23,7 +23,7 @@ namespace SampleProject.Application.Customers.DomainServices
             var customersNumber = connection.QuerySingleOrDefault<int?>(sql,
                             new
                             {
-                                customer.Email
+                                Email = customerEmail
                             });
 
             return !customersNumber.HasValue;
