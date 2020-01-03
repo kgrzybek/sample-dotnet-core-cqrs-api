@@ -5,13 +5,13 @@ using System.Reflection;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
-using Quartz;
+using Microsoft.Extensions.Hosting;
+using SampleProject.API.Configuration;
 using SampleProject.Application.Configuration.Validation;
 using SampleProject.API.SeedWork;
 using SampleProject.Domain.SeedWork;
@@ -27,10 +27,7 @@ namespace SampleProject.API
         private readonly IConfiguration _configuration;
         private const string OrdersConnectionString = "OrdersConnectionString";
 
-        private ISchedulerFactory _schedulerFactory;
-        private IScheduler _scheduler;
-
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             this._configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
@@ -42,13 +39,13 @@ namespace SampleProject.API
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();
+            
+            services.AddMemoryCache();
 
-            this.AddSwagger(services);
+            services.AddSwaggerDocumentation();
             
             services
-                .AddEntityFrameworkSqlServer()
-                
                 .AddDbContext<OrdersContext>(options =>
                 {
                     options
@@ -72,8 +69,7 @@ namespace SampleProject.API
                 cachingConfiguration);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
-            IApplicationLifetime lifetime, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -84,38 +80,11 @@ namespace SampleProject.API
                 app.UseProblemDetails();
             }
 
-            app.UseMvc();
+            app.UseRouting();
 
-            ConfigureSwagger(app);
-        }
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-        private static void ConfigureSwagger(IApplicationBuilder app)
-        {
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample CQRS API V1");
-            });
-        }
-
-        private void AddSwagger(IServiceCollection services)
-        {
-            services.AddSwaggerGen(options =>
-            {
-                options.DescribeAllEnumsAsStrings();
-                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
-                {
-                    Title = "Sample CQRS API",
-                    Version = "v1",
-                    Description = "Sample .NET Core REST API CQRS implementation with raw SQL and DDD using Clean Architecture.",
-                });
-
-                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                var commentsFileName = Assembly.GetExecutingAssembly().GetName().Name + ".XML";
-                var commentsFile = Path.Combine(baseDirectory, commentsFileName);
-                options.IncludeXmlComments(commentsFile);
-            });
+            app.UseSwaggerDocumentation();
         }
     }
 }

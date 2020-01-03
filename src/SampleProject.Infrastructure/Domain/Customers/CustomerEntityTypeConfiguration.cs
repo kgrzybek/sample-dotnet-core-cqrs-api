@@ -27,8 +27,10 @@ namespace SampleProject.Infrastructure.Domain.Customers
             
             builder.OwnsMany<Order>(OrdersList, x =>
             {
+                x.WithOwner().HasForeignKey("CustomerId");
+
                 x.ToTable("Orders", SchemaNames.Orders);
-                x.HasForeignKey("CustomerId");
+                
                 x.Property<bool>("_isRemoved").HasColumnName("IsRemoved");
                 x.Property<DateTime>("_orderDate").HasColumnName("OrderDate");
                 x.Property<DateTime?>("_orderChangeDate").HasColumnName("OrderChangeDate");
@@ -39,10 +41,12 @@ namespace SampleProject.Infrastructure.Domain.Customers
 
                 x.OwnsMany<OrderProduct>(OrderProducts, y =>
                 {
+                    y.WithOwner().HasForeignKey("OrderId");
+
                     y.ToTable("OrderProducts", SchemaNames.Orders);
                     y.Property<OrderId>("OrderId");
                     y.Property<ProductId>("ProductId");
-                    y.HasForeignKey("OrderId");
+                    
                     y.HasKey("OrderId", "ProductId");
 
                     y.OwnsOne<MoneyValue>("Value", mv =>
