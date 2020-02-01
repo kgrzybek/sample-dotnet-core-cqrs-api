@@ -44,15 +44,6 @@ namespace SampleProject.API
             services.AddMemoryCache();
 
             services.AddSwaggerDocumentation();
-            
-            services
-                .AddDbContext<OrdersContext>(options =>
-                {
-                    options
-                        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
-                        
-                        .UseSqlServer(this._configuration[OrdersConnectionString]);
-                });
 
             services.AddProblemDetails(x =>
             {

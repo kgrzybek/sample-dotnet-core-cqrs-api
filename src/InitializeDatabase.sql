@@ -136,3 +136,14 @@ CREATE TABLE payments.Payments
     [EmailNotificationIsSent] BIT NOT NULL
 	CONSTRAINT [PK_payments_Payments_Id] PRIMARY KEY ([Id] ASC)
 )
+GO
+
+CREATE VIEW orders.v_Customers
+AS
+SELECT
+	[Customer].[Id],
+	[Customer].[Email],
+	[Customer].[Name],
+    [Customer].[WelcomeEmailWasSent]
+FROM [orders].[Customers] AS [Customer]
+GO

@@ -2,7 +2,7 @@
 
 namespace SampleProject.Application.Customers.RegisterCustomer
 {
-    public class RegisterCustomerCommand : IRequest<CustomerDto>
+    public class RegisterCustomerCommand : CommandBase<CustomerDto>
     {
         public string Email { get; }
 

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleProject.Application;
 using SampleProject.Application.Configuration.Data;
@@ -49,6 +50,20 @@ namespace SampleProject.Infrastructure.Database
 
             builder.RegisterType<StronglyTypedIdValueConverterSelector>()
                 .As<IValueConverterSelector>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .Register(c =>
+                {
+                    var dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
+                    dbContextOptionsBuilder.UseSqlServer(_databaseConnectionString);
+                    dbContextOptionsBuilder
+                        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+
+                    return new OrdersContext(dbContextOptionsBuilder.Options);
+                })
+                .AsSelf()
+                .As<DbContext>()
                 .InstancePerLifetimeScope();
         }
     }

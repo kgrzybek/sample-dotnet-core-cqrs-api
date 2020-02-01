@@ -26,9 +26,13 @@ namespace SampleProject.Infrastructure
         public static IServiceProvider Initialize(
             IServiceCollection services,
             string connectionString,
-            Dictionary<string, TimeSpan> cachingConfiguration)
+            Dictionary<string, TimeSpan> cachingConfiguration,
+            bool runQuartz = true)
         {
-            StartQuartz(connectionString);
+            if (runQuartz)
+            {
+                StartQuartz(connectionString);
+            }
 
             var serviceProvider = CreateAutofacServiceProvider(services, connectionString, cachingConfiguration);
 
@@ -53,11 +57,13 @@ namespace SampleProject.Infrastructure
             container.RegisterModule(new CachingModule(cachingConfiguration));
 
             var buildContainer = container.Build();
-                         
+
             ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
 
             var serviceProvider = new AutofacServiceProvider(buildContainer);
-            
+
+            CompositionRoot.SetContainer(buildContainer);
+
             return serviceProvider;
         }
 
@@ -89,23 +95,23 @@ namespace SampleProject.Infrastructure
             scheduler.Start().GetAwaiter().GetResult();
 
             var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            var trigger = 
+            var trigger =
                 TriggerBuilder
                     .Create()
                     .StartNow()
                     .WithCronSchedule("0/15 * * ? * *")
                     .Build();
 
-            scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult(); 
+            scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
 
             var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
-            var triggerCommandsProcessing = 
+            var triggerCommandsProcessing =
                 TriggerBuilder
                     .Create()
                     .StartNow()
                     .WithCronSchedule("0/15 * * ? * *")
                     .Build();
-            scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();           
+            scheduler.ScheduleJob(processInternalCommandsJob, triggerCommandsProcessing).GetAwaiter().GetResult();
         }
     }
 }
