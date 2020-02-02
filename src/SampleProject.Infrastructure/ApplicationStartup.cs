@@ -6,6 +6,7 @@ using Autofac.Extras.CommonServiceLocator;
 using CommonServiceLocator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
@@ -26,7 +27,7 @@ namespace SampleProject.Infrastructure
         public static IServiceProvider Initialize(
             IServiceCollection services,
             string connectionString,
-            Dictionary<string, TimeSpan> cachingConfiguration,
+            ICacheStore cacheStore,
             bool runQuartz = true)
         {
             if (runQuartz)
@@ -34,15 +35,16 @@ namespace SampleProject.Infrastructure
                 StartQuartz(connectionString);
             }
 
-            var serviceProvider = CreateAutofacServiceProvider(services, connectionString, cachingConfiguration);
+            services.AddSingleton(cacheStore);
+
+            var serviceProvider = CreateAutofacServiceProvider(services, connectionString);
 
             return serviceProvider;
         }
 
         private static IServiceProvider CreateAutofacServiceProvider(
             IServiceCollection services,
-            string connectionString,
-            Dictionary<string, TimeSpan> cachingConfiguration)
+            string connectionString)
         {
             var container = new ContainerBuilder();
 
@@ -53,8 +55,6 @@ namespace SampleProject.Infrastructure
             container.RegisterModule(new DomainModule());
             container.RegisterModule(new EmailModule());
             container.RegisterModule(new ProcessingModule());
-
-            container.RegisterModule(new CachingModule(cachingConfiguration));
 
             var buildContainer = container.Build();
 

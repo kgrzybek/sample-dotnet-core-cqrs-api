@@ -4,7 +4,7 @@ using MediatR;
 
 namespace SampleProject.Application.Orders.PlaceCustomerOrder
 {
-    public class PlaceCustomerOrderCommand : IRequest
+    public class PlaceCustomerOrderCommand : CommandBase<Guid>
     {
         public Guid CustomerId { get; }
 

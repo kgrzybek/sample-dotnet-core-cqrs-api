@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using SampleProject.Domain.Products;
 
 namespace SampleProject.Application.Orders.PlaceCustomerOrder
 {
-    public class PlaceCustomerOrderCommandHandler : IRequestHandler<PlaceCustomerOrderCommand>
+    public class PlaceCustomerOrderCommandHandler : ICommandHandler<PlaceCustomerOrderCommand, Guid>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
@@ -26,7 +27,7 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
             this._foreignExchange = foreignExchange;
         }
 
-        public async Task<Unit> Handle(PlaceCustomerOrderCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(PlaceCustomerOrderCommand request, CancellationToken cancellationToken)
         {
             var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
  
@@ -39,13 +40,13 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
                 .Select(x => new OrderProductData(new ProductId(x.Id), x.Quantity))
                 .ToList();          
             
-            customer.PlaceOrder(
+            var orderId = customer.PlaceOrder(
                 orderProductsData, 
                 allProducts, 
                 request.Currency,
                 conversionRates);
 
-            return Unit.Value;
+            return orderId.Value;
         }
     }
 }

@@ -50,7 +50,7 @@ namespace SampleProject.Domain.Customers
             return new Customer(email, name);
         }
 
-        public void PlaceOrder(
+        public OrderId PlaceOrder(
             List<OrderProductData> orderProductsData,
             List<Product> allProducts,
             string currency, 
@@ -66,6 +66,8 @@ namespace SampleProject.Domain.Customers
             this._orders.Add(order);
 
             this.AddDomainEvent(new OrderPlacedEvent(order.Id));
+
+            return order.Id;
         }
 
         public void ChangeOrder(

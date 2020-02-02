@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ using SampleProject.Application.Configuration.Validation;
 using SampleProject.API.SeedWork;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
+using SampleProject.Infrastructure.Caching;
 using SampleProject.Infrastructure.Database;
 using SampleProject.Infrastructure.SeedWork;
 
@@ -54,10 +56,12 @@ namespace SampleProject.API
             var children = this._configuration.GetSection("Caching").GetChildren();
             var cachingConfiguration = children.ToDictionary(child => child.Key, child => TimeSpan.Parse(child.Value));
 
+            var serviceProvider = services.BuildServiceProvider();
+            var memoryCache = serviceProvider.GetService<IMemoryCache>();
             return ApplicationStartup.Initialize(
                 services, 
                 this._configuration[OrdersConnectionString],
-                cachingConfiguration);
+                new MemoryCacheStore(memoryCache, cachingConfiguration));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

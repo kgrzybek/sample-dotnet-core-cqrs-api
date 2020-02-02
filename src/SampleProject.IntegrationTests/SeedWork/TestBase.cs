@@ -4,7 +4,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using SampleProject.Infrastructure;
 
@@ -33,7 +35,7 @@ namespace SampleProject.IntegrationTests.SeedWork
             ApplicationStartup.Initialize(
                 new ServiceCollection(),
                 ConnectionString, 
-                new Dictionary<string, TimeSpan>(),
+                new CacheStore(),
                 runQuartz:false);
         }
 

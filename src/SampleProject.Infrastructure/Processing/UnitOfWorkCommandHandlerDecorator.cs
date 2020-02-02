@@ -1,17 +1,18 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Application;
 using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Infrastructure.Processing
 {
-    public class DomainEventsDispatcherCommandHandlerDecorator<T> : IRequestHandler<T, Unit> where T:IRequest
+    public class UnitOfWorkCommandHandlerDecorator<T> : ICommandHandler<T> where T:ICommand
     {
-        private readonly IRequestHandler<T, Unit> _decorated;
+        private readonly ICommandHandler<T> _decorated;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DomainEventsDispatcherCommandHandlerDecorator(
-            IRequestHandler<T, Unit> decorated, 
+        public UnitOfWorkCommandHandlerDecorator(
+            ICommandHandler<T> decorated, 
             IUnitOfWork unitOfWork)
         {
             _decorated = decorated;

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Autofac;
 using MediatR;
+using SampleProject.Application;
 using SampleProject.Application.Configuration.DomainEvents;
 using SampleProject.Application.Configuration.Processing;
 using SampleProject.Application.Payments;
@@ -24,8 +25,12 @@ namespace SampleProject.Infrastructure.Processing
                 typeof(INotificationHandler<>));
 
             builder.RegisterGenericDecorator(
-                typeof(DomainEventsDispatcherCommandHandlerDecorator<>),
-                typeof(IRequestHandler<,>));
+                typeof(UnitOfWorkCommandHandlerDecorator<>),
+                typeof(ICommandHandler<>));
+
+            builder.RegisterGenericDecorator(
+                typeof(UnitOfWorkCommandHandlerWithResultDecorator<,>),
+                typeof(ICommandHandler<,>));
 
             builder.RegisterType<CommandsDispatcher>()
                 .As<ICommandsDispatcher>()

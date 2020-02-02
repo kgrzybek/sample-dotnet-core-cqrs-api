@@ -24,8 +24,8 @@ namespace SampleProject.Domain.Customers.Orders
         }
 
         private OrderProduct(
-            Product product, 
-            int quantity, 
+            Product product,
+            int quantity,
             string currency,
             List<ConversionRate> conversionRates)
         {
@@ -53,9 +53,15 @@ namespace SampleProject.Domain.Customers.Orders
             var totalValueForOrderProduct = this.Quantity * product.GetPrice(currency).Value;
             this.Value = new MoneyValue(totalValueForOrderProduct, currency);
 
-            var conversionRate = conversionRates.Single(x => x.SourceCurrency == currency && x.TargetCurrency == "EUR");
-
-            this.ValueInEUR = conversionRate.Convert(this.Value);
+            if (currency == "EUR")
+            {
+                this.ValueInEUR = new MoneyValue(this.Value.Value, this.Value.Currency);
+            }
+            else
+            {
+                var conversionRate = conversionRates.Single(x => x.SourceCurrency == currency && x.TargetCurrency == "EUR");
+                this.ValueInEUR = conversionRate.Convert(this.Value);
+            }
         }
     }
 }
