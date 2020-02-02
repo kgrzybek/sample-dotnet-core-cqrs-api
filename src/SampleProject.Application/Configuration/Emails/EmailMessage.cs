@@ -1,6 +1,6 @@
 ﻿namespace SampleProject.Application.Configuration.Emails
 {
-    public class EmailMessage
+    public struct EmailMessage
     {
         public string From { get; }
 

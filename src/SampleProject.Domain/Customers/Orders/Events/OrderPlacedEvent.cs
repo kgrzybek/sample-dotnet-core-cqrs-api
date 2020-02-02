@@ -7,9 +7,12 @@ namespace SampleProject.Domain.Customers.Orders.Events
     {
         public OrderId OrderId { get; }
 
-        public OrderPlacedEvent(OrderId orderId)
+        public CustomerId CustomerId { get; }
+
+        public OrderPlacedEvent(OrderId orderId, CustomerId customerId)
         {
             this.OrderId = orderId;
+            this.CustomerId = customerId;
         }
     }
 }

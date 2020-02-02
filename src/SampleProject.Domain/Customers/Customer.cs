@@ -65,7 +65,7 @@ namespace SampleProject.Domain.Customers
 
             this._orders.Add(order);
 
-            this.AddDomainEvent(new OrderPlacedEvent(order.Id));
+            this.AddDomainEvent(new OrderPlacedEvent(order.Id, this.Id));
 
             return order.Id;
         }

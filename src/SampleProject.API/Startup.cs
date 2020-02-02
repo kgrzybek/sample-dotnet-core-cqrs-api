@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using SampleProject.API.Configuration;
 using SampleProject.Application.Configuration.Validation;
 using SampleProject.API.SeedWork;
+using SampleProject.Application.Configuration.Emails;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure;
 using SampleProject.Infrastructure.Caching;
@@ -56,12 +57,15 @@ namespace SampleProject.API
             var children = this._configuration.GetSection("Caching").GetChildren();
             var cachingConfiguration = children.ToDictionary(child => child.Key, child => TimeSpan.Parse(child.Value));
 
+            var emailsSettings = _configuration.GetSection("EmailsSettings").Get<EmailsSettings>();
             var serviceProvider = services.BuildServiceProvider();
             var memoryCache = serviceProvider.GetService<IMemoryCache>();
             return ApplicationStartup.Initialize(
                 services, 
                 this._configuration[OrdersConnectionString],
-                new MemoryCacheStore(memoryCache, cachingConfiguration));
+                new MemoryCacheStore(memoryCache, cachingConfiguration),
+                null,
+                emailsSettings);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

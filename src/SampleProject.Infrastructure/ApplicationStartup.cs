@@ -10,6 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
+using SampleProject.Application.Configuration.Emails;
 using SampleProject.Infrastructure.Caching;
 using SampleProject.Infrastructure.Database;
 using SampleProject.Infrastructure.Domain;
@@ -28,23 +29,27 @@ namespace SampleProject.Infrastructure
             IServiceCollection services,
             string connectionString,
             ICacheStore cacheStore,
+            IEmailSender emailSender,
+            EmailsSettings emailsSettings,
             bool runQuartz = true)
         {
             if (runQuartz)
             {
-                StartQuartz(connectionString);
+                StartQuartz(connectionString, emailsSettings);
             }
 
             services.AddSingleton(cacheStore);
 
-            var serviceProvider = CreateAutofacServiceProvider(services, connectionString);
+            var serviceProvider = CreateAutofacServiceProvider(services, connectionString, emailSender, emailsSettings);
 
             return serviceProvider;
         }
 
         private static IServiceProvider CreateAutofacServiceProvider(
             IServiceCollection services,
-            string connectionString)
+            string connectionString,
+            IEmailSender emailSender,
+            EmailsSettings emailsSettings)
         {
             var container = new ContainerBuilder();
 
@@ -53,7 +58,15 @@ namespace SampleProject.Infrastructure
             container.RegisterModule(new DataAccessModule(connectionString));
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new DomainModule());
-            container.RegisterModule(new EmailModule());
+            if (emailSender != null)
+            {
+                container.RegisterModule(new EmailModule(emailSender, emailsSettings));
+            }
+            else
+            {
+                container.RegisterModule(new EmailModule(emailsSettings));
+            }
+            
             container.RegisterModule(new ProcessingModule());
 
             var buildContainer = container.Build();
@@ -67,7 +80,7 @@ namespace SampleProject.Infrastructure
             return serviceProvider;
         }
 
-        private static void StartQuartz(string connectionString)
+        private static void StartQuartz(string connectionString, EmailsSettings emailsSettings)
         {
             var schedulerFactory = new StdSchedulerFactory();
             var scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
@@ -76,7 +89,7 @@ namespace SampleProject.Infrastructure
             container.RegisterModule(new QuartzModule());
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new DataAccessModule(connectionString));
-            container.RegisterModule(new EmailModule());
+            container.RegisterModule(new EmailModule(emailsSettings));
             container.RegisterModule(new ProcessingModule());
 
             container.Register(c =>

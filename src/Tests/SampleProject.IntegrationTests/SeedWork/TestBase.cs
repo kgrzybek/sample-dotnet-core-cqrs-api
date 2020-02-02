@@ -7,7 +7,9 @@ using Dapper;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NSubstitute;
 using NUnit.Framework;
+using SampleProject.Application.Configuration.Emails;
 using SampleProject.Infrastructure;
 
 namespace SampleProject.IntegrationTests.SeedWork
@@ -15,6 +17,10 @@ namespace SampleProject.IntegrationTests.SeedWork
     public class TestBase
     {
         protected string ConnectionString;
+
+        protected EmailsSettings EmailsSettings;
+
+        protected IEmailSender EmailSender;
 
         [SetUp]
         public async Task BeforeEachTest()
@@ -32,10 +38,16 @@ namespace SampleProject.IntegrationTests.SeedWork
 
             await ClearDatabase(sqlConnection);
 
+            EmailsSettings = new EmailsSettings {FromAddressEmail = "from@mail.com"};
+
+            EmailSender = Substitute.For<IEmailSender>();
+
             ApplicationStartup.Initialize(
                 new ServiceCollection(),
                 ConnectionString, 
                 new CacheStore(),
+                EmailSender,
+                EmailsSettings,
                 runQuartz:false);
         }
 
