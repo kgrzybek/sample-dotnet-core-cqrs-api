@@ -9,7 +9,7 @@ using SampleProject.Domain.Products;
 
 namespace SampleProject.Application.Orders.ChangeCustomerOrder
 {
-    internal class ChangeCustomerOrderCommandHandler : IRequestHandler<ChangeCustomerOrderCommand>
+    internal class ChangeCustomerOrderCommandHandler : ICommandHandler<ChangeCustomerOrderCommand,Unit>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
