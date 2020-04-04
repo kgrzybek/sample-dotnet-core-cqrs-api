@@ -5,7 +5,7 @@ using SampleProject.Domain.Products;
 
 namespace SampleProject.Application.Orders.ChangeCustomerOrder
 {
-    public class ChangeCustomerOrderCommand : IRequest
+    public class ChangeCustomerOrderCommand : CommandBase<Unit>
     {
         public Guid CustomerId { get; }
 
