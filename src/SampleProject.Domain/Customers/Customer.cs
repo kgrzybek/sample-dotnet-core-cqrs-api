@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
+using SampleProject.Domain.Customers.Rules;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
@@ -41,11 +42,7 @@ namespace SampleProject.Domain.Customers
             string name,
             ICustomerUniquenessChecker customerUniquenessChecker)
         {
-            var isUnique = customerUniquenessChecker.IsUnique(email);
-            if (!isUnique)
-            {
-                throw new BusinessRuleValidationException("Customer with this email already exists.");
-            }
+            CheckRule(new CustomerEmailMustBeUniqueRule(customerUniquenessChecker, email));
 
             return new Customer(email, name);
         }
@@ -56,10 +53,7 @@ namespace SampleProject.Domain.Customers
             string currency, 
             List<ConversionRate> conversionRates)
         {
-            if (this._orders.Count(x => x.IsOrderedToday()) >= 2)
-            {
-                throw new BusinessRuleValidationException("You cannot order more than 2 orders on the same day");
-            }
+            CheckRule(new CustomerCannotOrderMoreThan2OrdersOnTheSameDayRule(_orders));
 
             var order = Order.CreateNew(orderProductsData, allProducts, currency, conversionRates);
 
