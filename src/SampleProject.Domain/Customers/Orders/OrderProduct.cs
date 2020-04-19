@@ -50,12 +50,10 @@ namespace SampleProject.Domain.Customers.Orders
 
         private void CalculateValue(Product product, string currency, List<ConversionRate> conversionRates)
         {
-            var totalValueForOrderProduct = this.Quantity * product.GetPrice(currency).Value;
-            this.Value = new MoneyValue(totalValueForOrderProduct, currency);
-
+            this.Value = this.Quantity * product.GetPrice(currency);
             if (currency == "EUR")
             {
-                this.ValueInEUR = new MoneyValue(this.Value.Value, this.Value.Currency);
+                this.ValueInEUR = this.Quantity * product.GetPrice(currency);
             }
             else
             {

@@ -11,12 +11,18 @@ namespace SampleProject.Domain.Customers.Orders
     public class Order : Entity
     {
         internal OrderId Id;
+
         private bool _isRemoved;
+
         private MoneyValue _value;
+
         private MoneyValue _valueInEUR;
+
         private List<OrderProduct> _orderProducts;
         private OrderStatus _status;
+
         private DateTime _orderDate;
+
         private DateTime? _orderChangeDate;
 
         private Order()
@@ -111,11 +117,9 @@ namespace SampleProject.Domain.Customers.Orders
 
         private void CalculateOrderValue()
         {
-            var value = this._orderProducts.Sum(x => x.Value.Value);
-            this._value = new MoneyValue(value, this._orderProducts.First().Value.Currency);
+            _value = _orderProducts.Sum(x => x.Value);
 
-            var valueInEUR = this._orderProducts.Sum(x => x.ValueInEUR.Value);            
-            this._valueInEUR = new MoneyValue(valueInEUR, "EUR");
+            _valueInEUR = _orderProducts.Sum(x => x.ValueInEUR);
         }
     }
 }

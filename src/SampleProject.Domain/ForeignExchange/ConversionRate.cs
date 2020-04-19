@@ -20,7 +20,7 @@ namespace SampleProject.Domain.ForeignExchange
 
         internal MoneyValue Convert(MoneyValue value)
         {
-            return new MoneyValue(value.Value * this.Factor, this.TargetCurrency);
+            return this.Factor * value;
         }
     }
 }
