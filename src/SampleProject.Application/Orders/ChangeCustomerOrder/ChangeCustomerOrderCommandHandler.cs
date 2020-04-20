@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Application.Configuration.Data;
+using SampleProject.Application.Orders.PlaceCustomerOrder;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.ForeignExchange;
@@ -12,17 +14,19 @@ namespace SampleProject.Application.Orders.ChangeCustomerOrder
     internal class ChangeCustomerOrderCommandHandler : ICommandHandler<ChangeCustomerOrderCommand,Unit>
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IProductRepository _productRepository;
+
         private readonly IForeignExchange _foreignExchange;
 
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
+
         public ChangeCustomerOrderCommandHandler(
-            ICustomerRepository customerRepository, 
-            IProductRepository productRepository, 
-            IForeignExchange foreignExchange)
+            ICustomerRepository customerRepository,
+            IForeignExchange foreignExchange, 
+            ISqlConnectionFactory sqlConnectionFactory)
         {
             this._customerRepository = customerRepository;
-            this._productRepository = productRepository;
             _foreignExchange = foreignExchange;
+            _sqlConnectionFactory = sqlConnectionFactory;
         }
 
         public async Task<Unit> Handle(ChangeCustomerOrderCommand request, CancellationToken cancellationToken)
@@ -31,17 +35,18 @@ namespace SampleProject.Application.Orders.ChangeCustomerOrder
 
             var orderId = new OrderId(request.OrderId);
 
-            var allProducts = await this._productRepository.GetAllAsync();
-
             var conversionRates = this._foreignExchange.GetConversionRates();
             var orderProducts = request
                     .Products
                     .Select(x => new OrderProductData(new ProductId(x.Id), x.Quantity))
-                    .ToList();  
+                    .ToList();
+
+            var allProductPrices =
+                await ProductPriceProvider.GetAllProductPrices(_sqlConnectionFactory.GetOpenConnection());
 
             customer.ChangeOrder(
-                orderId, 
-                allProducts, 
+                orderId,
+                allProductPrices, 
                 orderProducts, 
                 conversionRates, 
                 request.Currency);

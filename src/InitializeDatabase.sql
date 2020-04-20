@@ -147,3 +147,11 @@ SELECT
     [Customer].[WelcomeEmailWasSent]
 FROM [orders].[Customers] AS [Customer]
 GO
+
+CREATE VIEW orders.v_ProductPrices
+AS
+SELECT
+	[ProductPrice].[ProductId],
+	[ProductPrice].[Value],
+	[ProductPrice].[Currency]
+FROM orders.ProductPrices AS [ProductPrice]

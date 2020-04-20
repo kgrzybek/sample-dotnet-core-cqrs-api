@@ -19,6 +19,7 @@ namespace SampleProject.Domain.Customers.Orders
         private MoneyValue _valueInEUR;
 
         private List<OrderProduct> _orderProducts;
+
         private OrderStatus _status;
 
         private DateTime _orderDate;
@@ -33,20 +34,21 @@ namespace SampleProject.Domain.Customers.Orders
 
         private Order(
             List<OrderProductData> orderProductsData,
-            List<Product> allProducts,
+            List<ProductPriceData> productPrices,
             string currency, 
             List<ConversionRate> conversionRates
             )
         {
-            this._orderDate = DateTime.UtcNow;
+            this._orderDate = SystemClock.Now;
             this.Id = new OrderId(Guid.NewGuid());
             this._orderProducts = new List<OrderProduct>();
 
             foreach (var orderProductData in orderProductsData)
             {
-                var product = allProducts.Single(x => x.Id == orderProductData.ProductId);
+                var productPrice = productPrices.Single(x => x.ProductId == orderProductData.ProductId &&
+                                                             x.Price.Currency == currency);
                 var orderProduct = OrderProduct.CreateForProduct(
-                    product, 
+                    productPrice, 
                     orderProductData.Quantity,
                     currency, 
                     conversionRates);
@@ -59,22 +61,23 @@ namespace SampleProject.Domain.Customers.Orders
         }
 
         internal static Order CreateNew(List<OrderProductData> orderProductsData,
-            List<Product> allProducts,
+            List<ProductPriceData> allProductPrices,
             string currency,
             List<ConversionRate> conversionRates)
         {
-            return new Order(orderProductsData, allProducts, currency, conversionRates);
+            return new Order(orderProductsData, allProductPrices, currency, conversionRates);
         }
 
         internal void Change(
-            List<Product> allProducts,
+            List<ProductPriceData> allProductPrices,
             List<OrderProductData> orderProductsData, 
             List<ConversionRate> conversionRates,
             string currency)
         {
             foreach (var orderProductData in orderProductsData)
             {
-                var product = allProducts.Single(x => x.Id == orderProductData.ProductId);
+                var product = allProductPrices.Single(x => x.ProductId == orderProductData.ProductId &&
+                                                           x.Price.Currency == currency);
                 
                 var existingProductOrder = _orderProducts.SingleOrDefault(x => x.ProductId == orderProductData.ProductId);
                 if (existingProductOrder != null)
@@ -112,7 +115,12 @@ namespace SampleProject.Domain.Customers.Orders
 
         internal bool IsOrderedToday()
         {
-           return this._orderDate.Date == DateTime.UtcNow.Date;
+           return this._orderDate.Date == SystemClock.Now.Date;
+        }
+
+        internal MoneyValue GetValue()
+        {
+            return _value;
         }
 
         private void CalculateOrderValue()

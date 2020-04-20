@@ -33,6 +33,7 @@ namespace SampleProject.Domain.Customers
             _email = email;
             _name = name;
             _welcomeEmailWasSent = false;
+            _orders = new List<Order>();
 
             this.AddDomainEvent(new CustomerRegisteredEvent(this.Id));
         }
@@ -49,28 +50,31 @@ namespace SampleProject.Domain.Customers
 
         public OrderId PlaceOrder(
             List<OrderProductData> orderProductsData,
-            List<Product> allProducts,
+            List<ProductPriceData> allProductPrices,
             string currency, 
             List<ConversionRate> conversionRates)
         {
             CheckRule(new CustomerCannotOrderMoreThan2OrdersOnTheSameDayRule(_orders));
+            CheckRule(new OrderMustHaveAtLeastOneProductRule(orderProductsData));
 
-            var order = Order.CreateNew(orderProductsData, allProducts, currency, conversionRates);
+            var order = Order.CreateNew(orderProductsData, allProductPrices, currency, conversionRates);
 
             this._orders.Add(order);
 
-            this.AddDomainEvent(new OrderPlacedEvent(order.Id, this.Id));
+            this.AddDomainEvent(new OrderPlacedEvent(order.Id, this.Id, order.GetValue()));
 
             return order.Id;
         }
 
         public void ChangeOrder(
             OrderId orderId, 
-            List<Product> existingProducts,
+            List<ProductPriceData> existingProducts,
             List<OrderProductData> newOrderProductsData,
             List<ConversionRate> conversionRates,
             string currency)
         {
+            CheckRule(new OrderMustHaveAtLeastOneProductRule(newOrderProductsData));
+
             var order = this._orders.Single(x => x.Id == orderId);
             order.Change(existingProducts, newOrderProductsData, conversionRates, currency);
 

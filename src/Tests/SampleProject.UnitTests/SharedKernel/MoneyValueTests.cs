@@ -59,10 +59,10 @@ namespace SampleProject.UnitTests.SharedKernel
         public void GivenTwoMoneyValuesWithDifferentCurrencies_WhenAddThem_ThrowsMoneyValueOperationMustBePerformedOnTheSameCurrencyRule()
         {
             var valueInEuros = MoneyValue.Of(100, "EUR");
-            var valueInDolars = MoneyValue.Of(50, "USD");
+            var valueInDollars = MoneyValue.Of(50, "USD");
             AssertBrokenRule<MoneyValueOperationMustBePerformedOnTheSameCurrencyRule>(() =>
             {
-                var add = valueInEuros + valueInDolars;
+                var add = valueInEuros + valueInDollars;
             });
         }
     }

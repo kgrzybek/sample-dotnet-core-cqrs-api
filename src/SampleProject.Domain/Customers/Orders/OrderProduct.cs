@@ -24,36 +24,37 @@ namespace SampleProject.Domain.Customers.Orders
         }
 
         private OrderProduct(
-            Product product,
+            ProductPriceData productPrice,
             int quantity,
             string currency,
             List<ConversionRate> conversionRates)
         {
-            this.ProductId = product.Id;
+            this.ProductId = productPrice.ProductId;
             this.Quantity = quantity;
 
-            this.CalculateValue(product, currency, conversionRates);
+            this.CalculateValue(productPrice, currency, conversionRates);
         }
 
-        internal static OrderProduct CreateForProduct(Product product, int quantity, string currency,
+        internal static OrderProduct CreateForProduct(
+            ProductPriceData productPrice, int quantity, string currency,
             List<ConversionRate> conversionRates)
         {
-            return new OrderProduct(product, quantity, currency, conversionRates);
+            return new OrderProduct(productPrice, quantity, currency, conversionRates);
         }
 
-        internal void ChangeQuantity(Product product, int quantity, List<ConversionRate> conversionRates)
+        internal void ChangeQuantity(ProductPriceData productPrice, int quantity, List<ConversionRate> conversionRates)
         {
             this.Quantity = quantity;
 
-            this.CalculateValue(product, this.Value.Currency, conversionRates);
+            this.CalculateValue(productPrice, this.Value.Currency, conversionRates);
         }
 
-        private void CalculateValue(Product product, string currency, List<ConversionRate> conversionRates)
+        private void CalculateValue(ProductPriceData productPrice, string currency, List<ConversionRate> conversionRates)
         {
-            this.Value = this.Quantity * product.GetPrice(currency);
+            this.Value = this.Quantity * productPrice.Price;
             if (currency == "EUR")
             {
-                this.ValueInEUR = this.Quantity * product.GetPrice(currency);
+                this.ValueInEUR = this.Quantity * productPrice.Price;
             }
             else
             {
