@@ -14,9 +14,9 @@ namespace SampleProject.Domain.Customers
     {
         public CustomerId Id { get; private set; }
 
-        public string _email;
+        private string _email;
 
-        public string _name;
+        private string _name;
 
         private readonly List<Order> _orders;
 

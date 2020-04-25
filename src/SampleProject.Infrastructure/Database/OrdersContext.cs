@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SampleProject.Application.Configuration.Processing;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Payments;
 using SampleProject.Domain.Products;
-using SampleProject.Infrastructure.Domain.Customers;
-using SampleProject.Infrastructure.Domain.Payments;
-using SampleProject.Infrastructure.Domain.Products;
 using SampleProject.Infrastructure.Processing.InternalCommands;
 using SampleProject.Infrastructure.Processing.Outbox;
 

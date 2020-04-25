@@ -37,6 +37,7 @@ namespace SampleProject.Infrastructure.Processing
                 builder
                     .RegisterAssemblyTypes(typeof(GetCustomerOrdersQuery).GetTypeInfo().Assembly)
                     .AsClosedTypesOf(mediatrOpenType)
+                    .FindConstructorsWith(new AllConstructorFinder())
                     .AsImplementedInterfaces();
             }
 
@@ -52,7 +53,7 @@ namespace SampleProject.Infrastructure.Processing
             builder.RegisterGeneric(typeof(CommandValidationBehavior<,>)).As(typeof(IPipelineBehavior<,>));
         }
 
-        public class ScopedContravariantRegistrationSource : IRegistrationSource
+        private class ScopedContravariantRegistrationSource : IRegistrationSource
         {
             private readonly IRegistrationSource _source = new ContravariantRegistrationSource();
             private readonly List<Type> _types = new List<Type>();

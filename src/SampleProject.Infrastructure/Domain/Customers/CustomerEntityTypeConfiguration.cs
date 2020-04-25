@@ -10,7 +10,7 @@ using SampleProject.Infrastructure.Database;
 
 namespace SampleProject.Infrastructure.Domain.Customers
 {
-    internal class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer>
+    internal sealed class CustomerEntityTypeConfiguration : IEntityTypeConfiguration<Customer>
     {
         internal const string OrdersList = "_orders";
         internal const string OrderProducts = "_orderProducts";

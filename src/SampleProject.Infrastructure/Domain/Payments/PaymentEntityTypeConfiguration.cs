@@ -8,7 +8,7 @@ using SampleProject.Infrastructure.Database;
 
 namespace SampleProject.Infrastructure.Domain.Payments
 {
-    internal class PaymentEntityTypeConfiguration : IEntityTypeConfiguration<Payment>
+    internal sealed class PaymentEntityTypeConfiguration : IEntityTypeConfiguration<Payment>
     {
         public void Configure(EntityTypeBuilder<Payment> builder)
         {

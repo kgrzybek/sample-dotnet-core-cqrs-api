@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SampleProject.Application.Configuration.Processing;
 using SampleProject.Infrastructure.Database;
 
 namespace SampleProject.Infrastructure.Processing.InternalCommands
 {
-    internal class InternalCommandEntityTypeConfiguration : IEntityTypeConfiguration<InternalCommand>
+    internal sealed class InternalCommandEntityTypeConfiguration : IEntityTypeConfiguration<InternalCommand>
     {
         public void Configure(EntityTypeBuilder<InternalCommand> builder)
         {

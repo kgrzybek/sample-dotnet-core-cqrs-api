@@ -18,10 +18,5 @@ namespace SampleProject.Domain.Products
         {
 
         }
-
-        internal MoneyValue GetPrice(string currency)
-        {
-            return this._prices.Single(x => x.Value.Currency == currency).Value;
-        }
     }
 }

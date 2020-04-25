@@ -7,11 +7,11 @@ using SampleProject.Application.Configuration.Data;
 
 namespace SampleProject.Application.Orders.GetCustomerOrders
 {
-    internal class GetCustomerOrdersQueryHandler : IRequestHandler<GetCustomerOrdersQuery, List<OrderDto>>
+    internal sealed class GetCustomerOrdersQueryHandler : IRequestHandler<GetCustomerOrdersQuery, List<OrderDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetCustomerOrdersQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        internal GetCustomerOrdersQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             this._sqlConnectionFactory = sqlConnectionFactory;
         }

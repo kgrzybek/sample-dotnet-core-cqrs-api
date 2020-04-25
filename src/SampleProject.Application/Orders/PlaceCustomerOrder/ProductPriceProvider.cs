@@ -26,7 +26,7 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
                 .ToList();
         }
 
-        private class ProductPriceResponse
+        private sealed class ProductPriceResponse
         {
             public Guid ProductId { get; set; }
 

@@ -5,7 +5,7 @@ using SampleProject.Infrastructure.Database;
 
 namespace SampleProject.Infrastructure.Domain.Products
 {
-    internal class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
+    internal sealed class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {

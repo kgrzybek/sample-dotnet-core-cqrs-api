@@ -2,6 +2,7 @@
 using SampleProject.Application.Customers.DomainServices;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.ForeignExchange;
+using SampleProject.Infrastructure.Domain.ForeignExchanges;
 
 namespace SampleProject.Infrastructure.Domain
 {
@@ -13,7 +14,7 @@ namespace SampleProject.Infrastructure.Domain
                 .As<ICustomerUniquenessChecker>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<ForeignExchange.ForeignExchange>()
+            builder.RegisterType<ForeignExchange>()
                 .As<IForeignExchange>()
                 .InstancePerLifetimeScope();
         }

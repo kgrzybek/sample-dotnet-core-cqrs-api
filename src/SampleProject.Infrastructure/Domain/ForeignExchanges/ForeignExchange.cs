@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Infrastructure.Caching;
 
-namespace SampleProject.Infrastructure.Domain.ForeignExchange
+namespace SampleProject.Infrastructure.Domain.ForeignExchanges
 {
     public class ForeignExchange : IForeignExchange
     {
