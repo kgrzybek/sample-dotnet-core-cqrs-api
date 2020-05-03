@@ -1,4 +1,5 @@
 ﻿using System;
+using SampleProject.Application.Configuration.Queries;
 
 namespace SampleProject.Application.Customers.GetCustomerDetails
 {

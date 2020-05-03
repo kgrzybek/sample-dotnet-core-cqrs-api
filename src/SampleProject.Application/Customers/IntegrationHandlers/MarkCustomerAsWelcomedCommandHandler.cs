@@ -1,11 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers.Orders;
 
 namespace SampleProject.Application.Customers.IntegrationHandlers
 {
-    public class MarkCustomerAsWelcomedCommandHandler : IRequestHandler<MarkCustomerAsWelcomedCommand, Unit>
+    public class MarkCustomerAsWelcomedCommandHandler : ICommandHandler<MarkCustomerAsWelcomedCommand, Unit>
     {
         private readonly ICustomerRepository _customerRepository;
 

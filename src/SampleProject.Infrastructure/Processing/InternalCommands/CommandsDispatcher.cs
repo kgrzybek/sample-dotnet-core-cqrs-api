@@ -25,14 +25,14 @@ namespace SampleProject.Infrastructure.Processing.InternalCommands
 
         public async Task DispatchCommandAsync(Guid id)
         {
-            var command = await this._ordersContext.InternalCommands.SingleOrDefaultAsync(x => x.Id == id);
+            var internalCommand = await this._ordersContext.InternalCommands.SingleOrDefaultAsync(x => x.Id == id);
 
-            Type type = Assembly.GetAssembly(typeof(MarkCustomerAsWelcomedCommand)).GetType(command.Type);
-            var request = JsonConvert.DeserializeObject(command.Data, type);
+            Type type = Assembly.GetAssembly(typeof(MarkCustomerAsWelcomedCommand)).GetType(internalCommand.Type);
+            dynamic command = JsonConvert.DeserializeObject(internalCommand.Data, type);
 
-            command.ProcessedDate = DateTime.UtcNow;
+            internalCommand.ProcessedDate = DateTime.UtcNow;
 
-            await this._mediator.Send((IRequest)request);
+            await this._mediator.Send(command);
         }
     }
 }

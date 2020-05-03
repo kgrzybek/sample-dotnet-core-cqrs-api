@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Dapper;
 using MediatR;
 using SampleProject.Application.Configuration.Data;
+using SampleProject.Application.Configuration.Queries;
 
 namespace SampleProject.Application.Orders.GetCustomerOrders
 {
-    internal sealed class GetCustomerOrdersQueryHandler : IRequestHandler<GetCustomerOrdersQuery, List<OrderDto>>
+    internal sealed class GetCustomerOrdersQueryHandler : IQueryHandler<GetCustomerOrdersQuery, List<OrderDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 

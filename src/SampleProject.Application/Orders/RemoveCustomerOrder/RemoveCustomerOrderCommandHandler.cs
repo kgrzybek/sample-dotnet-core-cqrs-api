@@ -1,12 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 
 namespace SampleProject.Application.Orders.RemoveCustomerOrder
 {
-    public class RemoveCustomerOrderCommandHandler : IRequestHandler<RemoveCustomerOrderCommand>
+    public class RemoveCustomerOrderCommandHandler : ICommandHandler<RemoveCustomerOrderCommand>
     {
         private readonly ICustomerRepository _customerRepository;
 

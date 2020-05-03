@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MediatR;
+using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Products;
 
 namespace SampleProject.Application.Orders.ChangeCustomerOrder

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Dapper;
 using SampleProject.Application.Configuration.Data;
+using SampleProject.Application.Configuration.Queries;
 
 namespace SampleProject.Application.Customers.GetCustomerDetails
 {

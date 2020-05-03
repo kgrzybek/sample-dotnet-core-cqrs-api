@@ -1,13 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Application.Customers.RegisterCustomer
 {
-    public class RegisterCustomerCommandHandler : IRequestHandler<RegisterCustomerCommand, CustomerDto>
+    public class RegisterCustomerCommandHandler : ICommandHandler<RegisterCustomerCommand, CustomerDto>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly ICustomerUniquenessChecker _customerUniquenessChecker;

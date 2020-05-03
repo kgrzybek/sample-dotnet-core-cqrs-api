@@ -12,25 +12,33 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
     {
         private readonly IEmailSender _emailSender;
         private readonly EmailsSettings _emailsSettings;
-        private readonly ISqlConnectionFactory _sqlConnectionFactoryory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public OrderPlacedNotificationHandler(IEmailSender emailSender, EmailsSettings emailsSettings, ISqlConnectionFactory sqlConnectionFactoryory)
+        public OrderPlacedNotificationHandler(
+            IEmailSender emailSender, 
+            EmailsSettings emailsSettings, 
+            ISqlConnectionFactory sqlConnectionFactory)
         {
             _emailSender = emailSender;
             _emailsSettings = emailsSettings;
-            _sqlConnectionFactoryory = sqlConnectionFactoryory;
+            _sqlConnectionFactory = sqlConnectionFactory;
         }
 
         public async Task Handle(OrderPlacedNotification request, CancellationToken cancellationToken)
         {
-            var connection = _sqlConnectionFactoryory.GetOpenConnection();
+            var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT [Customer].[Email] " +
                                "FROM orders.v_Customers AS [Customer] " +
                                "WHERE [Customer].[Id] = @Id";
 
-            var customerEmail = await connection.QueryFirstAsync<string>(sql, new {Id = request.CustomerId});
-            EmailMessage emailMessage = new EmailMessage(
+            var customerEmail = await connection.QueryFirstAsync<string>(sql, 
+                new
+                {
+                    Id = request.CustomerId.Value
+                });
+
+            var emailMessage = new EmailMessage(
                 _emailsSettings.FromAddressEmail, 
                 customerEmail, 
                 OrderNotificationsService.GetOrderEmailConfirmationDescription(request.OrderId));

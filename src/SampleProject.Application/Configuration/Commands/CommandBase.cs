@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SampleProject.Application
+namespace SampleProject.Application.Configuration.Commands
 {
     public class CommandBase : ICommand
     {

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SampleProject.Application
+namespace SampleProject.Application.Configuration.Commands
 {
     public interface ICommandHandler<in TCommand> :
         IRequestHandler<TCommand> where TCommand : ICommand

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SampleProject.Application.Configuration.Processing;
@@ -17,7 +18,8 @@ namespace SampleProject.Application.Payments
 
         public async Task Handle(PaymentCreatedNotification request, CancellationToken cancellationToken)
         {
-            await _commandsScheduler.EnqueueAsync(new SendEmailAfterPaymentCommand(request.PaymentId));
+            await _commandsScheduler.EnqueueAsync(
+                new SendEmailAfterPaymentCommand(Guid.NewGuid(), request.PaymentId));
         }
     }
 }

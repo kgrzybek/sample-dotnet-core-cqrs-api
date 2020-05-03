@@ -1,11 +1,15 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
+using Newtonsoft.Json;
+using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers;
 
 namespace SampleProject.Application.Customers
 {
-    public class MarkCustomerAsWelcomedCommand : IRequest
+    public class MarkCustomerAsWelcomedCommand : InternalCommandBase<Unit>
     {
-        public MarkCustomerAsWelcomedCommand(CustomerId customerId)
+        [JsonConstructor]
+        public MarkCustomerAsWelcomedCommand(Guid id, CustomerId customerId) : base(id)
         {
             CustomerId = customerId;
         }

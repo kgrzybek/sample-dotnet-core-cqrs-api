@@ -1,9 +1,10 @@
 ﻿using System;
 using MediatR;
+using SampleProject.Application.Configuration.Commands;
 
 namespace SampleProject.Application.Orders.RemoveCustomerOrder
 {
-    public class RemoveCustomerOrderCommand : IRequest
+    public class RemoveCustomerOrderCommand : CommandBase
     {
         public Guid CustomerId { get; }
 

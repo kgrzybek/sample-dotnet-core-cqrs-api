@@ -35,7 +35,7 @@ namespace SampleProject.Infrastructure.Processing
             foreach (var mediatrOpenType in mediatrOpenTypes)
             {
                 builder
-                    .RegisterAssemblyTypes(typeof(GetCustomerOrdersQuery).GetTypeInfo().Assembly)
+                    .RegisterAssemblyTypes(Assemblies.Application, ThisAssembly)
                     .AsClosedTypesOf(mediatrOpenType)
                     .FindConstructorsWith(new AllConstructorFinder())
                     .AsImplementedInterfaces();

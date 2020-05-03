@@ -1,7 +1,7 @@
 ﻿using System;
 using MediatR;
 
-namespace SampleProject.Application
+namespace SampleProject.Application.Configuration.Commands
 {
     public interface ICommand : IRequest
     {

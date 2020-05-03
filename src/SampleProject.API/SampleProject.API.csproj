@@ -13,9 +13,13 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="logs\**" />
     <Compile Remove="SampleProject.Domain\**" />
+    <Content Remove="logs\**" />
     <Content Remove="SampleProject.Domain\**" />
+    <EmbeddedResource Remove="logs\**" />
     <EmbeddedResource Remove="SampleProject.Domain\**" />
+    <None Remove="logs\**" />
     <None Remove="SampleProject.Domain\**" />
   </ItemGroup>
 
@@ -28,6 +32,9 @@
     <PackageReference Include="MediatR" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.0" />
     <PackageReference Include="Quartz" Version="3.0.7" />
+    <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
   </ItemGroup>
 

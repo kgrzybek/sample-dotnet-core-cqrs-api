@@ -4,6 +4,7 @@ using Dapper;
 using MediatR;
 using Newtonsoft.Json;
 using SampleProject.Application;
+using SampleProject.Application.Configuration.Commands;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Application.Configuration.Processing;
 
@@ -18,7 +19,7 @@ namespace SampleProject.Infrastructure.Processing
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task EnqueueAsync(IRequest command)
+        public async Task EnqueueAsync<T>(ICommand<T> command)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
 
@@ -27,7 +28,7 @@ namespace SampleProject.Infrastructure.Processing
 
             await connection.ExecuteAsync(sqlInsert, new
             {
-                Id = Guid.NewGuid(),
+                command.Id,
                 EnqueueDate = DateTime.UtcNow,
                 Type = command.GetType().FullName,
                 Data = JsonConvert.SerializeObject(command)

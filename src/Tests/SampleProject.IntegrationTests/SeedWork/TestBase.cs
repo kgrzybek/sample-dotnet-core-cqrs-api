@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
 using SampleProject.Application.Configuration.Emails;
 using SampleProject.Infrastructure;
+using Serilog.Core;
 
 namespace SampleProject.IntegrationTests.SeedWork
 {
@@ -21,6 +19,8 @@ namespace SampleProject.IntegrationTests.SeedWork
         protected EmailsSettings EmailsSettings;
 
         protected IEmailSender EmailSender;
+
+        protected ExecutionContextMock ExecutionContext;
 
         [SetUp]
         public async Task BeforeEachTest()
@@ -42,12 +42,16 @@ namespace SampleProject.IntegrationTests.SeedWork
 
             EmailSender = Substitute.For<IEmailSender>();
 
+            ExecutionContext = new ExecutionContextMock();
+
             ApplicationStartup.Initialize(
                 new ServiceCollection(),
                 ConnectionString, 
                 new CacheStore(),
                 EmailSender,
                 EmailsSettings,
+                Logger.None,
+                ExecutionContext,
                 runQuartz:false);
         }
 
