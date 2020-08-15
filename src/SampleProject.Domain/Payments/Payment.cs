@@ -1,6 +1,6 @@
-﻿using System;
-using SampleProject.Domain.Customers.Orders;
+﻿using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SeedWork;
+using System;
 
 namespace SampleProject.Domain.Payments
 {
@@ -8,11 +8,11 @@ namespace SampleProject.Domain.Payments
     {
         public PaymentId Id { get; private set; }
 
-        private OrderId _orderId;
+        private readonly OrderId _orderId;
 
-        private DateTime _createDate;
+        private readonly DateTime _createDate;
 
-        private PaymentStatus _status;
+        private readonly PaymentStatus _status;
 
         private bool _emailNotificationIsSent;
 
@@ -23,18 +23,18 @@ namespace SampleProject.Domain.Payments
 
         public Payment(OrderId orderId)
         {
-            this.Id = new PaymentId(Guid.NewGuid());
-            this._createDate = DateTime.UtcNow;
-            this._orderId = orderId;
-            this._status = PaymentStatus.ToPay;
-            this._emailNotificationIsSent = false;
+            Id = new PaymentId(Guid.NewGuid());
+            _createDate = DateTime.UtcNow;
+            _orderId = orderId;
+            _status = PaymentStatus.ToPay;
+            _emailNotificationIsSent = false;
 
-            this.AddDomainEvent(new PaymentCreatedEvent(this.Id, this._orderId));
+            AddDomainEvent(new PaymentCreatedEvent(Id, _orderId));
         }
 
         public void MarkEmailNotificationIsSent()
         {
-            this._emailNotificationIsSent = true;
+            _emailNotificationIsSent = true;
         }
     }
 }

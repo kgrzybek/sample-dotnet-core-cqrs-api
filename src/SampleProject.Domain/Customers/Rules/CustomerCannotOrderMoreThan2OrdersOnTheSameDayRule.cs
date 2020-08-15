@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SampleProject.Domain.Customers.Orders;
+﻿using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SeedWork;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SampleProject.Domain.Customers.Rules
 {
@@ -16,7 +16,7 @@ namespace SampleProject.Domain.Customers.Rules
 
         public bool IsBroken()
         {
-           return _orders.Count(x => x.IsOrderedToday()) >= 2;
+            return _orders.Count(x => x.IsOrderedToday()) >= 2;
         }
 
         public string Message => "You cannot order more than 2 orders on the same day.";

@@ -8,7 +8,7 @@ namespace SampleProject.Domain.Customers.Orders.Events
 
         public OrderChangedEvent(OrderId orderId)
         {
-            this.OrderId = orderId;
+            OrderId = orderId;
         }
     }
 }

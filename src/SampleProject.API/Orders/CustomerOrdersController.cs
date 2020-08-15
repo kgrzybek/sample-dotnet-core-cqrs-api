@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SampleProject.Application.Orders.ChangeCustomerOrder;
 using SampleProject.Application.Orders.GetCustomerOrderDetails;
 using SampleProject.Application.Orders.GetCustomerOrders;
 using SampleProject.Application.Orders.PlaceCustomerOrder;
 using SampleProject.Application.Orders.RemoveCustomerOrder;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SampleProject.API.Orders
 {
@@ -20,7 +20,7 @@ namespace SampleProject.API.Orders
 
         public CustomerOrdersController(IMediator mediator)
         {
-            this._mediator = mediator;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace SampleProject.API.Orders
         [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCustomerOrders(Guid customerId)
         {
-            var orders = await _mediator.Send(new GetCustomerOrdersQuery(customerId));
+            List<OrderDto> orders = await _mediator.Send(new GetCustomerOrdersQuery(customerId));
 
             return Ok(orders);
         }
@@ -46,9 +46,9 @@ namespace SampleProject.API.Orders
         [HttpGet]
         [ProducesResponseType(typeof(OrderDetailsDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCustomerOrderDetails(
-            [FromRoute]Guid orderId)
+            [FromRoute] Guid orderId)
         {
-            var orderDetails = await _mediator.Send(new GetCustomerOrderDetailsQuery(orderId));
+            OrderDetailsDto orderDetails = await _mediator.Send(new GetCustomerOrderDetailsQuery(orderId));
 
             return Ok(orderDetails);
         }
@@ -63,12 +63,12 @@ namespace SampleProject.API.Orders
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> AddCustomerOrder(
-            [FromRoute]Guid customerId, 
-            [FromBody]CustomerOrderRequest request)
+            [FromRoute] Guid customerId,
+            [FromBody] CustomerOrderRequest request)
         {
-           await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products, request.Currency));
+            await _mediator.Send(new PlaceCustomerOrderCommand(customerId, request.Products, request.Currency));
 
-           return Created(string.Empty, null);
+            return Created(string.Empty, null);
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace SampleProject.API.Orders
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> ChangeCustomerOrder(
-            [FromRoute]Guid customerId, 
-            [FromRoute]Guid orderId,
-            [FromBody]CustomerOrderRequest request)
+            [FromRoute] Guid customerId,
+            [FromRoute] Guid orderId,
+            [FromBody] CustomerOrderRequest request)
         {
             await _mediator.Send(new ChangeCustomerOrderCommand(customerId, orderId, request.Products, request.Currency));
 
@@ -99,8 +99,8 @@ namespace SampleProject.API.Orders
         [HttpDelete]
         [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> RemoveCustomerOrder(
-            [FromRoute]Guid customerId,
-            [FromRoute]Guid orderId)
+            [FromRoute] Guid customerId,
+            [FromRoute] Guid orderId)
         {
             await _mediator.Send(new RemoveCustomerOrderCommand(customerId, orderId));
 

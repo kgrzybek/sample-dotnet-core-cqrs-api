@@ -1,9 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Dapper;
-using MediatR;
+﻿using Dapper;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Application.Configuration.Queries;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Orders.GetCustomerOrderDetails
 {
@@ -13,12 +12,12 @@ namespace SampleProject.Application.Orders.GetCustomerOrderDetails
 
         internal GetCustomerOrderDetailsQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
-            this._sqlConnectionFactory = sqlConnectionFactory;
+            _sqlConnectionFactory = sqlConnectionFactory;
         }
 
         public async Task<OrderDetailsDto> Handle(GetCustomerOrderDetailsQuery request, CancellationToken cancellationToken)
         {
-            var connection = this._sqlConnectionFactory.GetOpenConnection();
+            System.Data.IDbConnection connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT " +
                                "[Order].[Id], " +
@@ -27,7 +26,7 @@ namespace SampleProject.Application.Orders.GetCustomerOrderDetails
                                "[Order].[Currency] " +
                                "FROM orders.v_Orders AS [Order] " +
                                "WHERE [Order].Id = @OrderId";
-            var order = await connection.QuerySingleOrDefaultAsync<OrderDetailsDto>(sql, new { request.OrderId });
+            OrderDetailsDto order = await connection.QuerySingleOrDefaultAsync<OrderDetailsDto>(sql, new { request.OrderId });
 
             const string sqlProducts = "SELECT " +
                                "[Order].[ProductId] AS [Id], " +
@@ -37,7 +36,7 @@ namespace SampleProject.Application.Orders.GetCustomerOrderDetails
                                "[Order].[Currency] " +
                                "FROM orders.v_OrderProducts AS [Order] " +
                                "WHERE [Order].OrderId = @OrderId";
-            var products = await connection.QueryAsync<ProductDto>(sqlProducts, new { request.OrderId });
+            System.Collections.Generic.IEnumerable<ProductDto> products = await connection.QueryAsync<ProductDto>(sqlProducts, new { request.OrderId });
 
             order.Products = products.AsList();
 

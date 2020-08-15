@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace SampleProject.Application.Orders
 {
@@ -9,19 +8,19 @@ namespace SampleProject.Application.Orders
 
         public int Quantity { get; set; }
 
-        
+
 
         public string Name { get; set; }
 
         public ProductDto()
         {
-            
+
         }
 
         public ProductDto(Guid id, int quantity)
         {
-            this.Id = id;
-            this.Quantity = quantity;
+            Id = id;
+            Quantity = quantity;
         }
     }
 }

@@ -1,8 +1,5 @@
-﻿using System;
+﻿using SampleProject.Domain.SeedWork;
 using System.Collections.Generic;
-using System.Linq;
-using SampleProject.Domain.SeedWork;
-using SampleProject.Domain.SharedKernel;
 
 namespace SampleProject.Domain.Products
 {
@@ -12,7 +9,7 @@ namespace SampleProject.Domain.Products
 
         public string Name { get; private set; }
 
-        private List<ProductPrice> _prices;
+        private readonly List<ProductPrice> _prices;
 
         private Product()
         {

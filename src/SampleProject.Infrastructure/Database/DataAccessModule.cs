@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SampleProject.Application;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Payments;
@@ -21,7 +20,7 @@ namespace SampleProject.Infrastructure.Database
 
         public DataAccessModule(string databaseConnectionString)
         {
-            this._databaseConnectionString = databaseConnectionString;
+            _databaseConnectionString = databaseConnectionString;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -55,7 +54,7 @@ namespace SampleProject.Infrastructure.Database
             builder
                 .Register(c =>
                 {
-                    var dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
+                    DbContextOptionsBuilder<OrdersContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
                     dbContextOptionsBuilder.UseSqlServer(_databaseConnectionString);
                     dbContextOptionsBuilder
                         .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();

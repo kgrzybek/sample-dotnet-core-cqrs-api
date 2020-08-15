@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Domain.SharedKernel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SampleProject.UnitTests.SeedWork
 {
@@ -11,7 +11,7 @@ namespace SampleProject.UnitTests.SeedWork
     {
         public static T AssertPublishedDomainEvent<T>(Entity aggregate) where T : IDomainEvent
         {
-            var domainEvent = DomainEventsTestHelper.GetAllDomainEvents(aggregate).OfType<T>().SingleOrDefault();
+            T domainEvent = DomainEventsTestHelper.GetAllDomainEvents(aggregate).OfType<T>().SingleOrDefault();
 
             if (domainEvent == null)
             {
@@ -23,7 +23,7 @@ namespace SampleProject.UnitTests.SeedWork
 
         public static List<T> AssertPublishedDomainEvents<T>(Entity aggregate) where T : IDomainEvent
         {
-            var domainEvents = DomainEventsTestHelper.GetAllDomainEvents(aggregate).OfType<T>().ToList();
+            List<T> domainEvents = DomainEventsTestHelper.GetAllDomainEvents(aggregate).OfType<T>().ToList();
 
             if (!domainEvents.Any())
             {
@@ -35,8 +35,8 @@ namespace SampleProject.UnitTests.SeedWork
 
         public static void AssertBrokenRule<TRule>(TestDelegate testDelegate) where TRule : class, IBusinessRule
         {
-            var message = $"Expected {typeof(TRule).Name} broken rule";
-            var businessRuleValidationException = Assert.Catch<BusinessRuleValidationException>(testDelegate, message);
+            string message = $"Expected {typeof(TRule).Name} broken rule";
+            BusinessRuleValidationException businessRuleValidationException = Assert.Catch<BusinessRuleValidationException>(testDelegate, message);
             if (businessRuleValidationException != null)
             {
                 Assert.That(businessRuleValidationException.BrokenRule, Is.TypeOf<TRule>(), message);

@@ -1,7 +1,6 @@
-﻿using System.Threading;
+﻿using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using SampleProject.Application.Configuration.DomainEvents;
 
 namespace SampleProject.Infrastructure.Processing
 {
@@ -11,7 +10,7 @@ namespace SampleProject.Infrastructure.Processing
         private readonly IDomainEventsDispatcher _domainEventsDispatcher;
 
         public DomainEventsDispatcherNotificationHandlerDecorator(
-            IDomainEventsDispatcher domainEventsDispatcher, 
+            IDomainEventsDispatcher domainEventsDispatcher,
             INotificationHandler<T> decorated)
         {
             _domainEventsDispatcher = domainEventsDispatcher;
@@ -20,9 +19,9 @@ namespace SampleProject.Infrastructure.Processing
 
         public async Task Handle(T notification, CancellationToken cancellationToken)
         {
-            await this._decorated.Handle(notification, cancellationToken);
+            await _decorated.Handle(notification, cancellationToken);
 
-            await this._domainEventsDispatcher.DispatchEventsAsync();
+            await _domainEventsDispatcher.DispatchEventsAsync();
         }
     }
 }

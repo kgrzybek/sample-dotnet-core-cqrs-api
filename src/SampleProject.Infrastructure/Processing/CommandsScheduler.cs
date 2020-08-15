@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Dapper;
-using MediatR;
+﻿using Dapper;
 using Newtonsoft.Json;
-using SampleProject.Application;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Application.Configuration.Processing;
+using System;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Processing
 {
@@ -21,7 +19,7 @@ namespace SampleProject.Infrastructure.Processing
 
         public async Task EnqueueAsync<T>(ICommand<T> command)
         {
-            var connection = this._sqlConnectionFactory.GetOpenConnection();
+            System.Data.IDbConnection connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sqlInsert = "INSERT INTO [app].[InternalCommands] ([Id], [EnqueueDate] , [Type], [Data]) VALUES " +
                                      "(@Id, @EnqueueDate, @Type, @Data)";

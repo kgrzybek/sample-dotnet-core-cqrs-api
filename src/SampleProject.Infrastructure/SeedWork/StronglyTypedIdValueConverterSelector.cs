@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SampleProject.Domain.SeedWork;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Infrastructure.SeedWork
 {
@@ -14,28 +14,28 @@ namespace SampleProject.Infrastructure.SeedWork
         private readonly ConcurrentDictionary<(Type ModelClrType, Type ProviderClrType), ValueConverterInfo> _converters
             = new ConcurrentDictionary<(Type ModelClrType, Type ProviderClrType), ValueConverterInfo>();
 
-        public StronglyTypedIdValueConverterSelector(ValueConverterSelectorDependencies dependencies) 
+        public StronglyTypedIdValueConverterSelector(ValueConverterSelectorDependencies dependencies)
             : base(dependencies)
         {
         }
 
         public override IEnumerable<ValueConverterInfo> Select(Type modelClrType, Type providerClrType = null)
         {
-            var baseConverters = base.Select(modelClrType, providerClrType);
-            foreach (var converter in baseConverters)
+            IEnumerable<ValueConverterInfo> baseConverters = base.Select(modelClrType, providerClrType);
+            foreach (ValueConverterInfo converter in baseConverters)
             {
                 yield return converter;
             }
 
-            var underlyingModelType = UnwrapNullableType(modelClrType);
-            var underlyingProviderType = UnwrapNullableType(providerClrType);
+            Type underlyingModelType = UnwrapNullableType(modelClrType);
+            Type underlyingProviderType = UnwrapNullableType(providerClrType);
 
             if (underlyingProviderType is null || underlyingProviderType == typeof(Guid))
             {
-                var isTypedIdValue = typeof(TypedIdValueBase).IsAssignableFrom(underlyingModelType);
+                bool isTypedIdValue = typeof(TypedIdValueBase).IsAssignableFrom(underlyingModelType);
                 if (isTypedIdValue)
                 {
-                    var converterType = typeof(TypedIdValueConverter<>).MakeGenericType(underlyingModelType);
+                    Type converterType = typeof(TypedIdValueConverter<>).MakeGenericType(underlyingModelType);
 
                     yield return _converters.GetOrAdd((underlyingModelType, typeof(Guid)), _ =>
                     {

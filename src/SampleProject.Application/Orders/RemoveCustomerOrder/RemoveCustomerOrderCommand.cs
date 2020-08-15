@@ -1,6 +1,5 @@
-﻿using System;
-using MediatR;
-using SampleProject.Application.Configuration.Commands;
+﻿using SampleProject.Application.Configuration.Commands;
+using System;
 
 namespace SampleProject.Application.Orders.RemoveCustomerOrder
 {
@@ -14,8 +13,8 @@ namespace SampleProject.Application.Orders.RemoveCustomerOrder
             Guid customerId,
             Guid orderId)
         {
-            this.CustomerId = customerId;
-            this.OrderId = orderId;
+            CustomerId = customerId;
+            OrderId = orderId;
         }
     }
 }

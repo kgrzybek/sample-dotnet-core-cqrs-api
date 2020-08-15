@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using SampleProject.Application.Configuration.Processing;
 using SampleProject.Application.Payments.SendEmailAfterPayment;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Payments
 {

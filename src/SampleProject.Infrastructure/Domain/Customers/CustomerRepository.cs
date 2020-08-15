@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Infrastructure.Database;
 using SampleProject.Infrastructure.SeedWork;
+using System;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Domain.Customers
 {
@@ -14,19 +14,19 @@ namespace SampleProject.Infrastructure.Domain.Customers
 
         public CustomerRepository(OrdersContext context)
         {
-            this._context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task AddAsync(Customer customer)
         {
-            await this._context.Customers.AddAsync(customer);
+            await _context.Customers.AddAsync(customer);
         }
 
         public async Task<Customer> GetByIdAsync(CustomerId id)
         {
-            return await this._context.Customers
+            return await _context.Customers
                 .IncludePaths(
-                    CustomerEntityTypeConfiguration.OrdersList, 
+                    CustomerEntityTypeConfiguration.OrdersList,
                     CustomerEntityTypeConfiguration.OrderProducts)
                 .SingleAsync(x => x.Id == id);
         }

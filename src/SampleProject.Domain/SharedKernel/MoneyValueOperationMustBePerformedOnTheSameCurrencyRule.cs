@@ -14,7 +14,10 @@ namespace SampleProject.Domain.SharedKernel
             _right = right;
         }
 
-        public bool IsBroken() => _left.Currency != _right.Currency;
+        public bool IsBroken()
+        {
+            return _left.Currency != _right.Currency;
+        }
 
         public string Message => "Money value currencies must be the same";
     }

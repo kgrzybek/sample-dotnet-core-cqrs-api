@@ -1,8 +1,8 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Newtonsoft.Json;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Payments;
+using System;
 
 namespace SampleProject.Application.Payments.SendEmailAfterPayment
 {
@@ -13,7 +13,7 @@ namespace SampleProject.Application.Payments.SendEmailAfterPayment
         [JsonConstructor]
         public SendEmailAfterPaymentCommand(Guid id, PaymentId paymentId) : base(id)
         {
-            this.PaymentId = paymentId;
+            PaymentId = paymentId;
         }
     }
 }

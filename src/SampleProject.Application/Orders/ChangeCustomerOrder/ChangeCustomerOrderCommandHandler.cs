@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Application.Orders.PlaceCustomerOrder;
@@ -9,10 +6,13 @@ using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Orders.ChangeCustomerOrder
 {
-    internal sealed class ChangeCustomerOrderCommandHandler : ICommandHandler<ChangeCustomerOrderCommand,Unit>
+    internal sealed class ChangeCustomerOrderCommandHandler : ICommandHandler<ChangeCustomerOrderCommand, Unit>
     {
         private readonly ICustomerRepository _customerRepository;
 
@@ -22,34 +22,34 @@ namespace SampleProject.Application.Orders.ChangeCustomerOrder
 
         internal ChangeCustomerOrderCommandHandler(
             ICustomerRepository customerRepository,
-            IForeignExchange foreignExchange, 
+            IForeignExchange foreignExchange,
             ISqlConnectionFactory sqlConnectionFactory)
         {
-            this._customerRepository = customerRepository;
+            _customerRepository = customerRepository;
             _foreignExchange = foreignExchange;
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
         public async Task<Unit> Handle(ChangeCustomerOrderCommand request, CancellationToken cancellationToken)
         {
-            var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
+            Customer customer = await _customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
 
-            var orderId = new OrderId(request.OrderId);
+            OrderId orderId = new OrderId(request.OrderId);
 
-            var conversionRates = this._foreignExchange.GetConversionRates();
-            var orderProducts = request
+            System.Collections.Generic.List<ConversionRate> conversionRates = _foreignExchange.GetConversionRates();
+            System.Collections.Generic.List<OrderProductData> orderProducts = request
                     .Products
                     .Select(x => new OrderProductData(new ProductId(x.Id), x.Quantity))
                     .ToList();
 
-            var allProductPrices =
+            System.Collections.Generic.List<ProductPriceData> allProductPrices =
                 await ProductPriceProvider.GetAllProductPrices(_sqlConnectionFactory.GetOpenConnection());
 
             customer.ChangeOrder(
                 orderId,
-                allProductPrices, 
-                orderProducts, 
-                conversionRates, 
+                allProductPrices,
+                orderProducts,
+                conversionRates,
                 request.Currency);
 
             return Unit.Value;

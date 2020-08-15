@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MediatR;
+using SampleProject.Application.Configuration.Processing;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using SampleProject.Application.Configuration.Processing;
 
 namespace SampleProject.Application.Customers.IntegrationHandlers
 {
@@ -20,7 +20,7 @@ namespace SampleProject.Application.Customers.IntegrationHandlers
         {
             // Send welcome e-mail message...
 
-            await this._commandsScheduler.EnqueueAsync(new MarkCustomerAsWelcomedCommand(
+            await _commandsScheduler.EnqueueAsync(new MarkCustomerAsWelcomedCommand(
                 Guid.NewGuid(),
                 notification.CustomerId));
         }

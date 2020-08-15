@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using SampleProject.Application.Orders.PlaceCustomerOrder;
+﻿using SampleProject.Application.Orders.PlaceCustomerOrder;
+using System.Reflection;
 
 namespace SampleProject.Infrastructure.Processing
 {

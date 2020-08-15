@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Autofac.Core;
 using MediatR;
 using Newtonsoft.Json;
@@ -10,6 +6,10 @@ using SampleProject.Application.Configuration.DomainEvents;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure.Database;
 using SampleProject.Infrastructure.Processing.Outbox;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Processing
 {
@@ -21,27 +21,27 @@ namespace SampleProject.Infrastructure.Processing
 
         public DomainEventsDispatcher(IMediator mediator, ILifetimeScope scope, OrdersContext ordersContext)
         {
-            this._mediator = mediator;
-            this._scope = scope;
-            this._ordersContext = ordersContext;
+            _mediator = mediator;
+            _scope = scope;
+            _ordersContext = ordersContext;
         }
 
         public async Task DispatchEventsAsync()
         {
-            var domainEntities = this._ordersContext.ChangeTracker
+            List<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Entity>> domainEntities = _ordersContext.ChangeTracker
                 .Entries<Entity>()
                 .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any()).ToList();
 
-            var domainEvents = domainEntities
+            List<IDomainEvent> domainEvents = domainEntities
                 .SelectMany(x => x.Entity.DomainEvents)
                 .ToList();
 
-            var domainEventNotifications = new List<IDomainEventNotification<IDomainEvent>>();
-            foreach (var domainEvent in domainEvents)
+            List<IDomainEventNotification<IDomainEvent>> domainEventNotifications = new List<IDomainEventNotification<IDomainEvent>>();
+            foreach (IDomainEvent domainEvent in domainEvents)
             {
                 Type domainEvenNotificationType = typeof(IDomainEventNotification<>);
-                var domainNotificationWithGenericType = domainEvenNotificationType.MakeGenericType(domainEvent.GetType());
-                var domainNotification = _scope.ResolveOptional(domainNotificationWithGenericType, new List<Parameter>
+                Type domainNotificationWithGenericType = domainEvenNotificationType.MakeGenericType(domainEvent.GetType());
+                object domainNotification = _scope.ResolveOptional(domainNotificationWithGenericType, new List<Parameter>
                 {
                     new NamedParameter("domainEvent", domainEvent)
                 });
@@ -55,7 +55,7 @@ namespace SampleProject.Infrastructure.Processing
             domainEntities
                 .ForEach(entity => entity.Entity.ClearDomainEvents());
 
-            var tasks = domainEvents
+            IEnumerable<Task> tasks = domainEvents
                 .Select(async (domainEvent) =>
                 {
                     await _mediator.Publish(domainEvent);
@@ -63,15 +63,15 @@ namespace SampleProject.Infrastructure.Processing
 
             await Task.WhenAll(tasks);
 
-            foreach (var domainEventNotification in domainEventNotifications)
+            foreach (IDomainEventNotification<IDomainEvent> domainEventNotification in domainEventNotifications)
             {
                 string type = domainEventNotification.GetType().FullName;
-                var data = JsonConvert.SerializeObject(domainEventNotification);
+                string data = JsonConvert.SerializeObject(domainEventNotification);
                 OutboxMessage outboxMessage = new OutboxMessage(
                     domainEventNotification.DomainEvent.OccurredOn,
                     type,
                     data);
-                this._ordersContext.OutboxMessages.Add(outboxMessage);
+                _ordersContext.OutboxMessages.Add(outboxMessage);
             }
         }
     }

@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Payments;
 using SampleProject.Infrastructure.Database;
+using System;
 
 namespace SampleProject.Infrastructure.Domain.Payments
 {
@@ -13,7 +13,7 @@ namespace SampleProject.Infrastructure.Domain.Payments
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
             builder.ToTable("Payments", SchemaNames.Payments);
-            
+
             builder.HasKey(b => b.Id);
 
             builder.Property<DateTime>("_createDate").HasColumnName("CreateDate");

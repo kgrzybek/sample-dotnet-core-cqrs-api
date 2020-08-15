@@ -13,15 +13,15 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
 
         public OrderPlacedNotification(OrderPlacedEvent domainEvent) : base(domainEvent)
         {
-            this.OrderId = domainEvent.OrderId;
-            this.CustomerId = domainEvent.CustomerId;
+            OrderId = domainEvent.OrderId;
+            CustomerId = domainEvent.CustomerId;
         }
 
         [JsonConstructor]
         public OrderPlacedNotification(OrderId orderId, CustomerId customerId) : base(null)
         {
-            this.OrderId = orderId;
-            this.CustomerId = customerId;
+            OrderId = orderId;
+            CustomerId = customerId;
         }
     }
 }

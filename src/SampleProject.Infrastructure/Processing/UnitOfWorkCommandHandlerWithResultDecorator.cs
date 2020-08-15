@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SampleProject.Application;
+﻿using Microsoft.EntityFrameworkCore;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure.Database;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Processing
 {
@@ -18,8 +17,8 @@ namespace SampleProject.Infrastructure.Processing
         private readonly OrdersContext _ordersContext;
 
         public UnitOfWorkCommandHandlerWithResultDecorator(
-            ICommandHandler<T, TResult> decorated, 
-            IUnitOfWork unitOfWork, 
+            ICommandHandler<T, TResult> decorated,
+            IUnitOfWork unitOfWork,
             OrdersContext ordersContext)
         {
             _decorated = decorated;
@@ -29,11 +28,11 @@ namespace SampleProject.Infrastructure.Processing
 
         public async Task<TResult> Handle(T command, CancellationToken cancellationToken)
         {
-            var result = await this._decorated.Handle(command, cancellationToken);
+            TResult result = await _decorated.Handle(command, cancellationToken);
 
             if (command is InternalCommandBase<TResult>)
             {
-                var internalCommand = await _ordersContext.InternalCommands.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken: cancellationToken);
+                InternalCommands.InternalCommand internalCommand = await _ordersContext.InternalCommands.FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken: cancellationToken);
 
                 if (internalCommand != null)
                 {
@@ -41,7 +40,7 @@ namespace SampleProject.Infrastructure.Processing
                 }
             }
 
-            await this._unitOfWork.CommitAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return result;
         }

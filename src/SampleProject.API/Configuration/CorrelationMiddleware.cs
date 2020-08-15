@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace SampleProject.API.Configuration
 {
@@ -13,19 +13,19 @@ namespace SampleProject.API.Configuration
         public CorrelationMiddleware(
             RequestDelegate next)
         {
-            this._next = next;
+            _next = next;
         }
 
         public async Task Invoke(HttpContext context)
         {
-            var correlationId = Guid.NewGuid();
+            Guid correlationId = Guid.NewGuid();
 
             if (context.Request != null)
             {
                 context.Request.Headers.Add(CorrelationHeaderKey, correlationId.ToString());
             }
 
-            await this._next.Invoke(context);
+            await _next.Invoke(context);
         }
     }
 }

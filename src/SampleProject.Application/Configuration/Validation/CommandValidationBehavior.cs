@@ -1,45 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using FluentValidation;
+using MediatR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
-using MediatR;
 
 namespace SampleProject.Application.Configuration.Validation
 {
-public class CommandValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-{
-    private readonly IList<IValidator<TRequest>> _validators;
-
-    public CommandValidationBehavior(IList<IValidator<TRequest>> validators)
+    public class CommandValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        this._validators = validators;
-    }
+        private readonly IList<IValidator<TRequest>> _validators;
 
-    public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-    {
-        var errors = _validators
+        public CommandValidationBehavior(IList<IValidator<TRequest>> validators)
+        {
+            _validators = validators;
+        }
+
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            List<FluentValidation.Results.ValidationFailure> errors = _validators
             .Select(v => v.Validate(request))
             .SelectMany(result => result.Errors)
             .Where(error => error != null)
             .ToList();
 
-        if (errors.Any())
-        {
-            var errorBuilder = new StringBuilder();
-
-            errorBuilder.AppendLine("Invalid command, reason: ");
-
-            foreach (var error in errors)
+            if (errors.Any())
             {
-                errorBuilder.AppendLine(error.ErrorMessage);
+                StringBuilder errorBuilder = new StringBuilder();
+
+                errorBuilder.AppendLine("Invalid command, reason: ");
+
+                foreach (FluentValidation.Results.ValidationFailure error in errors)
+                {
+                    errorBuilder.AppendLine(error.ErrorMessage);
+                }
+
+                throw new InvalidCommandException(errorBuilder.ToString(), null);
             }
 
-            throw new InvalidCommandException(errorBuilder.ToString(), null);
+            return next();
         }
-
-        return next();
     }
-}
 }

@@ -1,8 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Application.Configuration.Queries;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Customers.GetCustomerDetails
 {
@@ -25,7 +25,7 @@ namespace SampleProject.Application.Customers.GetCustomerDetails
                                "FROM orders.v_Customers AS [Customer] " +
                                "WHERE [Customer].[Id] = @CustomerId ";
 
-            var connection = _sqlConnectionFactory.GetOpenConnection();
+            System.Data.IDbConnection connection = _sqlConnectionFactory.GetOpenConnection();
 
             return connection.QuerySingleAsync<CustomerDetailsDto>(sql, new
             {

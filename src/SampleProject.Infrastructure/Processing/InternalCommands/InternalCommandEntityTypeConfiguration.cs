@@ -9,7 +9,7 @@ namespace SampleProject.Infrastructure.Processing.InternalCommands
         public void Configure(EntityTypeBuilder<InternalCommand> builder)
         {
             builder.ToTable("InternalCommands", SchemaNames.Application);
-            
+
             builder.HasKey(b => b.Id);
             builder.Property(b => b.Id).ValueGeneratedNever();
         }

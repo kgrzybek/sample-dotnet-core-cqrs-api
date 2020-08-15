@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using SampleProject.Domain.ForeignExchange;
+﻿using SampleProject.Domain.ForeignExchange;
 using SampleProject.Infrastructure.Caching;
+using System;
+using System.Collections.Generic;
 
 namespace SampleProject.Infrastructure.Domain.ForeignExchanges
 {
@@ -16,7 +16,7 @@ namespace SampleProject.Infrastructure.Domain.ForeignExchanges
 
         public List<ConversionRate> GetConversionRates()
         {
-            var ratesCache = this._cacheStore.Get(new ConversionRatesCacheKey());
+            ConversionRatesCache ratesCache = _cacheStore.Get(new ConversionRatesCacheKey());
 
             if (ratesCache != null)
             {
@@ -25,7 +25,7 @@ namespace SampleProject.Infrastructure.Domain.ForeignExchanges
 
             List<ConversionRate> rates = GetConversionRatesFromExternalApi();
 
-            this._cacheStore.Add(new ConversionRatesCache(rates), new ConversionRatesCacheKey(), DateTime.Now.Date.AddDays(1));
+            _cacheStore.Add(new ConversionRatesCache(rates), new ConversionRatesCacheKey(), DateTime.Now.Date.AddDays(1));
 
             return rates;
         }
@@ -34,10 +34,11 @@ namespace SampleProject.Infrastructure.Domain.ForeignExchanges
         {
             // Communication with external API. Here is only mock.
 
-            var conversionRates = new List<ConversionRate>();
-
-            conversionRates.Add(new ConversionRate("USD", "EUR", (decimal)0.88));
-            conversionRates.Add(new ConversionRate("EUR", "USD", (decimal)1.13));
+            List<ConversionRate> conversionRates = new List<ConversionRate>
+            {
+                new ConversionRate("USD", "EUR", (decimal)0.88),
+                new ConversionRate("EUR", "USD", (decimal)1.13)
+            };
 
             return conversionRates;
         }

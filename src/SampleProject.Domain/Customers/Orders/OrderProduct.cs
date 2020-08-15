@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SampleProject.Domain.ForeignExchange;
+﻿using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Domain.SharedKernel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SampleProject.Domain.Customers.Orders
 {
@@ -29,10 +28,10 @@ namespace SampleProject.Domain.Customers.Orders
             string currency,
             List<ConversionRate> conversionRates)
         {
-            this.ProductId = productPrice.ProductId;
-            this.Quantity = quantity;
+            ProductId = productPrice.ProductId;
+            Quantity = quantity;
 
-            this.CalculateValue(productPrice, currency, conversionRates);
+            CalculateValue(productPrice, currency, conversionRates);
         }
 
         internal static OrderProduct CreateForProduct(
@@ -44,22 +43,22 @@ namespace SampleProject.Domain.Customers.Orders
 
         internal void ChangeQuantity(ProductPriceData productPrice, int quantity, List<ConversionRate> conversionRates)
         {
-            this.Quantity = quantity;
+            Quantity = quantity;
 
-            this.CalculateValue(productPrice, this.Value.Currency, conversionRates);
+            CalculateValue(productPrice, Value.Currency, conversionRates);
         }
 
         private void CalculateValue(ProductPriceData productPrice, string currency, List<ConversionRate> conversionRates)
         {
-            this.Value = this.Quantity * productPrice.Price;
+            Value = Quantity * productPrice.Price;
             if (currency == "EUR")
             {
-                this.ValueInEUR = this.Quantity * productPrice.Price;
+                ValueInEUR = Quantity * productPrice.Price;
             }
             else
             {
-                var conversionRate = conversionRates.Single(x => x.SourceCurrency == currency && x.TargetCurrency == "EUR");
-                this.ValueInEUR = conversionRate.Convert(this.Value);
+                ConversionRate conversionRate = conversionRates.Single(x => x.SourceCurrency == currency && x.TargetCurrency == "EUR");
+                ValueInEUR = conversionRate.Convert(Value);
             }
         }
     }

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using SampleProject.Application.Orders;
+﻿using SampleProject.Application.Orders;
+using System.Collections.Generic;
 
 namespace SampleProject.API.Orders
 {

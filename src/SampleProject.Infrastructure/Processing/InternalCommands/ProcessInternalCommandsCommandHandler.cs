@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using MediatR;
 using Newtonsoft.Json;
-using SampleProject.Application;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Application.Configuration.Data;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Processing.InternalCommands
 {
@@ -22,18 +21,18 @@ namespace SampleProject.Infrastructure.Processing.InternalCommands
 
         public async Task<Unit> Handle(ProcessInternalCommandsCommand command, CancellationToken cancellationToken)
         {
-            var connection = this._sqlConnectionFactory.GetOpenConnection();
+            System.Data.IDbConnection connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT " +
                                "[Command].[Type], " +
                                "[Command].[Data] " +
                                "FROM [app].[InternalCommands] AS [Command] " +
                                "WHERE [Command].[ProcessedDate] IS NULL";
-            var commands = await connection.QueryAsync<InternalCommandDto>(sql);
+            System.Collections.Generic.IEnumerable<InternalCommandDto> commands = await connection.QueryAsync<InternalCommandDto>(sql);
 
-            var internalCommandsList = commands.AsList();
+            System.Collections.Generic.List<InternalCommandDto> internalCommandsList = commands.AsList();
 
-            foreach (var internalCommand in internalCommandsList)
+            foreach (InternalCommandDto internalCommand in internalCommandsList)
             {
                 Type type = Assemblies.Application.GetType(internalCommand.Type);
                 dynamic commandToProcess = JsonConvert.DeserializeObject(internalCommand.Data, type);

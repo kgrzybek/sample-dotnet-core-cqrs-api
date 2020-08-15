@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SampleProject.Application;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Infrastructure.Processing.Outbox;
 

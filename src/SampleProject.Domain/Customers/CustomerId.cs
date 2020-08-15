@@ -1,5 +1,5 @@
-﻿using System;
-using SampleProject.Domain.SeedWork;
+﻿using SampleProject.Domain.SeedWork;
+using System;
 
 namespace SampleProject.Domain.Customers
 {

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Reflection;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using MediatR;
 using Newtonsoft.Json;
 using SampleProject.Application.Payments;
 using SampleProject.Infrastructure.Processing.Outbox;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace SampleProject.IntegrationTests.SeedWork
 {
@@ -22,7 +22,7 @@ namespace SampleProject.IntegrationTests.SeedWork
                                "FROM [app].[OutboxMessages] AS [OutboxMessage] " +
                                "ORDER BY [OutboxMessage].[OccurredOn]";
 
-            var messages = await connection.QueryAsync<OutboxMessageDto>(sql);
+            IEnumerable<OutboxMessageDto> messages = await connection.QueryAsync<OutboxMessageDto>(sql);
             return messages.AsList();
         }
 

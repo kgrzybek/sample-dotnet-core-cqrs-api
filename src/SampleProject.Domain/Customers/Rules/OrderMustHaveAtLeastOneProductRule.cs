@@ -1,8 +1,7 @@
-﻿using System.Buffers;
+﻿using SampleProject.Domain.Customers.Orders;
+using SampleProject.Domain.SeedWork;
 using System.Collections.Generic;
 using System.Linq;
-using SampleProject.Domain.Customers.Orders;
-using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.Customers.Rules
 {
@@ -15,7 +14,10 @@ namespace SampleProject.Domain.Customers.Rules
             _orderProductData = orderProductData;
         }
 
-        public bool IsBroken() => !_orderProductData.Any();
+        public bool IsBroken()
+        {
+            return !_orderProductData.Any();
+        }
 
         public string Message => "Order must have at least one product";
     }

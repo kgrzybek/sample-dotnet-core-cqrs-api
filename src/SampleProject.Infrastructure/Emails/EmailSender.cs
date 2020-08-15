@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using SampleProject.Application.Configuration.Emails;
+﻿using SampleProject.Application.Configuration.Emails;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Emails
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using SampleProject.Application;
+﻿using MediatR;
 using SampleProject.Application.Configuration;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Infrastructure.Processing.Outbox;
@@ -10,6 +6,9 @@ using Serilog;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Events;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Logging
 {
@@ -44,19 +43,19 @@ namespace SampleProject.Infrastructure.Logging
             {
                 try
                 {
-                    this._logger.Information(
+                    _logger.Information(
                         "Executing command {Command}",
                         command.GetType().Name);
 
-                    var result = await _decorated.Handle(command, cancellationToken);
+                    Unit result = await _decorated.Handle(command, cancellationToken);
 
-                    this._logger.Information("Command {Command} processed successful", command.GetType().Name);
+                    _logger.Information("Command {Command} processed successful", command.GetType().Name);
 
                     return result;
                 }
                 catch (Exception exception)
                 {
-                    this._logger.Error(exception, "Command {Command} processing failed", command.GetType().Name);
+                    _logger.Error(exception, "Command {Command} processing failed", command.GetType().Name);
                     throw;
                 }
             }

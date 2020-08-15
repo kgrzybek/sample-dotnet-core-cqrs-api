@@ -1,5 +1,4 @@
-﻿using MediatR;
-using SampleProject.Application.Configuration.Commands;
+﻿using SampleProject.Application.Configuration.Commands;
 
 namespace SampleProject.Application.Customers.RegisterCustomer
 {
@@ -11,8 +10,8 @@ namespace SampleProject.Application.Customers.RegisterCustomer
 
         public RegisterCustomerCommand(string email, string name)
         {
-            this.Email = email;
-            this.Name = name;
-        }      
+            Email = email;
+            Name = name;
+        }
     }
 }

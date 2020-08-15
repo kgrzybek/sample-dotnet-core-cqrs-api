@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
 using SampleProject.Domain.Customers.Rules;
@@ -8,6 +6,8 @@ using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SharedKernel;
 using SampleProject.UnitTests.SeedWork;
+using System;
+using System.Collections.Generic;
 
 namespace SampleProject.UnitTests.Customers
 {
@@ -18,28 +18,30 @@ namespace SampleProject.UnitTests.Customers
         public void PlaceOrder_WhenAtLeastOneProductIsAdded_IsSuccessful()
         {
             // Arrange
-            var customer = CustomerFactory.Create();
+            Domain.Customers.Customer customer = CustomerFactory.Create();
 
-            var orderProductsData = new List<OrderProductData>();
-            orderProductsData.Add(new OrderProductData(SampleProducts.Product1Id, 2));
-            
-            var allProductPrices = new List<ProductPriceData>
+            List<OrderProductData> orderProductsData = new List<OrderProductData>
+            {
+                new OrderProductData(SampleProducts.Product1Id, 2)
+            };
+
+            List<ProductPriceData> allProductPrices = new List<ProductPriceData>
             {
                 SampleProductPrices.Product1EUR, SampleProductPrices.Product1USD
             };
-            
+
             const string currency = "EUR";
-            var conversionRates = GetConversionRates();
-            
+            List<ConversionRate> conversionRates = GetConversionRates();
+
             // Act
             customer.PlaceOrder(
-                orderProductsData, 
-                allProductPrices, 
-                currency, 
+                orderProductsData,
+                allProductPrices,
+                currency,
                 conversionRates);
 
             // Assert
-            var orderPlaced = AssertPublishedDomainEvent<OrderPlacedEvent>(customer);
+            OrderPlacedEvent orderPlaced = AssertPublishedDomainEvent<OrderPlacedEvent>(customer);
             Assert.That(orderPlaced.Value, Is.EqualTo(MoneyValue.Of(200, "EUR")));
         }
 
@@ -47,17 +49,17 @@ namespace SampleProject.UnitTests.Customers
         public void PlaceOrder_WhenNoProductIsAdded_BreaksOrderMustHaveAtLeastOneProductRule()
         {
             // Arrange
-            var customer = CustomerFactory.Create();
+            Domain.Customers.Customer customer = CustomerFactory.Create();
 
-            var orderProductsData = new List<OrderProductData>();
+            List<OrderProductData> orderProductsData = new List<OrderProductData>();
 
-            var allProductPrices = new List<ProductPriceData>
+            List<ProductPriceData> allProductPrices = new List<ProductPriceData>
             {
                 SampleProductPrices.Product1EUR, SampleProductPrices.Product1USD
             };
 
             const string currency = "EUR";
-            var conversionRates = GetConversionRates();
+            List<ConversionRate> conversionRates = GetConversionRates();
 
             // Assert
             AssertBrokenRule<OrderMustHaveAtLeastOneProductRule>(() =>
@@ -75,18 +77,20 @@ namespace SampleProject.UnitTests.Customers
         public void PlaceOrder_GivenTwoOrdersInThatDayAlreadyMade_BreaksCustomerCannotOrderMoreThan2OrdersOnTheSameDayRule()
         {
             // Arrange
-            var customer = CustomerFactory.Create();
+            Domain.Customers.Customer customer = CustomerFactory.Create();
 
-            var orderProductsData = new List<OrderProductData>();
-            orderProductsData.Add(new OrderProductData(SampleProducts.Product1Id, 2));
+            List<OrderProductData> orderProductsData = new List<OrderProductData>
+            {
+                new OrderProductData(SampleProducts.Product1Id, 2)
+            };
 
-            var allProductPrices = new List<ProductPriceData>
+            List<ProductPriceData> allProductPrices = new List<ProductPriceData>
             {
                 SampleProductPrices.Product1EUR, SampleProductPrices.Product1USD
             };
 
             const string currency = "EUR";
-            var conversionRates = GetConversionRates();
+            List<ConversionRate> conversionRates = GetConversionRates();
 
             SystemClock.Set(new DateTime(2020, 1, 10, 11, 0, 0));
             customer.PlaceOrder(
@@ -119,10 +123,11 @@ namespace SampleProject.UnitTests.Customers
         private static List<ConversionRate> GetConversionRates()
         {
 
-            var conversionRates = new List<ConversionRate>();
-
-            conversionRates.Add(new ConversionRate("USD", "EUR", (decimal)0.88));
-            conversionRates.Add(new ConversionRate("EUR", "USD", (decimal)1.13));
+            List<ConversionRate> conversionRates = new List<ConversionRate>
+            {
+                new ConversionRate("USD", "EUR", (decimal)0.88),
+                new ConversionRate("EUR", "USD", (decimal)1.13)
+            };
 
             return conversionRates;
         }

@@ -35,7 +35,10 @@ namespace SampleProject.Domain.SeedWork
 
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType()) return false;
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
 
             return GetProperties().All(p => PropertiesAreEqual(obj, p))
                 && GetFields().All(f => FieldsAreEqual(obj, f));
@@ -53,9 +56,9 @@ namespace SampleProject.Domain.SeedWork
 
         private IEnumerable<PropertyInfo> GetProperties()
         {
-            if (this._properties == null)
+            if (_properties == null)
             {
-                this._properties = GetType()
+                _properties = GetType()
                     .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
                     .ToList();
@@ -64,19 +67,19 @@ namespace SampleProject.Domain.SeedWork
                 // !Attribute.IsDefined(p, typeof(IgnoreMemberAttribute))).ToList();
             }
 
-            return this._properties;
+            return _properties;
         }
 
         private IEnumerable<FieldInfo> GetFields()
         {
-            if (this._fields == null)
+            if (_fields == null)
             {
-                this._fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                _fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
                     .ToList();
             }
 
-            return this._fields;
+            return _fields;
         }
 
         public override int GetHashCode()
@@ -84,15 +87,15 @@ namespace SampleProject.Domain.SeedWork
             unchecked   //allow overflow
             {
                 int hash = 17;
-                foreach (var prop in GetProperties())
+                foreach (PropertyInfo prop in GetProperties())
                 {
-                    var value = prop.GetValue(this, null);
+                    object value = prop.GetValue(this, null);
                     hash = HashValue(hash, value);
                 }
 
-                foreach (var field in GetFields())
+                foreach (FieldInfo field in GetFields())
                 {
-                    var value = field.GetValue(this);
+                    object value = field.GetValue(this);
                     hash = HashValue(hash, value);
                 }
 
@@ -102,7 +105,7 @@ namespace SampleProject.Domain.SeedWork
 
         private static int HashValue(int seed, object value)
         {
-            var currentHash = value?.GetHashCode() ?? 0;
+            int currentHash = value?.GetHashCode() ?? 0;
 
             return seed * 23 + currentHash;
         }

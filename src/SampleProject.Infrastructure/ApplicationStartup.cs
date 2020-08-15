@@ -1,5 +1,4 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Extras.CommonServiceLocator;
 using CommonServiceLocator;
@@ -21,6 +20,7 @@ using SampleProject.Infrastructure.Processing.Outbox;
 using SampleProject.Infrastructure.Quartz;
 using SampleProject.Infrastructure.SeedWork;
 using Serilog;
+using System;
 
 namespace SampleProject.Infrastructure
 {
@@ -43,10 +43,10 @@ namespace SampleProject.Infrastructure
 
             services.AddSingleton(cacheStore);
 
-            var serviceProvider = CreateAutofacServiceProvider(
-                services, 
-                connectionString, 
-                emailSender, 
+            IServiceProvider serviceProvider = CreateAutofacServiceProvider(
+                services,
+                connectionString,
+                emailSender,
                 emailsSettings,
                 logger,
                 executionContextAccessor);
@@ -62,7 +62,7 @@ namespace SampleProject.Infrastructure
             ILogger logger,
             IExecutionContextAccessor executionContextAccessor)
         {
-            var container = new ContainerBuilder();
+            ContainerBuilder container = new ContainerBuilder();
 
             container.Populate(services);
 
@@ -70,7 +70,7 @@ namespace SampleProject.Infrastructure
             container.RegisterModule(new DataAccessModule(connectionString));
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new DomainModule());
-            
+
             if (emailSender != null)
             {
                 container.RegisterModule(new EmailModule(emailSender, emailsSettings));
@@ -79,16 +79,16 @@ namespace SampleProject.Infrastructure
             {
                 container.RegisterModule(new EmailModule(emailsSettings));
             }
-            
+
             container.RegisterModule(new ProcessingModule());
 
             container.RegisterInstance(executionContextAccessor);
 
-            var buildContainer = container.Build();
+            IContainer buildContainer = container.Build();
 
             ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(buildContainer));
 
-            var serviceProvider = new AutofacServiceProvider(buildContainer);
+            AutofacServiceProvider serviceProvider = new AutofacServiceProvider(buildContainer);
 
             CompositionRoot.SetContainer(buildContainer);
 
@@ -96,15 +96,15 @@ namespace SampleProject.Infrastructure
         }
 
         private static void StartQuartz(
-            string connectionString, 
+            string connectionString,
             EmailsSettings emailsSettings,
             ILogger logger,
             IExecutionContextAccessor executionContextAccessor)
         {
-            var schedulerFactory = new StdSchedulerFactory();
-            var scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
+            StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
+            IScheduler scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
 
-            var container = new ContainerBuilder();
+            ContainerBuilder container = new ContainerBuilder();
 
             container.RegisterModule(new LoggingModule(logger));
             container.RegisterModule(new QuartzModule());
@@ -116,7 +116,7 @@ namespace SampleProject.Infrastructure
             container.RegisterInstance(executionContextAccessor);
             container.Register(c =>
             {
-                var dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
+                DbContextOptionsBuilder<OrdersContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<OrdersContext>();
                 dbContextOptionsBuilder.UseSqlServer(connectionString);
 
                 dbContextOptionsBuilder
@@ -129,8 +129,8 @@ namespace SampleProject.Infrastructure
 
             scheduler.Start().GetAwaiter().GetResult();
 
-            var processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
-            var trigger =
+            IJobDetail processOutboxJob = JobBuilder.Create<ProcessOutboxJob>().Build();
+            ITrigger trigger =
                 TriggerBuilder
                     .Create()
                     .StartNow()
@@ -139,8 +139,8 @@ namespace SampleProject.Infrastructure
 
             scheduler.ScheduleJob(processOutboxJob, trigger).GetAwaiter().GetResult();
 
-            var processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
-            var triggerCommandsProcessing =
+            IJobDetail processInternalCommandsJob = JobBuilder.Create<ProcessInternalCommandsJob>().Build();
+            ITrigger triggerCommandsProcessing =
                 TriggerBuilder
                     .Create()
                     .StartNow()

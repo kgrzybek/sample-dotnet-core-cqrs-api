@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using SampleProject.Domain.ForeignExchange;
+﻿using SampleProject.Domain.ForeignExchange;
+using System.Collections.Generic;
 
 namespace SampleProject.Infrastructure.Domain.ForeignExchanges
 {
@@ -9,7 +9,7 @@ namespace SampleProject.Infrastructure.Domain.ForeignExchanges
 
         public ConversionRatesCache(List<ConversionRate> rates)
         {
-            this.Rates = rates;
+            Rates = rates;
         }
     }
 }

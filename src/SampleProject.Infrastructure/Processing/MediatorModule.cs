@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using Autofac.Core;
 using Autofac.Features.Variance;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
 using SampleProject.Application.Configuration.Validation;
-using SampleProject.Application.Orders.GetCustomerOrders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace SampleProject.Infrastructure.Processing
 {
@@ -25,14 +24,14 @@ namespace SampleProject.Infrastructure.Processing
 
             builder.RegisterAssemblyTypes(typeof(IMediator).GetTypeInfo().Assembly).AsImplementedInterfaces();
 
-            var mediatrOpenTypes = new[]
+            Type[] mediatrOpenTypes = new[]
             {
             typeof(IRequestHandler<,>),
             typeof(INotificationHandler<>),
             typeof(IValidator<>),
         };
 
-            foreach (var mediatrOpenType in mediatrOpenTypes)
+            foreach (Type mediatrOpenType in mediatrOpenTypes)
             {
                 builder
                     .RegisterAssemblyTypes(Assemblies.Application, ThisAssembly)
@@ -46,7 +45,7 @@ namespace SampleProject.Infrastructure.Processing
 
             builder.Register<ServiceFactory>(ctx =>
             {
-                var c = ctx.Resolve<IComponentContext>();
+                IComponentContext c = ctx.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
             });
 
@@ -61,9 +60,15 @@ namespace SampleProject.Infrastructure.Processing
             public ScopedContravariantRegistrationSource(params Type[] types)
             {
                 if (types == null)
+                {
                     throw new ArgumentNullException(nameof(types));
+                }
+
                 if (!types.All(x => x.IsGenericTypeDefinition))
+                {
                     throw new ArgumentException("Supplied types should be generic type definitions");
+                }
+
                 _types.AddRange(types);
             }
 
@@ -71,15 +76,17 @@ namespace SampleProject.Infrastructure.Processing
                 Service service,
                 Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor)
             {
-                var components = _source.RegistrationsFor(service, registrationAccessor);
-                foreach (var c in components)
+                IEnumerable<IComponentRegistration> components = _source.RegistrationsFor(service, registrationAccessor);
+                foreach (IComponentRegistration c in components)
                 {
-                    var defs = c.Target.Services
+                    IEnumerable<Type> defs = c.Target.Services
                         .OfType<TypedService>()
                         .Select(x => x.ServiceType.GetGenericTypeDefinition());
 
                     if (defs.Any(_types.Contains))
+                    {
                         yield return c;
+                    }
                 }
             }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleProject.Domain.Customers;
@@ -7,6 +6,7 @@ using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SharedKernel;
 using SampleProject.Infrastructure.Database;
+using System;
 
 namespace SampleProject.Infrastructure.Domain.Customers
 {
@@ -18,19 +18,19 @@ namespace SampleProject.Infrastructure.Domain.Customers
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
             builder.ToTable("Customers", SchemaNames.Orders);
-            
+
             builder.HasKey(b => b.Id);
 
             builder.Property("_welcomeEmailWasSent").HasColumnName("WelcomeEmailWasSent");
             builder.Property("_email").HasColumnName("Email");
             builder.Property("_name").HasColumnName("Name");
-            
+
             builder.OwnsMany<Order>(OrdersList, x =>
             {
                 x.WithOwner().HasForeignKey("CustomerId");
 
                 x.ToTable("Orders", SchemaNames.Orders);
-                
+
                 x.Property<bool>("_isRemoved").HasColumnName("IsRemoved");
                 x.Property<DateTime>("_orderDate").HasColumnName("OrderDate");
                 x.Property<DateTime?>("_orderChangeDate").HasColumnName("OrderChangeDate");
@@ -46,7 +46,7 @@ namespace SampleProject.Infrastructure.Domain.Customers
                     y.ToTable("OrderProducts", SchemaNames.Orders);
                     y.Property<OrderId>("OrderId");
                     y.Property<ProductId>("ProductId");
-                    
+
                     y.HasKey("OrderId", "ProductId");
 
                     y.OwnsOne<MoneyValue>("Value", mv =>

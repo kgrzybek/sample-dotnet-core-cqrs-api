@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using Quartz;
+using System.Reflection;
 using Module = Autofac.Module;
 
 namespace SampleProject.Infrastructure.Quartz

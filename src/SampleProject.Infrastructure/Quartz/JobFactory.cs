@@ -10,14 +10,14 @@ namespace SampleProject.Infrastructure.Quartz
 
         public JobFactory(IContainer container)
         {
-            this._container = container;
+            _container = container;
         }
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            var job = _container.Resolve(bundle.JobDetail.JobType);
-                
-            return job  as IJob;
+            object job = _container.Resolve(bundle.JobDetail.JobType);
+
+            return job as IJob;
         }
 
         public void ReturnJob(IJob job)

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SampleProject.Application;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Infrastructure.Database;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Processing
 {
-    public class UnitOfWorkCommandHandlerDecorator<T> : ICommandHandler<T> where T:ICommand
+    public class UnitOfWorkCommandHandlerDecorator<T> : ICommandHandler<T> where T : ICommand
     {
         private readonly ICommandHandler<T> _decorated;
 
@@ -19,8 +18,8 @@ namespace SampleProject.Infrastructure.Processing
         private readonly OrdersContext _ordersContext;
 
         public UnitOfWorkCommandHandlerDecorator(
-            ICommandHandler<T> decorated, 
-            IUnitOfWork unitOfWork, 
+            ICommandHandler<T> decorated,
+            IUnitOfWork unitOfWork,
             OrdersContext ordersContext)
         {
             _decorated = decorated;
@@ -30,11 +29,11 @@ namespace SampleProject.Infrastructure.Processing
 
         public async Task<Unit> Handle(T command, CancellationToken cancellationToken)
         {
-            await this._decorated.Handle(command, cancellationToken);
+            await _decorated.Handle(command, cancellationToken);
 
             if (command is InternalCommandBase)
             {
-                var internalCommand =
+                InternalCommands.InternalCommand internalCommand =
                     await _ordersContext.InternalCommands.FirstOrDefaultAsync(x => x.Id == command.Id,
                         cancellationToken: cancellationToken);
 
@@ -44,7 +43,7 @@ namespace SampleProject.Infrastructure.Processing
                 }
             }
 
-            await this._unitOfWork.CommitAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return Unit.Value;
         }

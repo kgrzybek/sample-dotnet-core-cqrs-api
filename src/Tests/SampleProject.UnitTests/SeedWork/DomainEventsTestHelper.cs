@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using SampleProject.Domain.SeedWork;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.UnitTests.SeedWork
 {
@@ -17,15 +17,15 @@ namespace SampleProject.UnitTests.SeedWork
                 domainEvents.AddRange(aggregate.DomainEvents);
             }
 
-            var fields = aggregate.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Concat(aggregate.GetType().BaseType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)).ToArray();
+            FieldInfo[] fields = aggregate.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Concat(aggregate.GetType().BaseType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)).ToArray();
 
-            foreach (var field in fields)
+            foreach (FieldInfo field in fields)
             {
-                var isEntity = field.FieldType.IsAssignableFrom(typeof(Entity));
+                bool isEntity = field.FieldType.IsAssignableFrom(typeof(Entity));
 
                 if (isEntity)
                 {
-                    var entity = field.GetValue(aggregate) as Entity;
+                    Entity entity = field.GetValue(aggregate) as Entity;
                     domainEvents.AddRange(GetAllDomainEvents(entity).ToList());
                 }
 
@@ -33,7 +33,7 @@ namespace SampleProject.UnitTests.SeedWork
                 {
                     if (field.GetValue(aggregate) is IEnumerable enumerable)
                     {
-                        foreach (var en in enumerable)
+                        foreach (object en in enumerable)
                         {
                             if (en is Entity entityItem)
                             {
@@ -51,15 +51,15 @@ namespace SampleProject.UnitTests.SeedWork
         {
             aggregate.ClearDomainEvents();
 
-            var fields = aggregate.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Concat(aggregate.GetType().BaseType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)).ToArray();
+            FieldInfo[] fields = aggregate.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Concat(aggregate.GetType().BaseType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)).ToArray();
 
-            foreach (var field in fields)
+            foreach (FieldInfo field in fields)
             {
-                var isEntity = field.FieldType.IsAssignableFrom(typeof(Entity));
+                bool isEntity = field.FieldType.IsAssignableFrom(typeof(Entity));
 
                 if (isEntity)
                 {
-                    var entity = field.GetValue(aggregate) as Entity;
+                    Entity entity = field.GetValue(aggregate) as Entity;
                     ClearAllDomainEvents(entity);
                 }
 
@@ -67,7 +67,7 @@ namespace SampleProject.UnitTests.SeedWork
                 {
                     if (field.GetValue(aggregate) is IEnumerable enumerable)
                     {
-                        foreach (var en in enumerable)
+                        foreach (object en in enumerable)
                         {
                             if (en is Entity entityItem)
                             {

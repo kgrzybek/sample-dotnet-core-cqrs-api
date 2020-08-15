@@ -8,7 +8,7 @@ namespace SampleProject.Domain.Products
 
         private ProductPrice()
         {
-            
+
         }
     }
 }

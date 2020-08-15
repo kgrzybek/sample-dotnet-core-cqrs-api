@@ -10,7 +10,7 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
             RuleFor(x => x.Products).NotEmpty().WithMessage("Products list is empty");
             RuleForEach(x => x.Products).SetValidator(new ProductDtoValidator());
 
-            this.RuleFor(x => x.Currency).Must(x => x == "USD" || x == "EUR")
+            RuleFor(x => x.Currency).Must(x => x == "USD" || x == "EUR")
                 .WithMessage("At least one product has invalid currency");
         }
     }
