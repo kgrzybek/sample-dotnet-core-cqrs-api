@@ -33,11 +33,6 @@ namespace SampleProject.Domain.SharedKernel
         {
             CheckRule(new MoneyValueOperationMustBePerformedOnTheSameCurrencyRule(moneyValueLeft, moneyValueRight));
 
-            if (moneyValueLeft.Currency != moneyValueRight.Currency)
-            {
-                throw new ArgumentException();
-            }
-
             return new MoneyValue(moneyValueLeft.Value + moneyValueRight.Value, moneyValueLeft.Currency);
         }
 
