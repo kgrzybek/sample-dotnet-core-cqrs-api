@@ -5,13 +5,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DocumentationFile>D:\Development\Source\template-dotnet-core-cqrs-api\src\SampleProject.Application\SampleProject.Application.xml</DocumentationFile>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>D:\Development\Source\template-dotnet-core-cqrs-api\src\SampleProject.Application\SampleProject.Application.xml</DocumentationFile>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

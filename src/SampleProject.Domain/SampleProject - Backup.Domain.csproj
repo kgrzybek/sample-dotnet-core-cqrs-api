@@ -6,13 +6,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DocumentationFile>D:\Development\Source\template-dotnet-core-cqrs-api\src\SampleProject.Domain\SampleProject.Domain.xml</DocumentationFile>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <DocumentationFile>D:\Development\Source\template-dotnet-core-cqrs-api\src\SampleProject.Domain\SampleProject.Domain.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DocumentationFile>D:\Development\Source\template-dotnet-core-cqrs-api\src\SampleProject.Domain\SampleProject.Domain.xml</DocumentationFile>
+      <Optimize>false</Optimize>
     </PropertyGroup>
 
     <ItemGroup>

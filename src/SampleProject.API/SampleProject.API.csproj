@@ -1,67 +1,72 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>54e8eb06-aaa1-4fff-9f05-3ced1cb623c2</UserSecretsId>
-    <LangVersion>7.2</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.2\SampleProject.API.xml</DocumentationFile>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="logs\**" />
-    <Compile Remove="SampleProject.Domain\**" />
-    <Content Remove="logs\**" />
-    <Content Remove="SampleProject.Domain\**" />
-    <EmbeddedResource Remove="logs\**" />
-    <EmbeddedResource Remove="SampleProject.Domain\**" />
-    <None Remove="logs\**" />
-    <None Remove="SampleProject.Domain\**" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UserSecretsId>54e8eb06-aaa1-4fff-9f05-3ced1cb623c2</UserSecretsId>
+        <LangVersion>7.2</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>D:\Development\Source\template-dotnet-core-cqrs-api\src\SampleProject.API\SampleProject.API.xml</DocumentationFile>
+        <NoWarn>1701;1702;1705;1591</NoWarn>
+        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DocumentationFile>D:\Development\Source\template-dotnet-core-cqrs-api\src\SampleProject.API\SampleProject.API.xml</DocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="logs\**" />
+        <Compile Remove="SampleProject.Domain\**" />
+        <Content Remove="logs\**" />
+        <Content Remove="SampleProject.Domain\**" />
+        <EmbeddedResource Remove="logs\**" />
+        <EmbeddedResource Remove="SampleProject.Domain\**" />
+        <None Remove="logs\**" />
+        <None Remove="SampleProject.Domain\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="5.0.0" />
-    <PackageReference Include="Dapper" Version="2.0.30" />
-    <PackageReference Include="FluentValidation" Version="8.6.1" />
-    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="3.1.0" />
-    <PackageReference Include="MediatR" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.0" />
-    <PackageReference Include="Quartz" Version="3.0.7" />
-    <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+        <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="5.0.0" />
+        <PackageReference Include="Dapper" Version="2.0.30" />
+        <PackageReference Include="FluentValidation" Version="8.6.1" />
+        <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="3.1.0" />
+        <PackageReference Include="MediatR" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.0" />
+        <PackageReference Include="Quartz" Version="3.0.7" />
+        <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SampleProject.Application\SampleProject.Application.csproj" />
-    <ProjectReference Include="..\SampleProject.Infrastructure\SampleProject.Infrastructure.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SampleProject.Application\SampleProject.Application.csproj" />
+        <ProjectReference Include="..\SampleProject.Infrastructure\SampleProject.Infrastructure.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="appsettings.Production.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="appsettings.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="hosting.Production.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="hosting.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="hosting.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Update="appsettings.Production.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="appsettings.Development.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="hosting.Production.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="hosting.Development.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="hosting.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
 </Project>
