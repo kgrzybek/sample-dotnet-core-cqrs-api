@@ -68,3 +68,8 @@ Outbox Pattern implementation using [Quartz.NET](https://github.com/quartznet/qu
 2. Execute InitializeDatabase.sql script.
 3. Set connection string using environment variable named `ASPNETCORE_SampleProject_IntegrationTests_ConnectionString`
 - Run tests from project [src/Tests/SampleProject.IntegrationTests](src/Tests/SampleProject.IntegrationTests)
+# GetUserPrivateKey
+This method returns the value of the environment variable that holds the user's secret key
+  
+# GetConnectionString
+This method returns the value of the environment variable that holds the connection string
