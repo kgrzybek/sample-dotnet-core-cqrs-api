@@ -50,7 +50,7 @@ namespace SampleProject.Infrastructure.Database
 
             builder.RegisterType<StronglyTypedIdValueConverterSelector>()
                 .As<IValueConverterSelector>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
 
             builder
                 .Register(c =>
