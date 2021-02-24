@@ -1,8 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers.Orders;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Customers.IntegrationHandlers
 {
@@ -17,7 +17,7 @@ namespace SampleProject.Application.Customers.IntegrationHandlers
 
         public async Task<Unit> Handle(MarkCustomerAsWelcomedCommand command, CancellationToken cancellationToken)
         {
-            var customer = await this._customerRepository.GetByIdAsync(command.CustomerId);
+            Domain.Customers.Customer customer = await _customerRepository.GetByIdAsync(command.CustomerId);
 
             customer.MarkAsWelcomedByEmail();
 

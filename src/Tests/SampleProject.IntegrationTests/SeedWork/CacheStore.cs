@@ -1,14 +1,13 @@
-﻿using System;
+﻿using SampleProject.Infrastructure.Caching;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using SampleProject.Infrastructure.Caching;
 
 namespace SampleProject.IntegrationTests.SeedWork
 {
     public class CacheStore : ICacheStore
     {
-        private IDictionary dictionary = new ListDictionary();
+        private readonly IDictionary dictionary = new ListDictionary();
         public void Add<TItem>(TItem item, ICacheKey<TItem> key, TimeSpan? expirationTime = null)
         {
             dictionary.Add(key, item);

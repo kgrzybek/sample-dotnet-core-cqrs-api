@@ -1,12 +1,11 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using SampleProject.Application.Configuration.Processing;
 using SampleProject.Application.Customers;
 using SampleProject.Infrastructure.Database;
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Processing.InternalCommands
 {
@@ -16,23 +15,23 @@ namespace SampleProject.Infrastructure.Processing.InternalCommands
         private readonly OrdersContext _ordersContext;
 
         public CommandsDispatcher(
-            IMediator mediator, 
+            IMediator mediator,
             OrdersContext ordersContext)
         {
-            this._mediator = mediator;
-            this._ordersContext = ordersContext;
+            _mediator = mediator;
+            _ordersContext = ordersContext;
         }
 
         public async Task DispatchCommandAsync(Guid id)
         {
-            var internalCommand = await this._ordersContext.InternalCommands.SingleOrDefaultAsync(x => x.Id == id);
+            InternalCommand internalCommand = await _ordersContext.InternalCommands.SingleOrDefaultAsync(x => x.Id == id);
 
             Type type = Assembly.GetAssembly(typeof(MarkCustomerAsWelcomedCommand)).GetType(internalCommand.Type);
             dynamic command = JsonConvert.DeserializeObject(internalCommand.Data, type);
 
             internalCommand.ProcessedDate = DateTime.UtcNow;
 
-            await this._mediator.Send(command);
+            await _mediator.Send(command);
         }
     }
 }

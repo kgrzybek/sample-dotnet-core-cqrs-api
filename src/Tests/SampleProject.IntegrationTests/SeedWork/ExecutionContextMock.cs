@@ -1,5 +1,5 @@
-﻿using System;
-using SampleProject.Application.Configuration;
+﻿using SampleProject.Application.Configuration;
+using System;
 
 namespace SampleProject.IntegrationTests.SeedWork
 {

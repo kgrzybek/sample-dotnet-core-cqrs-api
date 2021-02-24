@@ -8,7 +8,7 @@ namespace SampleProject.Infrastructure.Emails
     {
         private readonly IEmailSender _emailSender;
         private readonly EmailsSettings _emailsSettings;
-        
+
         internal EmailModule(IEmailSender emailSender, EmailsSettings emailsSettings)
         {
             _emailSender = emailSender;

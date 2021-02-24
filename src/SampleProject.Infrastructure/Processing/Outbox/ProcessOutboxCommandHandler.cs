@@ -1,16 +1,15 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using MediatR;
 using Newtonsoft.Json;
-using SampleProject.Application;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Application.Configuration.DomainEvents;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Events;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Infrastructure.Processing.Outbox
 {
@@ -28,7 +27,7 @@ namespace SampleProject.Infrastructure.Processing.Outbox
 
         public async Task<Unit> Handle(ProcessOutboxCommand command, CancellationToken cancellationToken)
         {
-            var connection = this._sqlConnectionFactory.GetOpenConnection();
+            System.Data.IDbConnection connection = _sqlConnectionFactory.GetOpenConnection();
             const string sql = "SELECT " +
                                "[OutboxMessage].[Id], " +
                                "[OutboxMessage].[Type], " +
@@ -36,23 +35,23 @@ namespace SampleProject.Infrastructure.Processing.Outbox
                                "FROM [app].[OutboxMessages] AS [OutboxMessage] " +
                                "WHERE [OutboxMessage].[ProcessedDate] IS NULL";
 
-            var messages = await connection.QueryAsync<OutboxMessageDto>(sql);
-            var messagesList = messages.AsList();
+            System.Collections.Generic.IEnumerable<OutboxMessageDto> messages = await connection.QueryAsync<OutboxMessageDto>(sql);
+            System.Collections.Generic.List<OutboxMessageDto> messagesList = messages.AsList();
 
             const string sqlUpdateProcessedDate = "UPDATE [app].[OutboxMessages] " +
                                                   "SET [ProcessedDate] = @Date " +
                                                   "WHERE [Id] = @Id";
             if (messagesList.Count > 0)
             {
-                foreach (var message in messagesList)
+                foreach (OutboxMessageDto message in messagesList)
                 {
                     Type type = Assemblies.Application
                         .GetType(message.Type);
-                    var request = JsonConvert.DeserializeObject(message.Data, type) as IDomainEventNotification;
+                    IDomainEventNotification request = JsonConvert.DeserializeObject(message.Data, type) as IDomainEventNotification;
 
                     using (LogContext.Push(new OutboxMessageContextEnricher(request)))
                     {
-                        await this._mediator.Publish(request, cancellationToken);
+                        await _mediator.Publish(request, cancellationToken);
 
                         await connection.ExecuteAsync(sqlUpdateProcessedDate, new
                         {

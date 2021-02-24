@@ -21,7 +21,7 @@ namespace SampleProject.Domain.SeedWork
         protected void AddDomainEvent(IDomainEvent domainEvent)
         {
             _domainEvents = _domainEvents ?? new List<IDomainEvent>();
-            this._domainEvents.Add(domainEvent);
+            _domainEvents.Add(domainEvent);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
-﻿using System;
-using SampleProject.Application.Configuration.Queries;
+﻿using SampleProject.Application.Configuration.Queries;
+using System;
 
 namespace SampleProject.Application.Customers.GetCustomerDetails
 {

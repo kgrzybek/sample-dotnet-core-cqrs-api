@@ -9,13 +9,13 @@
         public string Content { get; }
 
         public EmailMessage(
-            string from, 
+            string from,
             string to,
             string content)
         {
-            this.From = from;
-            this.To = to;
-            this.Content = content;
+            From = from;
+            To = to;
+            Content = content;
         }
     }
 }

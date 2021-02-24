@@ -1,7 +1,6 @@
-﻿using System;
-using MediatR;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SampleProject.Domain.SeedWork;
+using System;
 
 namespace SampleProject.Application.Configuration.DomainEvents
 {
@@ -14,8 +13,8 @@ namespace SampleProject.Application.Configuration.DomainEvents
 
         public DomainNotificationBase(T domainEvent)
         {
-            this.Id = Guid.NewGuid();
-            this.DomainEvent = domainEvent;
+            Id = Guid.NewGuid();
+            DomainEvent = domainEvent;
         }
     }
 }

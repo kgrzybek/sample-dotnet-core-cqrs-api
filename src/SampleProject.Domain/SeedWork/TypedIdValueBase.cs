@@ -13,7 +13,11 @@ namespace SampleProject.Domain.SeedWork
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
             return obj is TypedIdValueBase other && Equals(other);
         }
 
@@ -24,7 +28,7 @@ namespace SampleProject.Domain.SeedWork
 
         public bool Equals(TypedIdValueBase other)
         {
-            return this.Value == other.Value;
+            return Value == other.Value;
         }
 
         public static bool operator ==(TypedIdValueBase obj1, TypedIdValueBase obj2)
@@ -39,7 +43,7 @@ namespace SampleProject.Domain.SeedWork
             }
             return obj1.Equals(obj2);
         }
-        public static bool operator !=(TypedIdValueBase x, TypedIdValueBase y) 
+        public static bool operator !=(TypedIdValueBase x, TypedIdValueBase y)
         {
             return !(x == y);
         }

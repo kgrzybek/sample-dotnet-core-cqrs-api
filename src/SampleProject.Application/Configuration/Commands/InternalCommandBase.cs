@@ -8,7 +8,7 @@ namespace SampleProject.Application.Configuration.Commands
 
         protected InternalCommandBase(Guid id)
         {
-            this.Id = id;
+            Id = id;
         }
     }
 
@@ -18,12 +18,12 @@ namespace SampleProject.Application.Configuration.Commands
 
         protected InternalCommandBase()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
 
         protected InternalCommandBase(Guid id)
         {
-            this.Id = id;
+            Id = id;
         }
     }
 }

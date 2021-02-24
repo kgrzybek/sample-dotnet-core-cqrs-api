@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SampleProject.Domain.ForeignExchange;
+﻿using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
 using SampleProject.Domain.SharedKernel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SampleProject.Domain.Customers.Orders
 {
@@ -18,46 +18,46 @@ namespace SampleProject.Domain.Customers.Orders
 
         private MoneyValue _valueInEUR;
 
-        private List<OrderProduct> _orderProducts;
+        private readonly List<OrderProduct> _orderProducts;
 
-        private OrderStatus _status;
+        private readonly OrderStatus _status;
 
-        private DateTime _orderDate;
+        private readonly DateTime _orderDate;
 
         private DateTime? _orderChangeDate;
 
         private Order()
         {
-            this._orderProducts = new List<OrderProduct>();
-            this._isRemoved = false;
+            _orderProducts = new List<OrderProduct>();
+            _isRemoved = false;
         }
 
         private Order(
             List<OrderProductData> orderProductsData,
             List<ProductPriceData> productPrices,
-            string currency, 
+            string currency,
             List<ConversionRate> conversionRates
             )
         {
-            this._orderDate = SystemClock.Now;
-            this.Id = new OrderId(Guid.NewGuid());
-            this._orderProducts = new List<OrderProduct>();
+            _orderDate = SystemClock.Now;
+            Id = new OrderId(Guid.NewGuid());
+            _orderProducts = new List<OrderProduct>();
 
-            foreach (var orderProductData in orderProductsData)
+            foreach (OrderProductData orderProductData in orderProductsData)
             {
-                var productPrice = productPrices.Single(x => x.ProductId == orderProductData.ProductId &&
+                ProductPriceData productPrice = productPrices.Single(x => x.ProductId == orderProductData.ProductId &&
                                                              x.Price.Currency == currency);
-                var orderProduct = OrderProduct.CreateForProduct(
-                    productPrice, 
+                OrderProduct orderProduct = OrderProduct.CreateForProduct(
+                    productPrice,
                     orderProductData.Quantity,
-                    currency, 
+                    currency,
                     conversionRates);
 
                 _orderProducts.Add(orderProduct);
             }
 
-            this.CalculateOrderValue();
-            this._status = OrderStatus.Placed;
+            CalculateOrderValue();
+            _status = OrderStatus.Placed;
         }
 
         internal static Order CreateNew(List<OrderProductData> orderProductsData,
@@ -70,52 +70,52 @@ namespace SampleProject.Domain.Customers.Orders
 
         internal void Change(
             List<ProductPriceData> allProductPrices,
-            List<OrderProductData> orderProductsData, 
+            List<OrderProductData> orderProductsData,
             List<ConversionRate> conversionRates,
             string currency)
         {
-            foreach (var orderProductData in orderProductsData)
+            foreach (OrderProductData orderProductData in orderProductsData)
             {
-                var product = allProductPrices.Single(x => x.ProductId == orderProductData.ProductId &&
+                ProductPriceData product = allProductPrices.Single(x => x.ProductId == orderProductData.ProductId &&
                                                            x.Price.Currency == currency);
-                
-                var existingProductOrder = _orderProducts.SingleOrDefault(x => x.ProductId == orderProductData.ProductId);
+
+                OrderProduct existingProductOrder = _orderProducts.SingleOrDefault(x => x.ProductId == orderProductData.ProductId);
                 if (existingProductOrder != null)
                 {
-                    var existingOrderProduct = this._orderProducts.Single(x => x.ProductId == existingProductOrder.ProductId);
-                    
+                    OrderProduct existingOrderProduct = _orderProducts.Single(x => x.ProductId == existingProductOrder.ProductId);
+
                     existingOrderProduct.ChangeQuantity(product, orderProductData.Quantity, conversionRates);
                 }
                 else
                 {
-                    var orderProduct = OrderProduct.CreateForProduct(product, orderProductData.Quantity, currency, conversionRates);
-                    this._orderProducts.Add(orderProduct);
+                    OrderProduct orderProduct = OrderProduct.CreateForProduct(product, orderProductData.Quantity, currency, conversionRates);
+                    _orderProducts.Add(orderProduct);
                 }
             }
 
-            var orderProductsToCheck = _orderProducts.ToList();
-            foreach (var existingProduct in orderProductsToCheck)
+            List<OrderProduct> orderProductsToCheck = _orderProducts.ToList();
+            foreach (OrderProduct existingProduct in orderProductsToCheck)
             {
-                var product = orderProductsData.SingleOrDefault(x => x.ProductId == existingProduct.ProductId);
+                OrderProductData product = orderProductsData.SingleOrDefault(x => x.ProductId == existingProduct.ProductId);
                 if (product == null)
                 {
-                    this._orderProducts.Remove(existingProduct);
+                    _orderProducts.Remove(existingProduct);
                 }
             }
 
-            this.CalculateOrderValue();
+            CalculateOrderValue();
 
-            this._orderChangeDate = DateTime.UtcNow;
+            _orderChangeDate = DateTime.UtcNow;
         }
 
         internal void Remove()
         {
-            this._isRemoved = true;
+            _isRemoved = true;
         }
 
         internal bool IsOrderedToday()
         {
-           return this._orderDate.Date == SystemClock.Now.Date;
+            return _orderDate.Date == SystemClock.Now.Date;
         }
 
         internal MoneyValue GetValue()

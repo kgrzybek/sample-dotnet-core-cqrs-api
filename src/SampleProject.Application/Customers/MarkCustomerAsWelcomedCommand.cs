@@ -1,8 +1,8 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Newtonsoft.Json;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers;
+using System;
 
 namespace SampleProject.Application.Customers
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using SampleProject.Domain.SharedKernel;
+﻿using SampleProject.Domain.SharedKernel;
 
 namespace SampleProject.Domain.ForeignExchange
 {
@@ -13,14 +12,14 @@ namespace SampleProject.Domain.ForeignExchange
 
         public ConversionRate(string sourceCurrency, string targetCurrency, decimal factor)
         {
-            this.SourceCurrency = sourceCurrency;
-            this.TargetCurrency = targetCurrency;
-            this.Factor = factor;
+            SourceCurrency = sourceCurrency;
+            TargetCurrency = targetCurrency;
+            Factor = factor;
         }
 
         internal MoneyValue Convert(MoneyValue value)
         {
-            return this.Factor * value;
+            return Factor * value;
         }
     }
 }

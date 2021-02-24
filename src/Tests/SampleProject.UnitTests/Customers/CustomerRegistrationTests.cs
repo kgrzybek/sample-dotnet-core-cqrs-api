@@ -13,12 +13,12 @@ namespace SampleProject.UnitTests.Customers
         public void GivenCustomerEmailIsUnique_WhenCustomerIsRegistering_IsSuccessful()
         {
             // Arrange
-            var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
+            ICustomerUniquenessChecker customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
             const string email = "testEmail@email.com";
             customerUniquenessChecker.IsUnique(email).Returns(true);
 
             // Act
-            var customer = Customer.CreateRegistered(email, "Sample name", customerUniquenessChecker);
+            Customer customer = Customer.CreateRegistered(email, "Sample name", customerUniquenessChecker);
 
             // Assert
             AssertPublishedDomainEvent<CustomerRegisteredEvent>(customer);
@@ -28,7 +28,7 @@ namespace SampleProject.UnitTests.Customers
         public void GivenCustomerEmailIsNotUnique_WhenCustomerIsRegistering_BreaksCustomerEmailMustBeUniqueRule()
         {
             // Arrange
-            var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
+            ICustomerUniquenessChecker customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
             const string email = "testEmail@email.com";
             customerUniquenessChecker.IsUnique(email).Returns(false);
 

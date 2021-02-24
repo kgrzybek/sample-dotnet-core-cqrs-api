@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Linq;
 
 namespace SampleProject.Infrastructure.SeedWork
 {

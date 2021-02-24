@@ -19,8 +19,14 @@ namespace SampleProject.Domain.SharedKernel
             }
         }
 
-        public static void Set(DateTime customDate) => _customDate = customDate;
+        public static void Set(DateTime customDate)
+        {
+            _customDate = customDate;
+        }
 
-        public static void Reset() => _customDate = null;
+        public static void Reset()
+        {
+            _customDate = null;
+        }
     }
 }

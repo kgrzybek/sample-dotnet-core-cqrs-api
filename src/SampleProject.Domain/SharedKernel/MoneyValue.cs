@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SampleProject.Domain.SeedWork;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using SampleProject.Domain.SeedWork;
 
 namespace SampleProject.Domain.SharedKernel
 {
@@ -13,8 +13,8 @@ namespace SampleProject.Domain.SharedKernel
 
         private MoneyValue(decimal value, string currency)
         {
-            this.Value = value;
-            this.Currency = currency;
+            Value = value;
+            Currency = currency;
         }
 
         public static MoneyValue Of(decimal value, string currency)

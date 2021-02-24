@@ -1,10 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using SampleProject.Application.Configuration.Commands;
+﻿using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.SeedWork;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Customers.RegisterCustomer
 {
@@ -15,22 +14,22 @@ namespace SampleProject.Application.Customers.RegisterCustomer
         private readonly IUnitOfWork _unitOfWork;
 
         public RegisterCustomerCommandHandler(
-            ICustomerRepository customerRepository, 
-            ICustomerUniquenessChecker customerUniquenessChecker, 
+            ICustomerRepository customerRepository,
+            ICustomerUniquenessChecker customerUniquenessChecker,
             IUnitOfWork unitOfWork)
         {
-            this._customerRepository = customerRepository;
+            _customerRepository = customerRepository;
             _customerUniquenessChecker = customerUniquenessChecker;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<CustomerDto> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = Customer.CreateRegistered(request.Email, request.Name, this._customerUniquenessChecker);
+            Customer customer = Customer.CreateRegistered(request.Email, request.Name, _customerUniquenessChecker);
 
-            await this._customerRepository.AddAsync(customer);
+            await _customerRepository.AddAsync(customer);
 
-            await this._unitOfWork.CommitAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return new CustomerDto { Id = customer.Id.Value };
         }

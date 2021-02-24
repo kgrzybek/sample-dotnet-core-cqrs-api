@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Collections.Generic;
-using Autofac;
 
 namespace SampleProject.Infrastructure.Caching
 {
@@ -17,7 +17,7 @@ namespace SampleProject.Infrastructure.Caching
         {
             builder.RegisterType<MemoryCacheStore>()
                 .As<ICacheStore>()
-                .WithParameter("expirationConfiguration", this._expirationConfiguration)
+                .WithParameter("expirationConfiguration", _expirationConfiguration)
                 .SingleInstance();
         }
     }

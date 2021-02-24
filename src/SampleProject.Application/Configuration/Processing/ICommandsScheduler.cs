@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
-using MediatR;
-using SampleProject.Application.Configuration.Commands;
+﻿using SampleProject.Application.Configuration.Commands;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Configuration.Processing
 {

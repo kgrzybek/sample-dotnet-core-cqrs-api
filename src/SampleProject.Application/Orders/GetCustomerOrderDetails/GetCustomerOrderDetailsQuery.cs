@@ -1,6 +1,5 @@
-﻿using System;
-using MediatR;
-using SampleProject.Application.Configuration.Queries;
+﻿using SampleProject.Application.Configuration.Queries;
+using System;
 
 namespace SampleProject.Application.Orders.GetCustomerOrderDetails
 {
@@ -10,7 +9,7 @@ namespace SampleProject.Application.Orders.GetCustomerOrderDetails
 
         public GetCustomerOrderDetailsQuery(Guid orderId)
         {
-            this.OrderId = orderId;
+            OrderId = orderId;
         }
     }
 }

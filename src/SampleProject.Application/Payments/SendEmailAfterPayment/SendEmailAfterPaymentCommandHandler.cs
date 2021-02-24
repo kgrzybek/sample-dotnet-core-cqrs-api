@@ -1,9 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Application.Configuration.Emails;
 using SampleProject.Domain.Payments;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Payments.SendEmailAfterPayment
 {
@@ -13,7 +13,7 @@ namespace SampleProject.Application.Payments.SendEmailAfterPayment
         private readonly IPaymentRepository _paymentRepository;
 
         public SendEmailAfterPaymentCommandHandler(
-            IEmailSender emailSender, 
+            IEmailSender emailSender,
             IPaymentRepository paymentRepository)
         {
             _emailSender = emailSender;
@@ -23,11 +23,11 @@ namespace SampleProject.Application.Payments.SendEmailAfterPayment
         public async Task<Unit> Handle(SendEmailAfterPaymentCommand request, CancellationToken cancellationToken)
         {
             // Logic of preparing an email. This is only mock.
-            var emailMessage = new EmailMessage("from@email.com", "to@email.com", "content");
+            EmailMessage emailMessage = new EmailMessage("from@email.com", "to@email.com", "content");
 
             await _emailSender.SendEmailAsync(emailMessage);
 
-            var payment = await this._paymentRepository.GetByIdAsync(request.PaymentId);
+            Payment payment = await _paymentRepository.GetByIdAsync(request.PaymentId);
 
             payment.MarkEmailNotificationIsSent();
 

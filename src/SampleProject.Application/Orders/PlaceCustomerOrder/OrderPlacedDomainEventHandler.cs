@@ -1,8 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using SampleProject.Domain.Customers.Orders.Events;
 using SampleProject.Domain.Payments;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Orders.PlaceCustomerOrder
 {
@@ -17,9 +17,9 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
 
         public async Task Handle(OrderPlacedEvent notification, CancellationToken cancellationToken)
         {
-            var newPayment = new Payment(notification.OrderId);
+            Payment newPayment = new Payment(notification.OrderId);
 
-            await this._paymentRepository.AddAsync(newPayment);
+            await _paymentRepository.AddAsync(newPayment);
         }
     }
 }

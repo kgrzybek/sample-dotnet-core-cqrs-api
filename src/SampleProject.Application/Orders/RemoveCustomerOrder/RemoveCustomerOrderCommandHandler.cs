@@ -1,9 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Domain.Customers;
 using SampleProject.Domain.Customers.Orders;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Orders.RemoveCustomerOrder
 {
@@ -13,12 +13,12 @@ namespace SampleProject.Application.Orders.RemoveCustomerOrder
 
         public RemoveCustomerOrderCommandHandler(ICustomerRepository customerRepository)
         {
-            this._customerRepository = customerRepository;
+            _customerRepository = customerRepository;
         }
 
         public async Task<Unit> Handle(RemoveCustomerOrderCommand request, CancellationToken cancellationToken)
         {
-            var customer = await this._customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
+            Customer customer = await _customerRepository.GetByIdAsync(new CustomerId(request.CustomerId));
 
             customer.RemoveOrder(new OrderId(request.OrderId));
 

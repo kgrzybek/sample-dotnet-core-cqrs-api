@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SampleProject.Domain.Customers.Orders;
+﻿using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
 using SampleProject.Domain.Customers.Rules;
 using SampleProject.Domain.ForeignExchange;
 using SampleProject.Domain.Products;
 using SampleProject.Domain.SeedWork;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SampleProject.Domain.Customers
 {
@@ -14,9 +14,9 @@ namespace SampleProject.Domain.Customers
     {
         public CustomerId Id { get; private set; }
 
-        private string _email;
+        private readonly string _email;
 
-        private string _name;
+        private readonly string _name;
 
         private readonly List<Order> _orders;
 
@@ -24,22 +24,22 @@ namespace SampleProject.Domain.Customers
 
         private Customer()
         {
-            this._orders = new List<Order>();
+            _orders = new List<Order>();
         }
-         
+
         private Customer(string email, string name)
         {
-            this.Id = new CustomerId(Guid.NewGuid());
+            Id = new CustomerId(Guid.NewGuid());
             _email = email;
             _name = name;
             _welcomeEmailWasSent = false;
             _orders = new List<Order>();
 
-            this.AddDomainEvent(new CustomerRegisteredEvent(this.Id));
+            AddDomainEvent(new CustomerRegisteredEvent(Id));
         }
 
         public static Customer CreateRegistered(
-            string email, 
+            string email,
             string name,
             ICustomerUniquenessChecker customerUniquenessChecker)
         {
@@ -51,23 +51,23 @@ namespace SampleProject.Domain.Customers
         public OrderId PlaceOrder(
             List<OrderProductData> orderProductsData,
             List<ProductPriceData> allProductPrices,
-            string currency, 
+            string currency,
             List<ConversionRate> conversionRates)
         {
             CheckRule(new CustomerCannotOrderMoreThan2OrdersOnTheSameDayRule(_orders));
             CheckRule(new OrderMustHaveAtLeastOneProductRule(orderProductsData));
 
-            var order = Order.CreateNew(orderProductsData, allProductPrices, currency, conversionRates);
+            Order order = Order.CreateNew(orderProductsData, allProductPrices, currency, conversionRates);
 
-            this._orders.Add(order);
+            _orders.Add(order);
 
-            this.AddDomainEvent(new OrderPlacedEvent(order.Id, this.Id, order.GetValue()));
+            AddDomainEvent(new OrderPlacedEvent(order.Id, Id, order.GetValue()));
 
             return order.Id;
         }
 
         public void ChangeOrder(
-            OrderId orderId, 
+            OrderId orderId,
             List<ProductPriceData> existingProducts,
             List<OrderProductData> newOrderProductsData,
             List<ConversionRate> conversionRates,
@@ -75,23 +75,23 @@ namespace SampleProject.Domain.Customers
         {
             CheckRule(new OrderMustHaveAtLeastOneProductRule(newOrderProductsData));
 
-            var order = this._orders.Single(x => x.Id == orderId);
+            Order order = _orders.Single(x => x.Id == orderId);
             order.Change(existingProducts, newOrderProductsData, conversionRates, currency);
 
-            this.AddDomainEvent(new OrderChangedEvent(orderId));
+            AddDomainEvent(new OrderChangedEvent(orderId));
         }
 
         public void RemoveOrder(OrderId orderId)
         {
-            var order = this._orders.Single(x => x.Id == orderId);
+            Order order = _orders.Single(x => x.Id == orderId);
             order.Remove();
 
-            this.AddDomainEvent(new OrderRemovedEvent(orderId));
+            AddDomainEvent(new OrderRemovedEvent(orderId));
         }
 
         public void MarkAsWelcomedByEmail()
         {
-            this._welcomeEmailWasSent = true;
+            _welcomeEmailWasSent = true;
         }
     }
 }

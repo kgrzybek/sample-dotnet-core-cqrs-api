@@ -1,13 +1,12 @@
-﻿using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using MediatR;
-using SampleProject.Application;
 using SampleProject.Application.Configuration.Commands;
 using SampleProject.Application.Configuration.DomainEvents;
 using SampleProject.Application.Configuration.Processing;
 using SampleProject.Application.Payments;
 using SampleProject.Infrastructure.Logging;
 using SampleProject.Infrastructure.Processing.InternalCommands;
+using System.Reflection;
 
 namespace SampleProject.Infrastructure.Processing
 {
@@ -23,7 +22,7 @@ namespace SampleProject.Infrastructure.Processing
                 .AsClosedTypesOf(typeof(IDomainEventNotification<>)).InstancePerDependency();
 
             builder.RegisterGenericDecorator(
-                typeof(DomainEventsDispatcherNotificationHandlerDecorator<>), 
+                typeof(DomainEventsDispatcherNotificationHandlerDecorator<>),
                 typeof(INotificationHandler<>));
 
             builder.RegisterGenericDecorator(

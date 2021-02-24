@@ -1,10 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using MediatR;
 using SampleProject.Application.Configuration.Data;
 using SampleProject.Application.Configuration.Emails;
 using SampleProject.Domain.Customers.Orders;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SampleProject.Application.Orders.PlaceCustomerOrder
 {
@@ -15,8 +15,8 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
         public OrderPlacedNotificationHandler(
-            IEmailSender emailSender, 
-            EmailsSettings emailsSettings, 
+            IEmailSender emailSender,
+            EmailsSettings emailsSettings,
             ISqlConnectionFactory sqlConnectionFactory)
         {
             _emailSender = emailSender;
@@ -26,23 +26,23 @@ namespace SampleProject.Application.Orders.PlaceCustomerOrder
 
         public async Task Handle(OrderPlacedNotification request, CancellationToken cancellationToken)
         {
-            var connection = _sqlConnectionFactory.GetOpenConnection();
+            System.Data.IDbConnection connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT [Customer].[Email] " +
                                "FROM orders.v_Customers AS [Customer] " +
                                "WHERE [Customer].[Id] = @Id";
 
-            var customerEmail = await connection.QueryFirstAsync<string>(sql, 
+            string customerEmail = await connection.QueryFirstAsync<string>(sql,
                 new
                 {
                     Id = request.CustomerId.Value
                 });
 
-            var emailMessage = new EmailMessage(
-                _emailsSettings.FromAddressEmail, 
-                customerEmail, 
+            EmailMessage emailMessage = new EmailMessage(
+                _emailsSettings.FromAddressEmail,
+                customerEmail,
                 OrderNotificationsService.GetOrderEmailConfirmationDescription(request.OrderId));
-            
+
             await _emailSender.SendEmailAsync(emailMessage);
         }
     }

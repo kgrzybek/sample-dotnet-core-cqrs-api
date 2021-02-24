@@ -15,12 +15,12 @@ namespace SampleProject.Application.Customers.DomainServices
 
         public bool IsUnique(string customerEmail)
         {
-            var connection = this._sqlConnectionFactory.GetOpenConnection();
+            System.Data.IDbConnection connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT TOP 1 1" +
                                "FROM [orders].[Customers] AS [Customer] " +
                                "WHERE [Customer].[Email] = @Email";
-            var customersNumber = connection.QuerySingleOrDefault<int?>(sql,
+            int? customersNumber = connection.QuerySingleOrDefault<int?>(sql,
                             new
                             {
                                 Email = customerEmail
