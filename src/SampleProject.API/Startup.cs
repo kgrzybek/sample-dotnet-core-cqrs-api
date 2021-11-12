@@ -82,14 +82,14 @@ namespace SampleProject.API
         {
             app.UseMiddleware<CorrelationMiddleware>();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseProblemDetails();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseProblemDetails();
+            //}
 
             app.UseRouting();
 
