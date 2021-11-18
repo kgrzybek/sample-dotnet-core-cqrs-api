@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using SampleProject.API.Configuration;
 using SampleProject.Application.Configuration.Validation;
 using SampleProject.API.SeedWork;
@@ -50,8 +51,11 @@ namespace SampleProject.API
             
             services.AddMemoryCache();
 
-            services.AddSwaggerDocumentation();
-
+            //services.AddSwaggerDocumentation();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "InluppALM20", Version = "v1" });
+            });
             services.AddProblemDetails(x =>
             {
                 x.Map<InvalidCommandException>(ex => new InvalidCommandProblemDetails(ex));
@@ -81,21 +85,15 @@ namespace SampleProject.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<CorrelationMiddleware>();
-
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-            //else
-            //{
-            //    app.UseProblemDetails();
-            //}
-
+            app.UseDeveloperExceptionPage();
+            app.UseProblemDetails();
+            app.UseDeveloperExceptionPage();
+            app.UseProblemDetails();
             app.UseRouting();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            app.UseSwaggerDocumentation();
+          //app.UseSwaggerDocumentation();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "InluppALM20 v1"));
         }
 
         private static ILogger ConfigureLogger()
