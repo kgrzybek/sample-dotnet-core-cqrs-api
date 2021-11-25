@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Quartz.Logging;
 using SampleProject.Application.Customers;
 using SampleProject.Application.Customers.RegisterCustomer;
 
@@ -12,10 +14,12 @@ namespace SampleProject.API.Customers
     public class CustomersController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly ILogger _Logger;
 
-        public CustomersController(IMediator mediator)
+        public CustomersController(IMediator mediator,ILogger logger)
         {
             this._mediator = mediator;
+            this._Logger = logger;
         }
 
         /// <summary>

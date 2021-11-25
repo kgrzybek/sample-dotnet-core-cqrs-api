@@ -1,0 +1,47 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "webAppNameInput": {
+      "defaultValue": "fadi-almlabb",
+      "type": "string"
+    },
+    "skuName": {
+      "defaultValue": "B1",
+      "type": "string"
+    },
+    "environment": {
+      "defaultValue": "stage",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "appServicePlanName": "ASP-ALM20-a5a7",
+    "webAppName": "[concat(parameters('webAppNameInput'), '-', parameters('environment'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-02-01",
+      "name": "[variables('appServicePlanName')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "[parameters('skuName')]"
+      },
+      "kind": "app"
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2020-06-01",
+      "name": "[variables('webAppName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "CURRENT_STACK": "dotnetcore"
+      }
+    }
+  ]
+}
