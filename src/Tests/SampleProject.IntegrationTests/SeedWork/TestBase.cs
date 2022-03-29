@@ -25,7 +25,7 @@ namespace SampleProject.IntegrationTests.SeedWork
         [SetUp]
         public async Task BeforeEachTest()
         {
-            ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SampleData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SampleData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
             await using var sqlConnection = new SqlConnection(ConnectionString);
 

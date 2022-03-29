@@ -13,6 +13,7 @@ namespace SampleProject.API.Customers
     {
         private readonly IMediator _mediator;
 
+
         public CustomersController(IMediator mediator)
         {
             this._mediator = mediator;
