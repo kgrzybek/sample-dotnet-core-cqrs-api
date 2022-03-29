@@ -25,14 +25,7 @@ namespace SampleProject.IntegrationTests.SeedWork
         [SetUp]
         public async Task BeforeEachTest()
         {
-            const string connectionStringEnvironmentVariable =
-                "ASPNETCORE_SampleProject_IntegrationTests_ConnectionString";
-            ConnectionString = Environment.GetEnvironmentVariable(connectionStringEnvironmentVariable);
-            if (ConnectionString == null)
-            {
-                throw new ApplicationException(
-                    $"Define connection string to integration tests database using environment variable: {connectionStringEnvironmentVariable}");
-            }
+            ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SampleData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
             await using var sqlConnection = new SqlConnection(ConnectionString);
 
