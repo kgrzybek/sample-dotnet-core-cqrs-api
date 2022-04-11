@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SampleProject.Domain.Customers.Customer">
+    <Position X="9.75" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ASACIAAAEEEAAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAE=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Id" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_orders" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SampleProject.Domain.Customers.Orders.Order">
+    <Position X="14.25" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AFACQCAAIABAEABAAAAABgAAAAAAAgAIAAAAAAACAAA=</HashCode>
+      <FileName>Customers\Orders\Order.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Id" />
+      <Field Name="_value" />
+      <Field Name="_valueInEUR" />
+      <Field Name="_status" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_orderProducts" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SampleProject.Domain.Customers.Orders.OrderProduct">
+    <Position X="17.75" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>GBAAAQAAAAAAAAAAAEAAAAAAAAAAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>Customers\Orders\OrderProduct.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProductId" />
+      <Property Name="Value" />
+      <Property Name="ValueInEUR" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SampleProject.Domain.Customers.Orders.OrderProductData">
+    <Position X="16.75" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Customers\Orders\OrderProductData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProductId" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SampleProject.Domain.ForeignExchange.ConversionRate">
+    <Position X="6.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAIQAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>ForeignExchange\ConversionRate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SampleProject.Domain.Payments.Payment">
+    <Position X="8.5" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEACAgAAEAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAAAA=</HashCode>
+      <FileName>Payments\Payment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_orderId" />
+      <Field Name="_status" />
+      <Property Name="Id" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SampleProject.Domain.Products.Product">
+    <Position X="23.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Products\Product.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Id" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_prices" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SampleProject.Domain.Products.ProductPrice">
+    <Position X="23.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Products\ProductPrice.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Value" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SampleProject.Domain.Products.ProductId">
+    <Position X="20.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Products\ProductId.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SampleProject.Domain.SharedKernel.MoneyValue">
+    <Position X="23.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAYAAAAAAACAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>SharedKernel\MoneyValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SampleProject.Domain.Customers.Orders.OrderId">
+    <Position X="11.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Orders\OrderId.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SampleProject.Domain.Customers.CustomerId">
+    <Position X="12.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerId.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SampleProject.Domain.Payments.PaymentId">
+    <Position X="5.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Payments\PaymentId.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="SampleProject.Domain.Customers.Orders.OrderStatus">
+    <Position X="16.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAQAAAAAIAAAAAAEIAAAAABAA=</HashCode>
+      <FileName>Customers\Orders\OrderStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SampleProject.Domain.Payments.PaymentStatus">
+    <Position X="5.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAgAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Payments\PaymentStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
