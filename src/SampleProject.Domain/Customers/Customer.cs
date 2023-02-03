@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
@@ -30,9 +31,9 @@ namespace SampleProject.Domain.Customers
         private Customer(string email, string name)
         {
             this.Id = new CustomerId(Guid.NewGuid());
-            _email = email;
-            _name = name;
-            _welcomeEmailWasSent = false;
+            SetCustomerEmail(email);
+            SetCustomerName(name);
+            SetWelcomeEmailSentStatus(false);
             _orders = new List<Order>();
 
             this.AddDomainEvent(new CustomerRegisteredEvent(this.Id));
@@ -91,7 +92,32 @@ namespace SampleProject.Domain.Customers
 
         public void MarkAsWelcomedByEmail()
         {
-            this._welcomeEmailWasSent = true;
+            SetWelcomeEmailSentStatus(true);
+        }
+
+        private void SetCustomerEmail(string email)
+        {
+            if (!IsValidEmailFormat(email))
+            {
+                throw new InvalidDataException();
+            }
+            _email = email;
+        }
+
+        private bool IsValidEmailFormat(string email)
+        {
+            //TODO: Implement email format verification logic
+            return true;
+        }
+
+        private void SetCustomerName(string name)
+        {
+            _name = name;
+        }
+
+        private void SetWelcomeEmailSentStatus(bool wasSent)
+        {
+            _welcomeEmailWasSent = wasSent;
         }
     }
 }
