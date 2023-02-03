@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Mail;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
 using SampleProject.Domain.Customers.Rules;
@@ -42,10 +44,32 @@ namespace SampleProject.Domain.Customers
         public static Customer CreateRegistered(
             string email, 
             string name,
-            ICustomerUniquenessChecker customerUniquenessChecker)
+            ICustomerUniquenessChecker customerUniquenessChecker,
+            ICustomerEmailChecker customerEmailChecker = null)
         {
-            CheckRule(new CustomerEmailMustBeUniqueRule(customerUniquenessChecker, email));
+            try
+            {
+                if (customerEmailChecker != null)
+                {
+                    CheckRule(new CustomerEmailValidRule(customerEmailChecker, email));
+                }   
+            }
+            catch (BusinessRuleValidationException ex)
+            {
+                return null;
+            }
 
+            try
+            {
+                
+                CheckRule(new CustomerEmailMustBeUniqueRule(customerUniquenessChecker, email));
+            }
+            
+            catch(BusinessRuleValidationException ex)
+            {
+                //FIXME: Maybe throw duplicate email exception? Or log the error?
+                return null;
+            }
             return new Customer(email, name);
         }
 
@@ -97,17 +121,7 @@ namespace SampleProject.Domain.Customers
 
         private void SetCustomerEmail(string email)
         {
-            if (!IsValidEmailFormat(email))
-            {
-                throw new InvalidDataException();
-            }
             _email = email;
-        }
-
-        private bool IsValidEmailFormat(string email)
-        {
-            //TODO: Implement email format verification logic
-            return true;
         }
 
         private void SetCustomerName(string name)

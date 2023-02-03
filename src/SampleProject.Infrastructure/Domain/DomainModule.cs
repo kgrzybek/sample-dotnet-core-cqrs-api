@@ -14,6 +14,10 @@ namespace SampleProject.Infrastructure.Domain
                 .As<ICustomerUniquenessChecker>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<ICustomerEmailChecker>()
+                .As<ICustomerEmailChecker>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<ForeignExchange>()
                 .As<IForeignExchange>()
                 .InstancePerLifetimeScope();
