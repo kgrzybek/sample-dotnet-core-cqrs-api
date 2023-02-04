@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Mail;
 using SampleProject.Domain.Customers.Orders;
 using SampleProject.Domain.Customers.Orders.Events;
 using SampleProject.Domain.Customers.Rules;
@@ -30,9 +33,9 @@ namespace SampleProject.Domain.Customers
         private Customer(string email, string name)
         {
             this.Id = new CustomerId(Guid.NewGuid());
-            _email = email;
-            _name = name;
-            _welcomeEmailWasSent = false;
+            SetCustomerEmail(email);
+            SetCustomerName(name);
+            SetWelcomeEmailSentStatus(false);
             _orders = new List<Order>();
 
             this.AddDomainEvent(new CustomerRegisteredEvent(this.Id));
@@ -41,10 +44,32 @@ namespace SampleProject.Domain.Customers
         public static Customer CreateRegistered(
             string email, 
             string name,
-            ICustomerUniquenessChecker customerUniquenessChecker)
+            ICustomerUniquenessChecker customerUniquenessChecker,
+            ICustomerEmailChecker customerEmailChecker = null)
         {
-            CheckRule(new CustomerEmailMustBeUniqueRule(customerUniquenessChecker, email));
+            try
+            {
+                if (customerEmailChecker != null)
+                {
+                    CheckRule(new CustomerEmailValidRule(customerEmailChecker, email));
+                }   
+            }
+            catch (BusinessRuleValidationException ex)
+            {
+                return null;
+            }
 
+            try
+            {
+                
+                CheckRule(new CustomerEmailMustBeUniqueRule(customerUniquenessChecker, email));
+            }
+            
+            catch(BusinessRuleValidationException ex)
+            {
+                //FIXME: Maybe throw duplicate email exception? Or log the error?
+                return null;
+            }
             return new Customer(email, name);
         }
 
@@ -91,7 +116,22 @@ namespace SampleProject.Domain.Customers
 
         public void MarkAsWelcomedByEmail()
         {
-            this._welcomeEmailWasSent = true;
+            SetWelcomeEmailSentStatus(true);
+        }
+
+        private void SetCustomerEmail(string email)
+        {
+            _email = email;
+        }
+
+        private void SetCustomerName(string name)
+        {
+            _name = name;
+        }
+
+        private void SetWelcomeEmailSentStatus(bool wasSent)
+        {
+            _welcomeEmailWasSent = wasSent;
         }
     }
 }
