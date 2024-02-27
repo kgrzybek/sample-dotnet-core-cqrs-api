@@ -24,11 +24,7 @@ namespace SampleProject.API.Customers
         [Route("")]
         [HttpPost]
         [ProducesResponseType(typeof(CustomerDto), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> RegisterCustomer([FromBody]RegisterCustomerRequest request)
-        {
-           var customer = await _mediator.Send(new RegisterCustomerCommand(request.Email, request.Name));
-
-           return Created(string.Empty, customer);
-        }       
+        public async Task<IActionResult> RegisterCustomer([FromBody] RegisterCustomerCommand command)
+            => Created(string.Empty, await _mediator.Send(command));
     }
 }
